@@ -1,0 +1,118 @@
+.wrapper {
+    width: 100%;
+    height: var(--default-layout-header-height, 60px);
+    box-shadow: 0px 1px 1px #24262b;
+    display: flex;
+    align-items: center;
+    background-color: var(--default-color-light);
+}
+
+.part_1 {
+    display: flex;
+    width: 35%;
+    flex-direction: row;
+    align-items: center;
+    .logo {
+        display: flex;
+        width: 128px;
+        height: 48px;
+        font-size: 30px;
+        font-weight: 700;
+        align-items: center;
+        color: #F06D35;
+        padding-left: 40px;
+        padding-right: 30px;
+    }
+    
+    .search {
+        display: flex;
+        position: relative;
+        margin: 20px 0px;
+        width: 400px;
+        height: 48px;
+        input {
+            width: 100%;
+            margin: 0 30px;
+            border-radius: 24px;
+            background-color: var(--primary-color);
+            color: #924F0C;
+            text-align: left;
+            padding-left: 50px;
+            font-size: 20px;
+            font-weight: 600;
+            outline: none;
+        }
+        .search-icon {
+            width: 35px;
+            position: absolute;
+            top: 6px;
+            left: 40px;
+        }
+    }
+}
+
+.part_2 {
+    display: flex;
+    width: 42%;
+    justify-content: center;
+    .menu {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between; 
+        .menu-item {
+            display: flex;
+            width: 110px;
+            height: 82px;
+            border-radius: 17px;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.2s ease;
+            cursor: pointer; /* Thêm con trỏ để có cảm giác như có thể nhấp */
+            
+            .menu-icon {
+                width: 30px;
+                height: 30px;
+            }
+    
+            &:hover {
+                background-color: #ECE0CA; /* Màu nền khi hover */
+                .menu-icon {
+                    transform: scale(1.2); /* Phóng to icon lên 1.1 lần khi hover */
+                    filter: brightness(0) saturate(100%) invert(43%) sepia(99%) saturate(2550%) hue-rotate(1deg) brightness(98%) contrast(99%);
+                }
+            }
+            
+        }
+    }
+}
+
+.part_3 {
+    display: flex;
+    width: 23%;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 20px;
+    .name {
+        font-size: 22px;
+        font-weight: 600;
+        margin-right: 20px;
+    }
+    .avtar {
+        width: 80px;
+        height: 80px;
+        border-radius: 40px;
+        overflow: hidden;
+        .img-avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+}
+
+
+
+
+
+
+

@@ -1,0 +1,26 @@
+.wrapper {
+    display: flex;
+}
+
+
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+} 
+
+.content {
+    display: flex;
+    width: 100%;
+    background-color: #ccc;
+    min-height: 1000px;
+    flex-direction: row;
+    .post {
+        width: 70%;
+    }
+    .side-bar {
+        width: 30%;
+    }
+}
+
+

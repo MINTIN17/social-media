@@ -1,0 +1,282 @@
+.wrapper {
+    display: flex;
+    width: 100%;
+    height: 200px;
+    background-color: var(--primary-color);
+    padding-top: 30px;
+    justify-content: center;
+
+    .create-post {
+        width: 800px;
+        height: 140px;
+        border-radius: 25px;
+        background-color: #fff;
+        
+        .content {
+            display: flex;
+            width: 100%;
+            height: 100px;
+            padding: 0 10px;  
+            align-items: center;
+            flex-direction: row;
+            .avatar {
+                width: 50px;
+                height: 50px;
+                margin-left: 20px;
+                border-radius: 50%;
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .avatar-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                }
+            }
+            input {
+                width: 670px;
+                height: 50px;
+                margin-left: 20px;
+                border-radius: 50px;
+                background-color: var(--primary-color);
+                border: 1px solid var(--primary-color);
+                color: #924F0C;
+                text-align: left;
+                padding-left: 40px;
+                font-size: 20px;
+                min-height: 50px;
+                outline: none;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: var(--primary-color);
+                }
+            } 
+        }
+    }
+}
+
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Làm mờ vùng ngoài modal */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    background-color: var(--default-color-dark);
+    padding: 10px;
+    border-radius: 8px;
+    width: 600px;
+    height: 400px;
+    transition: width 0.5s ease;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+
+    .modal-title {
+        color: #fff;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .circle {
+            width: 40px;  /* Đường kính của hình tròn */
+            height: 40px;
+            background-color: #333; /* Màu nền của hình tròn (xám đen) */
+            border-radius: 50%; /* Bo tròn để tạo hình tròn */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 7px;               /* Cách mép trên của div cha 10px */
+            right: 10px;
+            z-index: 2;
+          }
+          
+          /* Định dạng cho dấu X */
+          .cross {
+            color: #aaa; /* Màu xám cho dấu "X" */
+            font-size: 24px; /* Kích thước dấu "X" */
+            cursor: pointer; /* Hiển thị con trỏ khi hover */
+          }
+
+    }
+    .custom-line {
+        width: 100%;
+        border: none; /* Loại bỏ viền mặc định */
+        border-top: 1px solid #24252c; /* Đường kẻ gạch ngang */
+        margin: 10px 0px; /* Khoảng cách trên và dưới */
+    }
+    .modal-user-infor {
+        height: 60px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border-radius: 10px;
+        .modal-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .modal-avatar-img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+        }
+
+        .modal-status {
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            margin-left: 20px;
+            .modal-username{
+                display: flex;
+                height: 30px;
+                align-items: center;
+                font-size: 15px;
+                color: #fff;
+            }
+            .modal-user-status{
+                display: flex;
+                height: 30px;
+                align-items: center;
+                select {
+                    font-size: 15px;
+                    width: 110px;
+                    height: 70%;
+                    color: #fff;
+                    background-color: #3A3B3C;
+                    outline: none;
+                    border: none;
+                    border-radius: 5px;
+                }
+            }
+        }
+    }
+    .modal-post-content {
+        display: flex;
+        width: 580px;
+        height: 150px;
+        padding: 20px;
+        color: #fff;
+        font-size: 20px;
+        outline: none;
+        text-align: left;
+        justify-content: left;
+        overflow: auto;
+        overflow-x: hidden; 
+        white-space: pre-wrap; 
+        word-wrap: break-word; 
+        word-break: break-all;
+        scrollbar-color: #888 var(--default-color-dark);
+        &::-webkit-scrollbar-track {
+            background-color: #fff;
+        }
+    }
+    .placeholder {
+        font-size: 20px;
+        position: absolute; 
+        top: 140px;
+        left: 30px;
+        color: #fff;
+    }
+    .modal-add-img {
+        display: flex;
+        width: 100%;
+        height: 100px;
+        border: 1px solid #30333b;
+        border-radius: 10px;    
+        margin: 20px 0px;
+        padding: 20px;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        &:hover {
+            background-color: #373838;
+        }
+        .circle {
+            width: 30px;  /* Đường kính của hình tròn */
+            height: 30px;
+            background-color: #333; /* Màu nền của hình tròn (xám đen) */
+            border-radius: 50%; /* Bo tròn để tạo hình tròn */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 10px;               /* Cách mép trên của div cha 10px */
+            right: 10px;
+            z-index: 2;
+          }
+        
+          .cross {
+            color: #aaa; /* Màu xám cho dấu "X" */
+            font-size: 24px; /* Kích thước dấu "X" */
+            cursor: pointer; /* Hiển thị con trỏ khi hover */
+          }
+    }
+    .modal-add-other {
+        display: flex;
+        flex-direction: row;
+        color: #fff;
+        height: 60px;
+        align-items: center;
+        border-radius: 10px;
+        border: 1px solid #30333b;
+        padding: 20px;
+        div {
+            display: flex;
+            width: 40px;
+            height: 40px;
+            margin-left: 100px;
+            border-radius: 50%;
+            justify-content: center;
+            align-items: center;
+            .img {
+                cursor: pointer;
+            }
+
+            &:hover {
+                background-color: #33353d;
+            }
+        }
+    }
+    .button-post {
+        display: flex;
+        width: 100%;
+        height: 40px;
+        margin-top: 15px;
+        border-radius: 10px;
+        background-color: #505151;
+        color: #757676;
+        font-size: 23px;
+        font-weight: 700;
+        align-items: center;
+        justify-content: center;
+        cursor: not-allowed;
+    }
+}
+
+.modal-content.expanded {
+    height: 540px; /* Kích thước mới khi div con xuất hiện */
+}
+
+// .modal-post-content::-webkit-scrollbar-track {
+//     border-radius: 10px;
+//     border-color: #fff;
+// }
+

@@ -1,0 +1,71 @@
+.wrapper {
+    height: 1000px;
+    background-color: var(--primary-color);
+    .no-post {
+        display: flex;
+        color: #fff;
+        justify-content: center;
+        background-color: var(--primary-color);
+        font-size: 25px;
+    }
+    .Posts {
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+        background-color: var(--primary-color);
+        
+        
+        .Post {
+            justify-content: center;
+            width: 60%;
+            min-height: 200px;
+            border: '1px solid #ccc';
+            margin-bottom: 30px;
+            background-color: var(--default-color-dark);
+            border-radius: 10px;
+            .post-infor {
+                display: flex;
+                flex-direction: row;
+                height: 100px;
+                .avatar {
+                    width: 60px;
+                    height: 60px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin: 30px;
+                    .avatar-img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: contain;
+                    }
+                }
+                .name {
+                    display: flex;
+                    flex-direction: column;
+                    font-size: 20px;
+                    .user-name {
+                        height: 40px;
+                        color: #fff;
+                        display: flex;
+                        margin-top: 30px;
+                    }
+                    .time-post {
+                        color: #fff;
+                        font-size: 18px;
+                    }
+                }
+            }
+            .content {
+                display: flex;
+                width: 90%;
+                padding: 10px 30px;
+                color: #fff;
+                font-size: 22px;
+            }
+        }
+    }
+}
