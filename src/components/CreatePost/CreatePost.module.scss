@@ -206,8 +206,90 @@
         justify-content: center;
         align-items: center;
         position: relative;
+        cursor: pointer;
         &:hover {
             background-color: #373838;
+        }
+        // Ẩn các div theo mặc định
+        .edit-img, .add-more-img {
+            display: none; /* Ẩn mặc định */
+        }
+
+        // Khi hover vào modal-add-img, hiển thị các div
+        &:hover .edit-img, 
+        &:hover .add-more-img {
+            display: flex; /* Hiển thị khi hover */
+        }
+        .edit-img {
+            position: absolute;
+            width: 120px;
+            height: 30px;
+            top: 10px;
+            left: 10px;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 5px;
+            z-index: 3;
+        }
+        .add-more-img {
+            position: absolute;
+            width: 100px;
+            height: 30px;
+            justify-content: center;
+            align-items: center;
+            top: 10px;
+            left: 140px;
+            background-color: #fff;
+            border-radius: 5px;
+            z-index: 3;
+        }
+        .image-preview {
+            display: flex;
+            margin-top: 10px;
+            justify-content: flex-start; /* Để các ảnh nằm bên trái */
+            flex-wrap: wrap; /* Cho phép các ảnh xuống dòng */
+            gap: 20px; /* Khoảng cách giữa các ảnh */
+    
+            img.preview-img {
+                width: 80px;
+                height: 80px;
+                border-radius: 10px;
+                object-fit: cover;
+                transition: filter 0.3s; /* Hiệu ứng chuyển đổi khi làm mờ */
+            }
+    
+            .more-images {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 80px;
+                height: 80px;
+                background-color: rgba(0, 0, 0, 0.5);
+                color: #fff;
+                font-size: 20px;
+                font-weight: bold;
+                border-radius: 10px;
+                .image-overlay {
+                    position: absolute;
+                    top: 14px;
+                    right: 49px;
+                    width: 80px;
+                    height: 80px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 10px;
+                    background: rgba(0, 0, 0, 0.5); // Nền mờ đen cho chữ
+                    color: white;
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                    .more-count {
+                        position: relative;
+                        z-index: 2; // Đảm bảo chữ nằm trên ảnh
+                    }
+                }
+            }
         }
         .circle {
             width: 30px;  /* Đường kính của hình tròn */

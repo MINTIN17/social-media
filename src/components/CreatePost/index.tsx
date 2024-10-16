@@ -13,11 +13,7 @@ const CreatePost: React.FC = () => {
 
     useEffect(() => {
         // Khóa thanh cuộn khi modal mở
-        if (isModalVisible) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'auto';
-        }
+        document.body.style.overflow = isModalVisible ? 'hidden' : 'auto';
 
         // Cleanup khi component unmount
         return () => {
@@ -32,7 +28,14 @@ const CreatePost: React.FC = () => {
                     <div className={cx('avatar')}>
                         <img src="/asset/img/avatar.jpg" alt="avatar-img" className={cx('avatar-img')} />
                     </div>
-                    <input onClick={toggleModal} type="text" readOnly id="name" name="name" placeholder="Bạn đang nghĩ gì ?" />
+                    <input
+                        onClick={toggleModal}
+                        type="text"
+                        readOnly
+                        id="name"
+                        name="name"
+                        placeholder="Bạn đang nghĩ gì ?"
+                    />
                 </div>
             </div>
 
@@ -53,6 +56,7 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
     const [isFocused, setIsFocused] = useState(false);
     const contentEditableRef = useRef<HTMLDivElement>(null);
     const [isImageVisible, setIsImageVisible] = useState(false);
+    const [images, setImages] = useState<File[]>([]);
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedOption(event.target.value);
@@ -84,6 +88,7 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
 
     const toggleImageVisibility = () => {
         setIsImageVisible(!isImageVisible);
+        setImages([]);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -91,6 +96,21 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
             document.execCommand('insertHTML', false, '<br/><br/>');
             e.preventDefault();
         }
+    };
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || []);
+        setImages((prev) => [...prev, ...files].slice(0, 10)); // Giới hạn tối đa 5 ảnh
+    };
+
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        const files = Array.from(e.dataTransfer.files);
+        setImages((prev) => [...prev, ...files].slice(0, 10)); // Giới hạn tối đa 5 ảnh
+    };
+
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
     };
 
     return (
@@ -121,23 +141,82 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                     </div>
                 </div>
 
-                <div className={cx('modal-post-content')} contentEditable="true" onInput={handleInput}
+                <div 
+                    className={cx('modal-post-content')} 
+                    contentEditable="true" 
+                    onInput={handleInput}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
                     onKeyDown={handleKeyDown}
-                    ref={contentEditableRef}>
-                </div>
+                    ref={contentEditableRef}
+                />
+                
+                <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleImageChange}
+                    style={{ display: 'none' }}
+                    id="upload-input"
+                />
+                
                 {(!content.trim() && !isFocused) && (
                     <div className={cx('placeholder')}>
                         Bạn đang nghĩ gì thế, hãy chia sẻ nào?
                     </div>
                 )}
+                
                 {isImageVisible && (
-                    <div className={cx("modal-add-img")}>
-                        <div className={cx('circle')} onClick={() => setIsImageVisible(false)}>
+                    <div 
+                        className={cx("modal-add-img")} 
+                        onDrop={handleDrop} 
+                        onDragOver={handleDragOver}
+                        onClick={() => {
+                            if (images.length === 0) {  // Nếu chưa có ảnh nào thì mở input
+                                document.getElementById('upload-input')?.click();
+                            }
+                        }}
+                    >
+                        {images.length === 0 && (
+                            <img src="/asset/icon/addimage.svg" alt="add-img" />
+                        )}
+                        {images.length > 0 && (
+                            <div className={cx('edit-img')}
+                    
+                            > Chỉnh sửa ảnh</div>
+                        )}
+                        {images.length > 0 && (
+                            <div className={cx('add-more-img')}
+                            onClick={() => { document.getElementById('upload-input')?.click();}}
+                            >Thêm ảnh</div>
+                        )}
+                        <div className={cx('circle')} onClick={toggleImageVisibility}>
                             <span className={cx('cross')}>&#x2715;</span>
                         </div>
-                        <img src="/asset/icon/addimage.svg" alt="add-img" className={cx('add-img')} />
+                        <div className={cx('image-preview')}>
+                            {images.slice(0, 4).map((image, index) => (
+                                <img 
+                                    key={index} 
+                                    src={URL.createObjectURL(image)}  
+                                    alt="preview" 
+                                    className={cx('preview-img')}
+                                />
+                            ))}
+                            {images.length > 4 && (
+                                <div className={cx('more-images')}>
+                                    <img
+                                        src={URL.createObjectURL(images[4])}
+                                        alt="preview"
+                                        className={cx('preview-img')} // Làm mờ ảnh thứ 5 nếu số lượng ảnh > 5
+                                    />
+                                    {images.length > 5 && (
+                                        <div className={cx('image-overlay')}>
+                                            <span className={cx('more-count')}>+{images.length - 5}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 )}
 
@@ -149,13 +228,14 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                 </div>
 
                 <div className={cx("button-post")} 
-                     style={{
-                        cursor: content ? 'pointer' : 'not-allowed', 
-                        backgroundColor: content ? '#0866FF' : '#505151', 
-                        color: content ? '#fff' : '#757676'
-                     }}>
+                    style={{
+                        cursor: (content.trim() || images.length > 0) ? 'pointer' : 'not-allowed', 
+                        backgroundColor: (content.trim() || images.length > 0) ? '#0866FF' : '#505151', 
+                        color: (content.trim() || images.length > 0) ? '#fff' : '#757676'
+                    }}>
                     Đăng
-                </div> 
+                </div>
+
             </div>
         </div>
     );
