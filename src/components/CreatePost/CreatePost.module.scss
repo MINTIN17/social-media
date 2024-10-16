@@ -73,18 +73,18 @@
 
 .modal-content {
     position: relative;
-    background-color: var(--default-color-dark);
+    background-color: #fff;
     padding: 10px;
     border-radius: 8px;
     width: 600px;
     height: 400px;
     transition: width 0.5s ease;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     z-index: 1001;
 
     .modal-title {
-        color: #fff;
+        color: #000;
         height: 30px;
         display: flex;
         align-items: center;
@@ -93,7 +93,7 @@
         .circle {
             width: 40px;  /* Đường kính của hình tròn */
             height: 40px;
-            background-color: #333; /* Màu nền của hình tròn (xám đen) */
+            background-color: #fff; /* Màu nền của hình tròn (xám đen) */
             border-radius: 50%; /* Bo tròn để tạo hình tròn */
             display: flex;
             justify-content: center;
@@ -102,6 +102,9 @@
             top: 7px;               /* Cách mép trên của div cha 10px */
             right: 10px;
             z-index: 2;
+            &:hover {
+                background-color: #e7dada;
+            }
           }
           
           /* Định dạng cho dấu X */
@@ -115,7 +118,7 @@
     .custom-line {
         width: 100%;
         border: none; /* Loại bỏ viền mặc định */
-        border-top: 1px solid #24252c; /* Đường kẻ gạch ngang */
+        border-top: 1px solid #666666; /* Đường kẻ gạch ngang */
         margin: 10px 0px; /* Khoảng cách trên và dưới */
     }
     .modal-user-infor {
@@ -149,7 +152,7 @@
                 height: 30px;
                 align-items: center;
                 font-size: 15px;
-                color: #fff;
+                color: #000;
             }
             .modal-user-status{
                 display: flex;
@@ -159,8 +162,8 @@
                     font-size: 15px;
                     width: 110px;
                     height: 70%;
-                    color: #fff;
-                    background-color: #3A3B3C;
+                    color: #000;
+                    background-color: #aaaaaa;
                     outline: none;
                     border: none;
                     border-radius: 5px;
@@ -173,7 +176,7 @@
         width: 580px;
         height: 150px;
         padding: 20px;
-        color: #fff;
+        color: #000;
         font-size: 20px;
         outline: none;
         text-align: left;
@@ -193,7 +196,7 @@
         position: absolute; 
         top: 140px;
         left: 30px;
-        color: #fff;
+        color: #000;
     }
     .modal-add-img {
         display: flex;
@@ -314,7 +317,7 @@
     .modal-add-other {
         display: flex;
         flex-direction: row;
-        color: #fff;
+        color: #000;
         height: 60px;
         align-items: center;
         border-radius: 10px;
