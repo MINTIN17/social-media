@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
+import axios from 'axios';
 import classNames from 'classnames/bind';
 import styles from './CreatePost.module.scss';
+
 
 const cx = classNames.bind(styles);
 
@@ -112,6 +114,28 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
     };
+
+    const CreateNewPost = async () => {
+        // try {
+        //     const response = await axios.post(`${process.env.REACT_APP_link_server}/account`, {
+        //         email,
+        //         password,
+        //     });
+        //     const data: account = response.data;
+        //     console.log(data);
+        //     localStorage.setItem('accessToken', data.accessToken);
+        //     navigate("/home");            
+        // } catch (err: any) {
+        //     if (err.response) {
+        //         // Lỗi từ server, in chi tiết phản hồi
+        //         console.log('Server Response:', err.response.data);
+        //         setError('Đăng nhập thất bại: ' + err.response.data.message);
+        //     } else {
+        //         setError('Có lỗi xảy ra, vui lòng thử lại.');
+        //     }
+        // } 
+
+    }
 
     return (
         <div className={cx('modal-overlay')}>
@@ -232,7 +256,9 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                         cursor: (content.trim() || images.length > 0) ? 'pointer' : 'not-allowed', 
                         backgroundColor: (content.trim() || images.length > 0) ? '#0866FF' : '#505151', 
                         color: (content.trim() || images.length > 0) ? '#fff' : '#757676'
-                    }}>
+                    }}
+                    onClick={CreateNewPost}
+                    >
                     Đăng
                 </div>
 
