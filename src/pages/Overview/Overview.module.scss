@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+
+p {
+  margin: 0;
+}
+
+.home-container {
+  display: grid;
+  grid-template-rows: auto 1fr; 
+  height: 100vh;
+}
+
+.head-home {
+  position: fixed; /* Giữ phần tử đứng im khi cuộn trang */
+  top: 0; /* Đặt phần tử ở góc trên cùng */
+  left: 0; /* Đặt phần tử ở góc bên trái */
+  z-index: 1000; /* Đảm bảo phần tử nằm trên các phần tử khác */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  width: 100%; 
+  background-color: rgb(255, 255, 255);
+}
+
+.nick-name {
+  margin: 10px 10px 10px 30px;
+  padding: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  color: rgb(240 109 53);
+  text-shadow: none;
+}
+.Home{
+  padding: 10px 20px;
+  border: 1px solid rgb(240 109 53);
+  background-color: rgb(240 109 53);
+  margin-left: 0;
+}
+
+.content-home {
+  position: relative;
+  padding: 20px;
+  background-color: #dfd9d9; /* Chọn màu nền cho phần nội dung */
+  padding-top: 100px;
+}
+
+.head-content {
+  display: grid;
+  justify-content: space-between;
+  align-items: center;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 100px;
+}
+
+.text-head {
+  padding: 0 10%;
+}
+
+.first {
+  font-size: 320%;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold;
+  margin-top: 0;
+}
+
+#Truycap {
+  border-radius: 10px;
+  background-color: rgb(240 109 53);
+}
+
+.reminder {
+  font-size: 1em;
+  font-weight: bold;
+  margin: 10px 0 5px 0;
+}
+
+.imgHo {
+  width: 90%;
+  border-radius: 20px;
+}
+
+.title {
+  text-align: center;
+  font-size: 180%;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold;
+  margin: 100px 0 0 0;
+}
+
+.title2 {
+  text-align: center;
+  font-size: 130%;
+  font-family: "Times New Roman", Times, serif;
+  margin: 10px 0 80px 0;
+}
+
+.second {
+  font-size: 250%;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold;
+  margin-top: 0;
+}
+
+.text-body {
+  padding: 0 10% 0 0;
+}
+
+.img-body{
+  padding: 0 10%;
+}
+
+.bottom-content {
+  display: grid;
+  place-items: center; 
+  padding: 50px 70px;
+  margin: 100px;
+  background-color: #d6c2c2;
+  border-radius: 20px;
+  border: 1px solid black;
+}
+
+.text-bottom{
+  text-align: center;
+  margin: 0 0 30px 0;
+}
+
+.trip {
+  font-size: 200%;
+  font-family: "Tahoma", Geneva, Sans-Serif;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+}
+
+.texttrip {
+  font-style: italic;
+}
+
+#Truycapbottom {
+  border-radius: 10px;
+  border: 1px solid black;
+}
+
+.btnLo {
+  position: relative;
+  border-radius: 20px;
+  border: 1px solid rgb(240 109 53);
+  background-color: rgb(240 109 53);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 10px;
+  padding: 12px 30px;
+  letter-spacing: 1px;
+  text-transform: capitalize;
+  transition: 0.3s ease-in-out;
+}
+
+.btnLo:hover {
+  letter-spacing: 2px;
+}
+
+.btnLo:active {
+  transform: scale(0.95);
+}
+
+.btnLo:focus {
+  outline: none;
+}
+
+.btnLo.ghost {
+  background-color: rgba(225, 225, 225, 0.2);
+  border: 2px solid #fff;
+  color: #fff;
+}
+
+.btnLo.ghost i {
+  position: absolute;
+  opacity: 0;
+  transition: 0.3s ease-in-out;
+}
+
+.btnLo.ghost-i#register {
+  right: 70px;
+  opacity: 1;
+}
+
+.btnLo.ghost-i#login {
+  left: 70px;
+  opacity: 1;
+}

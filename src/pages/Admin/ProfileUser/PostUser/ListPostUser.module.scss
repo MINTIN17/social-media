@@ -1,0 +1,75 @@
+// Styles cho container của Post
+.containerPostUs {
+  display: flex;
+  justify-content: center; // Căn giữa theo chiều ngang
+}
+
+.PostUser {
+  width: 600px;
+  background-color: rgba(78, 79, 80, 0.39); // Chuyển đổi mã màu với độ trong suốt
+  padding: 25px;
+  border-radius: 10px;
+
+  // Head của Post (ảnh đại diện, tên, nút cài đặt)
+  .headPost {
+    display: flex;
+    align-items: center; // Căn chỉnh các phần tử theo chiều dọc
+
+    .avtPostUser {
+      width: 40px;
+      height: 40px; // Đảm bảo ảnh hình tròn với chiều cao bằng chiều rộng
+      border-radius: 50%;
+      border: 2px solid #fff;
+    }
+
+    .namePostUser {
+      color: #fff;
+      margin-left: 10px;
+      font-weight: bold;
+    }
+
+    .btnPostUs {
+      background: transparent; // Xóa nền
+      border: none; // Xóa viền
+      color: #fff; // Màu chữ của nút
+      margin-left: auto; // Đẩy nút ra cuối cùng bên phải
+    }
+  }
+
+  // Nội dung của Post (bài đăng và ảnh)
+  .tusPostUs {
+    color: #fff;
+    margin: 10px 0;
+  }
+
+  .imgPostUs {
+    max-width: 100%;
+    border-radius: 10px; // Bo tròn các góc của ảnh
+  }
+
+  // Nút tương tác (Like, Comment, Share)
+  .iconPostUs {
+    display: flex;
+    justify-content: space-between; // Căn đều các nút
+
+    .btnPostUser {
+      width: 33%;
+      background-color: transparent;
+      border: 1px solid transparent;
+      color: #fff;
+      text-align: center; // Căn giữa chữ
+
+      &:hover {
+        background-color: #545658 !important;
+        border: 1px solid #545658 !important;
+        color: #fff !important;
+      }
+    }
+
+    // Nút không thể click
+    #noneClick {
+      pointer-events: none;  // Ngăn không cho bấm vào nút
+      opacity: 0.5;          // Làm mờ nút để nó trông như bị vô hiệu hóa
+    }
+  }
+}
