@@ -41,7 +41,7 @@ const Post: React.FC = () => {
       fetchData();
     }, []);
   
-    if (loading) {
+    if (loading) { 
       return <div style={{backgroundColor : '#17181C', display: 'flex', justifyContent : 'content', color : '#fff'}}>Loading...</div>;
     }
 

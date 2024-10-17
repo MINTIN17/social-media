@@ -2,6 +2,8 @@ import DefaultLayout from "../layouts/DefaultLayout";
 import Home from "../pages/Home";
 import LoginPage from "../pages/Login/LoginPage";
 import ForgotPassword from "../pages/ForgotPassword"
+import Diary from "../pages/Diary";
+import Message from "../components/Message";
 import Overview from "../pages/Overview"
 import ListUser from "../pages/Admin/ListUser";
 // import TaskbarAdmin from "../components/TaskbarAdmin";
@@ -24,6 +26,8 @@ const publicRoutes = [
         component: PostUser, // Thêm route riêng cho PostUser
         layout: null,
     },
+    {path : '/diary', component : Diary, layout: null},
+    {path : '/message', component : Message, layout: null}
 ];
 
 

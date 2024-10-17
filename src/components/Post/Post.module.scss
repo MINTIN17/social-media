@@ -9,21 +9,20 @@
         font-size: 25px;
     }
     .Posts {
-        display: flex;
+        display: flex; 
         flex-direction: column;
 
         align-items: center;
         background-color: var(--primary-color);
         
-        
         .Post {
             justify-content: center;
-            width: 60%;
+            width: 800px;
             min-height: 200px;
             border: '1px solid #ccc';
             margin-bottom: 30px;
-            background-color: var(--default-color-dark);
-            border-radius: 10px;
+            background-color: #fff;
+            border-radius: 25px;
             .post-infor {
                 display: flex;
                 flex-direction: row;
