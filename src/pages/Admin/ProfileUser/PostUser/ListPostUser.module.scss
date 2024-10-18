@@ -1,56 +1,99 @@
 // Styles cho container của Post
 .containerPostUs {
   display: flex;
-  justify-content: center; // Căn giữa theo chiều ngang
+  // justify-content: center;
+  background-color: #dfd9d9;
+  padding-left: 103px;
+}
+
+#noneClick{
+  color: black;
 }
 
 .PostUser {
-  width: 600px;
-  background-color: rgba(78, 79, 80, 0.39); // Chuyển đổi mã màu với độ trong suốt
-  padding: 25px;
-  border-radius: 10px;
+  width: 670px;
+  background-color: rgb(255, 255, 255); 
+  border-radius: 20px;
 
-  // Head của Post (ảnh đại diện, tên, nút cài đặt)
-  .headPost {
-    display: flex;
-    align-items: center; // Căn chỉnh các phần tử theo chiều dọc
+  .headP {
+    margin: 25px 25px 5px 25px;
 
-    .avtPostUser {
-      width: 40px;
-      height: 40px; // Đảm bảo ảnh hình tròn với chiều cao bằng chiều rộng
-      border-radius: 50%;
-      border: 2px solid #fff;
-    }
-
-    .namePostUser {
-      color: #fff;
-      margin-left: 10px;
-      font-weight: bold;
-    }
-
-    .btnPostUs {
-      background: transparent; // Xóa nền
-      border: none; // Xóa viền
-      color: #fff; // Màu chữ của nút
-      margin-left: auto; // Đẩy nút ra cuối cùng bên phải
+    .headPost {
+      display: flex;
+      align-items: center; 
+  
+      .avtPostUser {
+        width: 40px;
+        height: 40px; 
+        border-radius: 50%;
+        border: 2px solid #000000;
+      }
+  
+      .namePostUser {
+        color: #fff;
+        margin-left: 10px;
+        font-weight: bold;
+      }
+  
+      .timePostUser{
+        color: #fff;
+        margin: 5px 0 0 10px;
+        font-size: 10px;
+      }
+  
+      .btnPostUs {
+        background: transparent; // Xóa nền
+        border: none; // Xóa viền
+        color: #fff; // Màu chữ của nút
+        margin-left: auto; // Đẩy nút ra cuối cùng bên phải
+      }
     }
   }
 
   // Nội dung của Post (bài đăng và ảnh)
   .tusPostUs {
     color: #fff;
-    margin: 10px 0;
+    margin: 5px 0 0 0;
   }
 
   .imgPostUs {
-    max-width: 100%;
-    border-radius: 10px; // Bo tròn các góc của ảnh
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .showLike {
+    display: flex;
+    justify-content: space-between;
+
+    .iconShow {
+      color: rgb(4, 160, 250);
+    }
+
+    .like{
+      color: #fff;
+      margin: 7px 0 7px 15px;
+      font-size: 14px;
+    }
+
+    .showCmt{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .cmt {
+        color: #fff;
+        margin: 7px 10px 7px 0;
+        font-size: 14px;
+      }
+    }
+
   }
 
   // Nút tương tác (Like, Comment, Share)
   .iconPostUs {
     display: flex;
     justify-content: space-between; // Căn đều các nút
+    margin: 5px 0 5px 0;
 
     .btnPostUser {
       width: 33%;
@@ -58,18 +101,19 @@
       border: 1px solid transparent;
       color: #fff;
       text-align: center; // Căn giữa chữ
+      font-size: 15px;
 
       &:hover {
-        background-color: #545658 !important;
-        border: 1px solid #545658 !important;
+        background-color: #8f909093 !important;
+        border: 1px solid #8f909093 !important;
         color: #fff !important;
       }
     }
 
     // Nút không thể click
-    #noneClick {
-      pointer-events: none;  // Ngăn không cho bấm vào nút
-      opacity: 0.5;          // Làm mờ nút để nó trông như bị vô hiệu hóa
-    }
+    // #noneClick {
+    //   pointer-events: none;  // Ngăn không cho bấm vào nút
+    //   opacity: 0.5;          // Làm mờ nút để nó trông như bị vô hiệu hóa
+    // }
   }
 }
