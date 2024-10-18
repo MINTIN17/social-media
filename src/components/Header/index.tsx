@@ -1,10 +1,32 @@
 import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 
 const cx = classNames.bind(styles);
 
 function Header() { 
+    const navigate = useNavigate(); // Hook để điều hướng
+
+    const DiaryPage = () => {
+        navigate("/diary");
+    }
+
+    const HomePage = () => {
+        navigate("/Home");
+    }
+
+    const [userName, setUserName] = useState<string | null>(null);
+
+    useEffect(() => {
+        const userName = localStorage.getItem('userName');
+        
+        if (userName) {
+            setUserName(userName); // Lấy tên người dùng từ localStorage
+        }
+    }, []);
+
     return (
         <header className={cx('wrapper')}>
             <div className={cx('part_1')}>
@@ -26,14 +48,14 @@ function Header() {
             </div>
             <div className={cx('part_2')}>
                 <div className={cx('menu')}>
-                    <div className={cx('menu-item')}>
+                    <div className={cx('menu-item')} onClick={HomePage}>
                         <img src="/asset/icon/home.svg" alt="home-icon" className={cx('menu-icon')} 
                         />
                     </div>
                     <div className={cx('menu-item')}>
                         <img src="/asset/icon/friend.svg" alt="friend-icon" className={cx('menu-icon')} />
                     </div>
-                    <div className={cx('menu-item')}>
+                    <div className={cx('menu-item')} onClick={DiaryPage}>
                         <img src="/asset/icon/diary.svg" alt="diary-icon" className={cx('menu-icon')} />
                     </div>
                     <div className={cx('menu-item')}>
@@ -46,7 +68,7 @@ function Header() {
             </div>
             <div className={cx('part_3')}>
                 <div className={cx('name')}>
-                    Hoang Minh Tin
+                    <p><span>{ userName }</span></p>
                 </div>
                 <div className={cx('avtar')}>
                     <img src="/asset/img/avatar.jpg" alt="group-img" className={cx('img-avatar')} />

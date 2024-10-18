@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import classNames from 'classnames/bind';
 import styles from './CreatePost.module.scss';
+import uploadFile from '../../api/uploadImage';
+import { useNavigate } from 'react-router-dom';
 
 
 const cx = classNames.bind(styles);
@@ -52,6 +54,15 @@ interface ModalProps {
     onClose: () => void;
 }
 
+// interface post {
+//     userId: string
+//     content: string;
+//     groupId: string;
+//     tag: string[];
+//     status: string;
+//     photo: string[];
+// }
+
 const Modal: React.FC<ModalProps> = ({ onClose }) => {
     const [selectedOption, setSelectedOption] = useState<string>('Công khai');
     const [content, setContent] = useState<string>('');
@@ -59,6 +70,7 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
     const contentEditableRef = useRef<HTMLDivElement>(null);
     const [isImageVisible, setIsImageVisible] = useState(false);
     const [images, setImages] = useState<File[]>([]);
+    const navigate = useNavigate();
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedOption(event.target.value);
@@ -116,24 +128,34 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
     };
 
     const CreateNewPost = async () => {
-        // try {
-        //     const response = await axios.post(`${process.env.REACT_APP_link_server}/account`, {
-        //         email,
-        //         password,
-        //     });
-        //     const data: account = response.data;
-        //     console.log(data);
-        //     localStorage.setItem('accessToken', data.accessToken);
-        //     navigate("/home");            
-        // } catch (err: any) {
-        //     if (err.response) {
-        //         // Lỗi từ server, in chi tiết phản hồi
-        //         console.log('Server Response:', err.response.data);
-        //         setError('Đăng nhập thất bại: ' + err.response.data.message);
-        //     } else {
-        //         setError('Có lỗi xảy ra, vui lòng thử lại.');
-        //     }
-        // } 
+        try {
+            const user_id = localStorage.getItem('userId')
+            const group_id = ""
+            // const tag = ""
+            const photo = []
+            for (let i = 0; i < images.length; i++)
+            {
+                const res = await uploadFile(images[i])
+                photo.push(res)
+            }
+            const response = await axios.post(`${process.env.REACT_APP_link_server}/post`, {
+                user_id,
+                content,
+                group_id,
+                // tag,
+                status: selectedOption,
+                photo
+            });
+            navigate("/home");            
+        } catch (err: any) {
+            if (err.response) {
+                // Lỗi từ server, in chi tiết phản hồi
+                console.log('Server Response:', err.response.data);
+                setError('Đăng nhập thất bại: ' + err.response.data.message);
+            } else {
+                setError('Có lỗi xảy ra, vui lòng thử lại.');
+            }
+        } 
 
     }
 
@@ -268,3 +290,7 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
 };
 
 export default CreatePost;
+function setError(arg0: string) {
+    throw new Error('Function not implemented.');
+}
+

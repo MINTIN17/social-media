@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Post.module.scss';
+import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
@@ -25,10 +26,10 @@ const Post: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
   
     useEffect(() => {
-      const fetchData = async () => {
+      const Posts = async () => {
         try {
-          const response = await fetch('https://pbl6-server-nestjs.onrender.com/post');
-          const data: post[] = await response.json();
+          const response = await axios.get(`${process.env.REACT_APP_link_server}/post`);
+          const data: post[] = await response.data;
           setItems(data);
           console.log(data);
         } catch (error) {
@@ -38,7 +39,7 @@ const Post: React.FC = () => {
         }
       };
   
-      fetchData();
+      Posts();
     }, []);
   
     if (loading) { 

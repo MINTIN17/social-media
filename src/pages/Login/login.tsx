@@ -7,6 +7,8 @@ import styles from './Login.module.scss';
 const cx = classNames.bind(styles);
 
 interface account {
+    userName: string
+    userId: any
     accessToken: string;
 }
 
@@ -32,12 +34,14 @@ const Login: React.FC = () => {
             console.log('Mat khau:', password);
 
             try {
-                const response = await axios.post('https://pbl6-server-nestjs.onrender.com/account/login', {
+                const response = await axios.post(`${process.env.REACT_APP_link_server}/account/login`, {
                     email,
                     password,
                 });
                 const data: account = response.data;
                 console.log(data);
+                localStorage.setItem('userName', data.userName);
+                localStorage.setItem('userId', data.userId);
                 localStorage.setItem('accessToken', data.accessToken);
                 navigate("/home");            
             } catch (err: any) {

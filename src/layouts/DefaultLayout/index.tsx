@@ -14,7 +14,7 @@ function DefaultLayout({ children }: DefaultLayoutProps) {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
-                <Header />
+                <div className={cx('header')}><Header /></div>
                 <div className={cx('content')}>
                     <div className={cx('body')}>{children}</div>
                     <div className={cx('side-bar')}><Sidebar /></div>
