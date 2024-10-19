@@ -7,9 +7,9 @@ const cx = classNames.bind(styles);
 
 interface post {
     _id : string,
-    user_id : string,
+    user_id : string, 
     content : string, 
-    stattus : string,
+    status : string,
     like_user_id : string[],
     dislike_user_id : string[],
     comment_user_id : string[],
@@ -17,7 +17,7 @@ interface post {
     group_id : string,
     created_time : string,
     updateAt : Date,
-    __v : 0,
+    __v : number,
 }
 
 
@@ -25,20 +25,22 @@ const Post: React.FC = () => {
     const [items, setItems] = useState<post[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
   
+    const [error, setError] = useState<string | null>(null);
+
     useEffect(() => {
       const Posts = async () => {
         try {
           const response = await axios.get(`${process.env.REACT_APP_link_server}/post`);
           const data: post[] = await response.data;
           setItems(data);
-          console.log(data);
         } catch (error) {
+          setError('Có lỗi xảy ra khi lấy dữ liệu.');
           console.error('Error fetching data:', error);
         } finally {
           setLoading(false);
         }
       };
-  
+
       Posts();
     }, []);
   
@@ -78,7 +80,26 @@ const Post: React.FC = () => {
                 <div className={cx('content')}>
                   {item.content}
                 </div>
-                  {item._id}
+                <div className={cx('image-container')}>
+                  
+                </div>
+                <div className={cx('infor-post')}> 
+                  1234
+                </div>
+                <div className={cx('line')}></div>
+                <div className={cx('action')}>
+                  <div className={cx('reaction', 'child')}>
+                    <img src='/asset/icon/like.svg' alt='like-icon' className={cx('like-icon')}/>
+                    Thích
+                    </div>
+                  <div className={cx('comment', 'child')}>
+                    <img src='/asset/icon/comment.svg' alt='comment-icon' className={cx('comment-icon')}/>
+                    Bình luận
+                  </div>
+                  <div className={cx('share', 'child')}>
+                    <img src='/asset/icon/share.svg' alt='share-icon' className={cx('share-icon')}/>
+                    Chia sẻ</div>
+                </div>
               </div>
             ))}
           </div>

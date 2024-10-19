@@ -71,6 +71,11 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
     const [isImageVisible, setIsImageVisible] = useState(false);
     const [images, setImages] = useState<File[]>([]);
     const navigate = useNavigate();
+    const [isModalimgOpen, setIsModalimgOpen] = useState(false);
+
+    const openModalimg = () => setIsModalimgOpen(true);
+
+    const closeModalimg = () => setIsModalimgOpen(false);
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedOption(event.target.value);
@@ -228,7 +233,7 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                         )}
                         {images.length > 0 && (
                             <div className={cx('edit-img')}
-                    
+                            onClick={openModalimg}
                             > Chỉnh sửa ảnh</div>
                         )}
                         {images.length > 0 && (
@@ -283,8 +288,16 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                     >
                     Đăng
                 </div>
-
             </div>
+
+            {isModalimgOpen && (
+            <div className={cx('modalimg-overlay')} onClick={closeModalimg}>
+                <div className={cx('modalimg-content')} onClick={(e) => e.stopPropagation()}>
+                    <h2>Chỉnh sửa ảnh</h2>
+                    <button onClick={closeModalimg}>Close Modal</button>
+                </div>
+            </div>
+            )}
         </div>
     );
 };

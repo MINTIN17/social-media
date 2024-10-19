@@ -10,6 +10,7 @@ type ImageUrlsType = string[];
 const Diary: React.FC = () => {
   const [diaryContent, setDiaryContent] = useState<string>('');  // Type set to string
   const [imageUrls, setImageUrls] = useState<ImageUrlsType>([]);  // Type for image URLs
+  const [date, setDate] = useState<Date>(new Date());  // Set initial date to today
 
   // Handle changes in the editor content and images
   const handleChange = (content: string, images: ImageUrlsType) => {
@@ -40,13 +41,12 @@ const Diary: React.FC = () => {
       console.log({
         content: removeHtmlTags(diaryContent),
         images: imageUrls,
-        date: new Date().toISOString(),
+        date: date.toISOString(),  // Thêm ngày vào dữ liệu gửi đi
       });
 
       const response = await axios.post('http://localhost:5000/predict', {
         text: removeHtmlTags(diaryContent),
-        // images: imageUrls,
-        // date: new Date().toISOString(),
+        date: date.toISOString(),  // Gửi ngày vào API
       });
       console.log('Response from API:', response.data);
     } catch (error) {
@@ -67,7 +67,11 @@ const Diary: React.FC = () => {
           <img className="diary-conversation-box" src="/asset/img/conversation_box.png" alt="Conversation Box" />
           <div className="diary-line">Ngày hôm nay của bạn thế nào</div>
           <div className="diary-date">
-            <span style={{ marginRight: '20px' }}>Ngày:</span>24/09/2024
+            <input
+              type="date"
+              value={date.toISOString().substr(0, 10)}  // Định dạng ngày cho input
+              onChange={(e) => setDate(new Date(e.target.value))}  // Cập nhật ngày khi thay đổi
+            />
           </div>
         </div>
         {/* Pass handleChange and handleImage props to TextEditor */}

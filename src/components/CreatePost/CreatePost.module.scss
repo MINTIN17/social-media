@@ -69,6 +69,29 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
+
+}
+
+.modalimg-overlay {
+    position: fixed; /* Modal phủ toàn bộ màn hình */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Màu nền đen mờ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* Đảm bảo modal luôn ở trên cùng */
+}
+
+.modalimg-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 700px;
+    height: 400px;
+    position: relative;
 }
 
 .modal-content {
@@ -324,7 +347,7 @@
         border-radius: 10px;
         border: 1px solid #30333b;
         padding: 20px;
-        div {
+        div { 
             display: flex;
             width: 40px;
             height: 40px;
@@ -356,6 +379,7 @@
         cursor: not-allowed;
     }
 }
+
 
 .modal-content.expanded {
     height: 540px; /* Kích thước mới khi div con xuất hiện */
