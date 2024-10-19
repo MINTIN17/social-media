@@ -1,0 +1,94 @@
+.containerListFe {
+  padding: 20px;
+  background-color: #DFD9D9;
+  margin: 0;
+
+  .headList {
+    display: flex;
+    justify-content: space-between;
+
+    .nameList {
+      color: #000;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .numberList {
+      color: #00000090;
+      font-size: 15px;
+    }
+  }
+  .userListFr {
+    padding: 0; 
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 1.25%;
+
+    .iconFr {
+      background-color: #fff;
+      width: 19%;
+      margin-top: 13px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 10px;
+
+      .imgListFr {
+        width: 100%;
+        aspect-ratio: 1;
+        border-top-left-radius: 10px; 
+        border-top-right-radius: 10px;
+        object-fit: cover;
+      }
+      .nameListFr {
+        color: #000;
+        font-size: 20px;
+        font-weight: bold;
+        margin-top: 5px; 
+        background-color: #fff; 
+        width: 90%;
+        padding-left: 10px;
+      }
+      .btnItemFr{
+        margin: 5px 10px;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: #F06D35;
+        color: #fff;
+        font-size: 15px;
+        font-weight: bold;
+        border: 1px solid #fff;
+      }
+      .btnItemPr{
+        margin: 0 10px;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: #D3D3D3;
+        color: #000000;
+        font-size: 15px;
+        font-weight: bold;
+        border: 1px solid #fff;
+      }
+    }
+  }
+}
+
+
+// .userlist {
+//   list-style-type: none; /* Xóa dấu đầu dòng */
+//   padding: 0; /* Xóa padding */
+//   margin: 0; /* Xóa margin */
+//   display: flex; /* Sử dụng flexbox */
+//   flex-wrap: wrap; /* Cho phép xuống dòng */
+// }
+
+// .useritem {
+//   border: 1px solid #ccc; /* Đường viền cho item */
+//   padding: 10px; /* Khoảng cách bên trong */
+//   margin: 5px; /* Khoảng cách giữa các item */
+//   width: 18%; /* Chiều rộng cố định là 18% */
+//   box-sizing: border-box; /* Để padding và border tính vào chiều rộng */
+//   display: flex; /* Để căn giữa nội dung */
+//   align-items: center; /* Căn giữa theo chiều dọc */
+//   justify-content: center; /* Căn giữa theo chiều ngang */
+// }
