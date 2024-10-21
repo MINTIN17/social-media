@@ -32,7 +32,7 @@ const publicRoutes = [
     {path : '/diary', component : Diary, layout: null},
     {path : '/message', component : Message, layout: null},
     {path : '/friendlist', component : FriendList, layout: null},
-    {path : '/taskbarfriend', component : TaskbarFriend, layout: DefaultLayout},
+    {path : '/taskbarfriend', component : TaskbarFriend, layout: null},
 ];
 
 
