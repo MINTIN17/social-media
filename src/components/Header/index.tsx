@@ -17,6 +17,10 @@ function Header() {
         navigate("/Home");
     }
 
+    const FriendList = () => {
+        navigate("/friendlist")
+    }
+
     const [userName, setUserName] = useState<string | null>(null);
 
     useEffect(() => {
@@ -52,7 +56,7 @@ function Header() {
                         <img src="/asset/icon/home.svg" alt="home-icon" className={cx('menu-icon')} 
                         />
                     </div>
-                    <div className={cx('menu-item')}>
+                    <div className={cx('menu-item')} onClick={FriendList}>
                         <img src="/asset/icon/friend.svg" alt="friend-icon" className={cx('menu-icon')} />
                     </div>
                     <div className={cx('menu-item')} onClick={DiaryPage}>

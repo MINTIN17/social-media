@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import styles from './CreatePost.module.scss';
 import uploadFile from '../../api/uploadImage';
 import { useNavigate } from 'react-router-dom';
-
+import { successNotification } from '../Notification';
 
 const cx = classNames.bind(styles);
 
@@ -143,6 +143,7 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                 const res = await uploadFile(images[i])
                 photo.push(res)
             }
+            onClose();
             const response = await axios.post(`${process.env.REACT_APP_link_server}/post`, {
                 user_id,
                 content,
@@ -151,6 +152,7 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                 status: selectedOption,
                 photo
             });
+            successNotification("Đăng bài thành công");
             navigate("/home");            
         } catch (err: any) {
             if (err.response) {

@@ -16,18 +16,16 @@ const items: MenuItem[] = [
   { key: '3', icon: <UserSwitchOutlined />, label: 'Lời mời đã gửi' },
 ];
 
-const App: React.FC = () => {
+const TaskBarFriend: React.FC = () => {
 
   return (
     <div className={styles.taskbarList}>
-      {/* Thêm tiêu đề bảng */}
       <div className={styles.headMenu}>
         <p className={styles.nameMenu}>Bạn bè</p>
         <p className={styles.numberFr}>20 Ban be</p>
       </div>
       <Menu
         defaultSelectedKeys={['1']}
-        // mode="inline"
         theme="light"
         items={items}
         className={styles.customMenu}
@@ -36,4 +34,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default TaskBarFriend;

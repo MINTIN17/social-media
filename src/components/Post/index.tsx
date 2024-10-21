@@ -10,6 +10,12 @@ interface Post {
     user_id: string,
     content: string,
     status: string,
+    userInfo:{
+        username: string,
+                    email: string,
+                    role: string,
+                    status: string
+    },
     like_user_id: string[],
     dislike_user_id: string[],
     comment_user_id: string[],
@@ -93,7 +99,7 @@ const Post: React.FC = () => {
                                     <img src="/asset/img/avatar.jpg" alt="avatar-img" className={cx('avatar-img')} />
                                 </div>
                                 <div className={cx('name')}>
-                                    <div className={cx('user-name')}>{item.user_id}</div>
+                                    <div className={cx('user-name')}>{item.userInfo.username}</div>
                                     <div className={cx('time-post')}>{formatDate(item.created_time)}</div>
                                 </div>
                             </div>

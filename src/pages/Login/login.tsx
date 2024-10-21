@@ -2,7 +2,7 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import classNames from 'classnames/bind';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import { successNotification } from '../../components/Notification';
 import styles from './Login.module.scss';
 const cx = classNames.bind(styles);
 
@@ -43,6 +43,7 @@ const Login: React.FC = () => {
                 localStorage.setItem('userName', data.userName);
                 localStorage.setItem('userId', data.userId);
                 localStorage.setItem('accessToken', data.accessToken);
+                successNotification("Đăng nhập thành công");
                 navigate("/home");            
             } catch (err: any) {
                 if (err.response) {
