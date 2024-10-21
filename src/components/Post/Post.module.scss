@@ -68,7 +68,50 @@
                 font-size: 20px;
             }
             .image-container {
-                height: 500px;
+                display: flex;
+                flex-wrap: wrap;
+                margin-top: 10px; 
+                padding: 5px;
+                max-height: 500px; // Giới hạn chiều cao tối đa
+                overflow: hidden;
+                .image-item {
+                    width: 100%;
+                    height: 100%;
+                    border: 2px solid #dfdfdf; 
+                    object-fit: contain; 
+                }
+            
+                .one-image {
+                    width: 100%; // Chiếm toàn bộ không gian
+                    height: auto; // Để chiều cao tự động theo kích thước ảnh
+                }
+            
+                .two-images {
+                    width: 50%; // Mỗi ảnh chiếm 50% chiều rộng
+                    height: auto; // Để chiều cao tự động theo kích thước ảnh
+                }
+            
+                .three-images {
+                    display: flex;
+                    width: 100%; // Chiếm toàn bộ không gian
+                    position: relative;
+                    .first {
+                        width: 50%; // Ảnh đầu tiên chiếm 50%
+                        height: 500px; // Để chiều cao tự động
+                    }
+            
+                    .two-images {
+                        display: flex;
+                        flex-direction: column;
+                        width: 50%; // Hai ảnh còn lại chiếm 50% không gian
+                        height: 500px; // Chiều cao cố định
+            
+                        .second, .third {
+                            width: 100%; // Mỗi ảnh chiếm toàn bộ chiều rộng của phần 50%
+                            height: 50%; // Mỗi ảnh chiếm 50% chiều cao
+                        }
+                    }
+                }
             }
             .infor-post
             {
@@ -92,12 +135,29 @@
                     }
                 }
                 .reaction{
+                    position: relative;
                     border-bottom-left-radius: 25px;
                     .like-icon
                     {
                         width: 20px;
                         height: 20px;
                         margin-right: 5px;
+                    }
+                    .reaction-icons {
+                        display: none; 
+                        width: 100px;
+                        height: 30px;
+                        position: absolute; 
+                        top: 100%; 
+                        background-color: #666666;
+                        border-radius: 10px;
+                        .like-icon, .dislike-icon{
+                            width: 20px;
+                            height: 20px;
+                        }
+                    }
+                    &:hover .reaction-icons{
+                        display: block;
                     }
                 }
                 .comment{
@@ -123,4 +183,70 @@
 
 .line {
     border-top: 1px solid #666666;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8); // Màu nền tối với độ trong suốt
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; // Đảm bảo modal nằm trên các phần tử khác
+}
+
+.modal-content {
+    position: relative;
+    width: 60%; // Kích thước tối đa của modal
+    height: 60%; // Chiều cao tối đa của modal
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-image {
+    width: 150%; // Kích thước tối đa của ảnh
+    height: 150%; // Chiều cao tối đa của ảnh
+    object-fit: contain; // Giữ tỉ lệ của ảnh
+}
+
+.prev-button, .next-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.7); // Nền trắng mờ
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1001; // Đảm bảo nút điều hướng nằm trên ảnh
+}
+
+.prev-button {
+    left: 10px; // Nút trước nằm bên trái
+}
+
+.next-button {
+    right: 10px; // Nút sau nằm bên phải
+}
+
+.image-overlay {
+    position: absolute;
+    top: 249px;
+    right: 2px;
+    width: 391px;
+    height: 246px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5); // Nền mờ đen cho chữ
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    .more-count {
+        position: relative;
+        z-index: 2; // Đảm bảo chữ nằm trên ảnh
+    }
 }

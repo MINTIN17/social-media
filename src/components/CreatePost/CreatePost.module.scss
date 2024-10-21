@@ -347,20 +347,22 @@
         border-radius: 10px;
         border: 1px solid #30333b;
         padding: 20px;
+        h4 {
+            margin-right: 100px;
+        }
         div { 
             display: flex;
             width: 40px;
             height: 40px;
-            margin-left: 100px;
+            margin-right: 10px;
             border-radius: 50%;
             justify-content: center;
             align-items: center;
-            .img {
+            .img, .tag-friend{
                 cursor: pointer;
             }
-
             &:hover {
-                background-color: #33353d;
+                background-color: #d8d8da;
             }
         }
     }
@@ -385,8 +387,4 @@
     height: 540px; /* Kích thước mới khi div con xuất hiện */
 }
 
-// .modal-post-content::-webkit-scrollbar-track {
-//     border-radius: 10px;
-//     border-color: #fff;
-// }
 

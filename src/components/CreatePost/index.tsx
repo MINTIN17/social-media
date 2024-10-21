@@ -260,7 +260,7 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                                         alt="preview"
                                         className={cx('preview-img')} // Làm mờ ảnh thứ 5 nếu số lượng ảnh > 5
                                     />
-                                    {images.length > 5 && (
+                                    {images.length > 5 && ( 
                                         <div className={cx('image-overlay')}>
                                             <span className={cx('more-count')}>+{images.length - 5}</span>
                                         </div>
@@ -275,6 +275,9 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                     <h4>Thêm vào bài viết của bạn</h4>
                     <div onClick={toggleImageVisibility}>
                         <img src="/asset/icon/img.svg" alt="img" className={cx('img')} />
+                    </div>
+                    <div onClick={toggleImageVisibility}>
+                        <img src="/asset/img/tagfriend.png" alt="tag-friend" className={cx('tag-friend')} />
                     </div>
                 </div>
 

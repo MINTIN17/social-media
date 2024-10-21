@@ -10,7 +10,7 @@ import {
 import styles from './ListPostUser.module.scss'; // Import SCSS module
 
 const PostUser: React.FC = () => {
-  // State quản lý modal
+  // State quản lý modal 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   // Hàm mở modal
