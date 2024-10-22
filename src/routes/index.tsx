@@ -11,6 +11,10 @@ import UserProfile from "../pages/Admin/ProfileUser/UserPro";
 import PostUser from "../pages/Admin/ProfileUser/PostUser";
 import FriendList from "../pages/FriendList";
 import TaskbarFriend from "../components/TaskbarFriend";
+import { components } from "react-select";
+import ProfilePage from "../components/Profile";
+import { Layout } from "antd";
+import { HeaderOnly } from "../layouts";
 
 const publicRoutes = [
     { path: '/home', component: Home, layout: DefaultLayout },
@@ -18,6 +22,7 @@ const publicRoutes = [
     { path: '/forgot_password', component: ForgotPassword, layout: null },
     { path: '/', component: Overview, layout: null },
     { path: '/admin/listUs', component: ListUser, layout: null },
+    { path: '/profile', component: ProfilePage, layout: HeaderOnly},
     {
         path: '/admin/listUs/:email',
         component: UserProfile,

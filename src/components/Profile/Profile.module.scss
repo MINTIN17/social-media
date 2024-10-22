@@ -1,0 +1,133 @@
+.wrapper {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+
+    .profile {
+        width: 960px;
+        height: 500px;
+
+        .background-img {
+            display: flex;
+            width: 100%;
+            height: 400px;
+            background-color: #666666;
+            border-radius: 20px;
+            position: relative;
+            justify-content: center;
+            align-items: center;
+            .img {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                top: 0;
+                left: 0;
+                border-radius: 20px;
+            }
+            .add-background-img {
+                position: absolute;
+                display: flex;
+                width: 130px;
+                height: 40px;
+                bottom: 10px;
+                right: 30px;
+                border-radius: 5px;
+                justify-content: center;
+                align-items: center;
+                background-color: var(--primary-color);
+                cursor: pointer;
+                &:hover {
+                    background-color: #c0bebe;
+                }
+            }
+
+            .user-infor {
+                width: 900px;
+                position: absolute;
+                bottom: -120px;
+                left: 50px;
+                display: flex;
+                flex-direction: row;
+
+                .avatar {
+                    width: 150px;
+                    height: 150px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                    margin-right: 20px;
+
+                    .avatar-img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: contain;
+                    }
+                }
+                .infor {
+                    display: flex;
+                    flex-direction: column;
+                    width: 200px;
+                    height: 150px;
+
+                    .user-name {
+                        margin-top: 40px;
+                        font-size: 35px;
+                        font-weight: 600;
+                    }
+
+                    .friend-quantity {
+                        margin-top: 10px;
+                    }
+                }
+                .edit-profile {
+                    width: 220px;
+                    height: 40px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-left: 310px;
+                    margin-top: 60px;
+                    background-color: var(--primary-color);
+                    border-radius: 10px;
+                    cursor: pointer;
+                    &:hover {
+                        background-color: #c0bebe;
+                    }
+                    .edit-icon {
+                        width: 20px;
+                        height: 20px;
+                        margin-right: 5px;
+                    }
+                }
+            }
+        }
+
+        .cropper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10;
+
+            .save-button {
+                position: absolute;
+                bottom: 10px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 2000;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 10px 20px; 
+                cursor: pointer;
+                border-radius: 5px;
+                transition: background-color 0.3s; 
+
+                &:hover {
+                    background-color: #45a049;
+                }
+            }
+        }
+    }
+}
