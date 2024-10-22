@@ -49,7 +49,7 @@ const Post: React.FC = () => {
             }
         };
 
-        fetchPosts();
+        fetchPosts(); 
     }, []);
 
     if (loading) {
@@ -103,7 +103,14 @@ const Post: React.FC = () => {
                                     <div className={cx('time-post')}>{formatDate(item.created_time)}</div>
                                 </div>
                             </div>
-                            <div className={cx('content')}>{item.content}</div>
+                            <div className={cx('content')}>
+                                {item.content.split('\n').map((line, index) => (
+                                    <React.Fragment key={index}>
+                                        {line}
+                                        {index < item.content.split('\n').length - 1 && <br />}
+                                    </React.Fragment>
+                                ))}
+                            </div>
                             <div className={cx('image-container')}>
                                 {item.photo && item.photo.length > 0 && (
                                     item.photo.length === 1 ? (

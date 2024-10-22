@@ -105,9 +105,10 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
         }
     };
 
-    const toggleImageVisibility = () => {
+    const toggleImageVisibility = (e : React.MouseEvent) => {
         setIsImageVisible(!isImageVisible);
         setImages([]);
+        e.stopPropagation();
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
