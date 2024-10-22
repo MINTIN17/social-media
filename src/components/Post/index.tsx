@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Post.module.scss';
 import axios from 'axios';
+import HoverDiv from '../HoverDiv';
 
 const cx = classNames.bind(styles);
 
@@ -170,8 +171,19 @@ const Post: React.FC = () => {
                                     <img src='/asset/icon/like.svg' alt='like-icon' className={cx('like-icon')} />
                                     Thích
                                     <div className={cx('reaction-icons')}>
-                                        <img src='/asset/icon/like.svg' alt='like-icon' className={cx('like-icon')} />
-                                        <img src='/asset/icon/dislike.svg' alt='dislike-icon' className={cx('dislike-icon')} />
+                                        <HoverDiv hoverText='Thích'>
+                                            <img src='/asset/img/thumb-up.png' alt='like-icon' className={cx('like-icon-post')} />
+                                        </HoverDiv>
+                                        <HoverDiv hoverText='Không thích'>
+                                            <img src='/asset/img/thumb-down.png' alt='dislike-icon' className={cx('dislike-icon')} />
+                                        </HoverDiv>                                        
+                                        <HoverDiv hoverText='Ha ha'>
+                                            <img src='/asset/icon/Post/haha.svg' alt='haha-icon' className={cx('haha-icon')} />
+                                        </HoverDiv>
+                                        <HoverDiv hoverText='Phẫn nộ'>
+                                            <img src='/asset/img/angry.png' alt='angry-icon' className={cx('angry-icon')} />
+                                        </HoverDiv>
+                                        
                                     </div>
                                 </div>
                                 <div className={cx('comment', 'child')}>
