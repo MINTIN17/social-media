@@ -33,38 +33,14 @@ function Sidebar() {
             <div className={cx('read-more')}>XEM THÊM</div>
         </div>
 
-        
- 
-        <div className={cx('community')}>
-            <div className={cx('title')}>
-                <span>My Community</span>
-                <div className={cx('number-community')}>
-
-                </div>
+        <div className={cx('friend')}>
+            <div className={cx('header')}>
+                <div style={{padding: 10}}>Người liên hệ</div>
+                <img src='/asset/icon/search.svg' alt='search-icon' className={cx('search-icon')}/>
             </div>
-            <div className={cx('group-items')}>
-                <div className={cx('group-img')}>
-                    <img src="/asset/img/avatar.jpg" alt="group-img" className={cx('group-item-img')} />
-                </div>
-                <span>Group1</span>
-            </div>
-            <div className={cx('group-items')}>
-                <div className={cx('group-img')}>
-                    <img src="/asset/img/avatar.jpg" alt="group-img" className={cx('group-item-img')} />
-                </div>
-                <span>Group1</span>
-            </div>
-            <div className={cx('group-items')}>
-                <div className={cx('group-img')}>
-                    <img src="/asset/img/avatar.jpg" alt="group-img" className={cx('group-item-img')} />
-                </div>
-                <span>Group1</span>
-            </div>
-
+            <div className={cx('line')}></div>
         </div>
-
-        <hr className={cx('custom-line')}></hr>
-
+        
 
     </aside>
 }

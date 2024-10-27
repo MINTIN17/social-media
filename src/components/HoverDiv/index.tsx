@@ -1,19 +1,25 @@
-import React, { useState, ReactNode, useEffect } from 'react';
+import React, { useState, useRef, useEffect, ReactNode } from 'react';
 
 type HoverDivProps = {
-  hoverText: string;  // Nội dung text hiển thị khi hover
+  hoverText: string;  // Nội dung hiển thị khi hover
   children: ReactNode; // Nội dung chính của component (div hoặc bất kỳ element nào)
 };
 
 const HoverDiv: React.FC<HoverDivProps> = ({ hoverText, children }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [showHoverText, setShowHoverText] = useState(false); // Trạng thái để quản lý hiển thị sau 0.3s
+  const [showHoverText, setShowHoverText] = useState(false);
+  const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
 
-    // Đặt timeout để hiển thị div sau 0.3 giây
-    setTimeout(() => {
+    // Xóa timeout trước đó để tránh trùng lặp
+    if (hoverTimeout.current) {
+      clearTimeout(hoverTimeout.current);
+    }
+
+    // Thiết lập timeout mới để hiển thị hover text
+    hoverTimeout.current = setTimeout(() => {
       setShowHoverText(true);
     }, 300);
   };
@@ -21,9 +27,21 @@ const HoverDiv: React.FC<HoverDivProps> = ({ hoverText, children }) => {
   const handleMouseLeave = () => {
     setIsHovered(false);
 
-    // Khi không hover nữa, ẩn div ngay lập tức
+    // Ẩn hover text ngay lập tức và xóa timeout
     setShowHoverText(false);
+    if (hoverTimeout.current) {
+      clearTimeout(hoverTimeout.current);
+    }
   };
+
+  // Dọn dẹp khi component bị unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeout.current) {
+        clearTimeout(hoverTimeout.current);
+      }
+    };
+  }, []);
 
   return (
     <div
@@ -35,23 +53,21 @@ const HoverDiv: React.FC<HoverDivProps> = ({ hoverText, children }) => {
         cursor: 'pointer',
       }}
     >
-      {/* Nội dung chính */}
       {children}
 
-      {/* Hiển thị khi hover với delay 0.3s */}
       {isHovered && showHoverText && (
         <div
           style={{
             position: 'absolute',
-            top: '100%',    // Vị trí ngay dưới phần tử chính
-            left: '50%',    // Canh giữa theo chiều ngang
-            transform: 'translateX(-50%)', // Dịch chuyển để căn giữa hoàn toàn
-            marginTop: '10px', // Khoảng cách 10px bên dưới phần tử chính
+            top: '100%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            marginTop: '10px',
             backgroundColor: '#b9b4aa',
-            color:"#505050",
+            color: "#505050",
             padding: '10px',
             textAlign: 'center',
-            whiteSpace: 'nowrap', // Không cho xuống dòng
+            whiteSpace: 'nowrap',
             borderRadius: '10px',
             fontSize: "14px",
             boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',

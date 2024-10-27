@@ -29,10 +29,6 @@
             text-decoration: underline;
             cursor: pointer;
         }
-        .line {
-            height: 1px;
-            background-color: #0b76b4;
-        }
         .friend-makers {
             display: flex;
             height: 110px;
@@ -123,6 +119,31 @@
             }
         }
     }
+    .friend {
+        width: 350px;
+        height: 210px;
+        padding: 10px;
+        background-color: var(--default-color-light);
+        border-radius: 25px;
+        .header {
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 40px;
+            color: #cc9144;
+            font-weight: 600;
+            .search-icon {
+                width: 25px;
+                position: absolute;
+                top: 8px;
+                right: 5px;
+            }
+        }
+    }
+}
 
-    
+.line {
+    height: 1px;
+    background-color: #0b76b4;
 }

@@ -104,14 +104,23 @@ const Post: React.FC = () => {
                                     <div className={cx('time-post')}>{formatDate(item.created_time)}</div>
                                 </div>
                             </div>
-                            <div className={cx('content')}>
-                                {item.content.split('\n').map((line, index) => (
-                                    <React.Fragment key={index}>
-                                        {line}
-                                        {index < item.content.split('\n').length - 1 && <br />}
-                                    </React.Fragment>
-                                ))}
-                            </div>
+                            {typeof item.content === 'string' &&(
+                                <div className={cx('content')}>
+                                    {item.content.split('\n').map((line, index) => (
+                                        <React.Fragment key={index}>
+                                            {line}
+                                            {index < item.content.split('\n').length - 1 && <br />}
+                                        </React.Fragment>
+                                    ))}
+                                </div>
+                            )}
+                            {item.tag.length > 0 &&(
+                                <div className={cx('tag')}>
+                                    {item.tag.map((tag_item, index) => (
+                                        <span key={index}>#{tag_item}{index < item.tag.length - 1 && ' '}</span>
+                                    ))}
+                                </div>
+                            )}
                             <div className={cx('image-container')}>
                                 {item.photo && item.photo.length > 0 && (
                                     item.photo.length === 1 ? (
