@@ -13,9 +13,9 @@ interface Post {
     status: string,
     userInfo:{
         username: string,
-                    email: string,
-                    role: string,
-                    status: string
+        email: string,
+        role: string,
+        status: string
     },
     like_user_id: string[],
     dislike_user_id: string[],
@@ -28,7 +28,12 @@ interface Post {
     photo: string[],
 }
 
-const Post: React.FC = () => {
+interface PostProps {
+    apiUrl: string; // URL API sẽ gọi
+    initialData?: Post[]; // Dữ liệu có thể được truyền vào từ bên ngoài
+  }
+
+const Post: React.FC<PostProps> = ({apiUrl, initialData = []}) => {
     const [items, setItems] = useState<Post[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -36,22 +41,24 @@ const Post: React.FC = () => {
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [images, setImages] = useState<string[]>([]); // Trường này để lưu danh sách ảnh hiện tại
 
-    useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_link_server}/post`);
-                const data: Post[] = await response.data;
-                setItems(data);
-            } catch (error) {
-                setError('Có lỗi xảy ra khi lấy dữ liệu.');
-                console.error('Error fetching data:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchPosts = async () => {
+        try {
+            const response = await axios.get(apiUrl);
+            const data: Post[] = await response.data;
+            setItems(data);
+        } catch (error) {
+            setError('Có lỗi xảy ra khi lấy dữ liệu.');
+            console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        fetchPosts(); 
-    }, []);
+    useEffect(() => {
+        if (!initialData.length) {
+          fetchPosts();
+        }
+      }, [apiUrl]);
 
     if (loading) {
         return <div style={{ backgroundColor: '#17181C', display: 'flex', justifyContent: 'center', color: '#DFD9D9' }}>Loading...</div>;
@@ -100,7 +107,7 @@ const Post: React.FC = () => {
                                     <img src="/asset/img/avatar.jpg" alt="avatar-img" className={cx('avatar-img')} />
                                 </div>
                                 <div className={cx('name')}>
-                                    <div className={cx('user-name')}>{item.userInfo.username}</div>
+                                    <div className={cx('user-name')}>{item.userInfo?.username || 'Người dùng không xác định'}</div>
                                     <div className={cx('time-post')}>{formatDate(item.created_time)}</div>
                                 </div>
                             </div>
