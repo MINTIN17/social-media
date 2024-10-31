@@ -3,10 +3,14 @@ import styles from './Header.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import HoverDiv from '../HoverDiv';
+import axios from 'axios';
+import { debounce } from 'lodash';
 
 const cx = classNames.bind(styles);
 
 function Header() {
+    const [searchResults, setSearchResults] = useState<any[]>([]);
+
     const navigate = useNavigate(); // Hook để điều hướng
 
     const DiaryPage = () => {
@@ -25,6 +29,32 @@ function Header() {
         navigate('/profile');
     };
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value; 
+        handleSearch(value); 
+    };
+
+    const handleSearch = debounce(async (query: string) => {
+        setSearchResults([]);
+        if (query.length > 0) {
+
+            try {
+                let response; 
+                if (!query.startsWith('#')) {
+                    const payload = {
+                        partialName: query
+                    };
+                    response = await axios.post(`${process.env.REACT_APP_link_server}/account/search`, payload);
+                    setSearchResults(response.data.slice(0,3));
+                    console.log(searchResults);
+                }
+
+            } catch (error) {
+                console.error('Error fetching search results:', error);
+            }
+        }
+    }, 300); // Adjust debounce time as needed
+
     const [userName, setUserName] = useState<string | null>(null);
 
     useEffect(() => {
@@ -40,9 +70,22 @@ function Header() {
             <div className={cx('part_1')}>
                 <div className={cx('logo')}>Trinity</div>
                 <div className={cx('search')}>
-                    <input type="text" id="name" name="name" placeholder="Tìm kiếm trên Trinity" />
+                    <input type="text" id="name" name="name" placeholder="Tìm kiếm trên Trinity" onChange={handleInputChange}/>
                     <img src='/asset/icon/search.svg' alt='search-icon' className={cx('search-icon')}/>
-                </div>
+
+                    {/* Div ẩn hiển thị kết quả tìm kiếm */}
+                {searchResults.length > 0 && (
+                    <div className={cx('search-results')}>
+                        {searchResults.map((result, index) => (
+                            
+                            <div key={index} className={cx('result-item')}>
+                                <div className='user'>{result.username}</div>
+                                {result.name}
+                            </div>
+                        ))}
+                    </div>
+                )}
+                </div>    
             </div>
             <div className={cx('part_2')}>
                 <div className={cx('menu')}>

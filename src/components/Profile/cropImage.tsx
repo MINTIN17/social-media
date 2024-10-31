@@ -1,8 +1,8 @@
-const getCroppedImg = (image: File, crop: { x: number; y: number; width: number; height: number }): Promise<string> => {
+const getCroppedImg = (image: File, crop: { x: number; y: number; width: number; height: number }): Promise<File> => {
     return new Promise((resolve, reject) => {
         const imageElement = document.createElement('img');
         imageElement.src = URL.createObjectURL(image);
-        
+
         imageElement.onload = () => {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
@@ -32,15 +32,16 @@ const getCroppedImg = (image: File, crop: { x: number; y: number; width: number;
 
             canvas.toBlob((blob) => {
                 if (blob) {
-                    const croppedImageUrl = URL.createObjectURL(blob);
-                    resolve(croppedImageUrl);
+                    // Tạo một File từ blob với tên và type
+                    const croppedImageFile = new File([blob], 'cropped-image.jpg', { type: 'image/jpeg' });
+                    resolve(croppedImageFile);
                 } else {
                     reject(new Error("Failed to create blob"));
                 }
             }, 'image/jpeg');
         };
 
-        imageElement.onerror = (error) => {
+        imageElement.onerror = () => {
             reject(new Error("Failed to load image"));
         };
     });
