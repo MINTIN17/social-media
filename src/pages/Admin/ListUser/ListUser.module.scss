@@ -1,0 +1,65 @@
+.List-container{
+  background-color: #ebedee;
+  border-radius: 30px;
+}
+
+.txtcontai{
+  text-align: start;
+  margin-bottom: 20px;
+  padding-top: 20px;
+  padding-left: 40px;
+  color: #5b9fffc9;
+}
+
+.txt-listUs {
+  font-size: 20px;
+  font-weight: bold;
+  font-family: "Tahoma", Geneva, Sans-Serif;
+}
+
+.tbl-listUs{
+  margin: 0px 40px;
+}
+
+.buttonContainer {
+  display: flex; 
+  justify-content: flex-start; 
+}
+
+.btnPrf,
+.btnDel {
+  width: 15%;
+  height: 15%;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btnPrf{
+  margin-right: 10px;
+}
+
+.btnDel  .btnPrf .anticon {
+  font-size: 20px;
+}
+
+.btnPrf .anticon{
+  color: #6aff3d;
+}
+
+.btnDel .anticon{
+  color: #ff3d3d;
+}
+
+.user-item .adForm .tblUser .ant-table-cell {
+  font-size: 105%;
+}
+
+.user-item .adForm .tblUser .ant-table-thead th {
+  font-size: 120%;
+}
+
+.ant-modal-content {
+  margin-top: 100px;
+}
