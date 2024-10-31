@@ -1,7 +1,7 @@
 .wrapper {
     width: 100%;
     height: var(--default-layout-header-height, 60px);
-    box-shadow: 0px 1px 1px #24262b;
+    box-shadow: 0px 1px 1px #99a1b6;
     display: flex;
     align-items: center;
     background-color: var(--default-color-light);
@@ -15,8 +15,7 @@
     .logo {
         display: flex;
         width: 128px;
-        height: 48px;
-        font-size: 30px;
+        font-size: 25px;
         font-weight: 700;
         align-items: center;
         color: #F06D35;
@@ -29,7 +28,6 @@
         position: relative;
         margin: 20px 0px;
         width: 400px;
-        height: 48px;
         input {
             width: 100%;
             margin: 0 30px;
@@ -38,7 +36,7 @@
             color: #924F0C;
             text-align: left;
             padding-left: 50px;
-            font-size: 20px;
+            // font-size: 20px;
             font-weight: 600;
             outline: none;
         }
@@ -70,8 +68,8 @@
             cursor: pointer; /* Thêm con trỏ để có cảm giác như có thể nhấp */
             
             .menu-icon {
-                width: 30px;
-                height: 30px;
+                width: 25px;
+                height: 25px;
             }
     
             &:hover {
@@ -98,8 +96,8 @@
         margin-right: 20px;
     }
     .avtar {
-        width: 80px;
-        height: 80px;
+        width: 50px;
+        height: 50px;
         border-radius: 40px;
         overflow: hidden;
         cursor: pointer;

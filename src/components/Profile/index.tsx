@@ -5,6 +5,9 @@ import Cropper from 'react-easy-crop';
 import getCroppedImg from './cropImage'; // Ensure this function is correctly defined
 import Post from '../../components/Post';
 import uploadFile from '../../api/uploadImage';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import { Menu } from 'antd';
+import { Link, Outlet } from 'react-router-dom';
 import axios from 'axios';
 
 const cx = classNames.bind(styles);
@@ -76,6 +79,11 @@ const ProfilePage: React.FC = () => {
         }
     };
 
+    const handleCancelCrop = () => {
+        setCropperOpen(false); 
+      };
+      
+
     return (  
         <div className={cx('wrapper')}>
             <div className={cx('profile-container')}>
@@ -94,12 +102,17 @@ const ProfilePage: React.FC = () => {
                             onChange={handleImageChange} 
                         />
                         <div className={cx('user-infor')}>
-                            <div className={cx('avatar')}>
+                            {/* <div className={cx('avatar')}>
                                 <img src='/asset/img/avatar.jpg' alt='' className={cx('avatar-img')}></img>
                             </div>
                             <div className={cx('infor')}>
-                                <div className={cx('user-name')}><p><span>{ userName }</span></p></div>
+                                <div className={cx('user-name')}><p>{ userName }Nguyen Duc Thang</p></div>
                                 <div className={cx('friend-quantity')}><p><span>{ userName } bạn bè</span></p></div>
+                            </div> */}
+                            <img src='/asset/img/avatar.jpg' alt='' className={cx('avatar-img')}></img>
+                            <div className={styles.nameUs}>
+                              <p className={styles.nameUser}>{ userName }Nguyen Duc Thang</p>
+                              <p className={styles.friendUs}>{ userName }299 Bạn bè</p>
                             </div>
                             <div className={cx('edit-profile')}>
                                 <img src='/asset/icon/edit.svg' alt='edit-icon' className={cx('edit-icon')}/>
@@ -113,14 +126,25 @@ const ProfilePage: React.FC = () => {
                                 image={URL.createObjectURL(image!)} // Chuyển đổi file thành URL
                                 crop={crop}
                                 zoom={zoom}
-                                aspect={12 / 5}
+                                aspect={12 / 3}
                                 onCropChange={setCrop}
                                 onZoomChange={setZoom}
                                 onCropComplete={handleCropComplete}
                             />
                             <button className={cx('save-button')} onClick={handleSaveCrop}>Lưu ảnh bìa</button>
+                            <button className={cx('cancel-button')} onClick={handleCancelCrop}>Hủy</button>
                         </div>
                     )}
+                </div>
+                <div className={styles.headMenu}>
+                    <Menu mode="horizontal" theme="light" defaultSelectedKeys={['1']} style={{ lineHeight: '64px' }}>
+                        <Menu.Item key="1">
+                            <Link to="post">Bài viết</Link>
+                        </Menu.Item>
+                        <Menu.Item key="2">
+                            <Link to="about">Giới thiệu</Link>
+                        </Menu.Item>
+                    </Menu>
                 </div>
             </div>
             <div className={cx('post')}><Post apiUrl={apiPostUserUrl}/></div>

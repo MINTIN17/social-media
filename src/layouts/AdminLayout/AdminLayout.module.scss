@@ -1,0 +1,15 @@
+.containerLayout{
+  background-color: #DFD9D9;
+  min-height: 100vh;
+
+  .taskbar{
+    position: fixed; 
+    top: 0;          
+    left: 0;         
+    z-index: 1000;
+  }
+
+  .content{
+    padding: 20px 50px 0 260px;
+  }
+}

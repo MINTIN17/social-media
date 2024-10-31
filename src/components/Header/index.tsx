@@ -18,7 +18,7 @@ function Header() {
     };
 
     const FriendList = () => {
-        navigate('/friendlist');
+        navigate('/friend');
     };
 
     const ProfilePage = () => {
