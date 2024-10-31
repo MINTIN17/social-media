@@ -1,0 +1,39 @@
+.taskbarList {
+
+  min-width: 256px;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  border-right: 2px solid #ffc69e69;
+
+  .headMenu{
+    padding: 11px 5px 11px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .nameMenu{
+      font-size: 25px;
+      color: #F9773F;
+    }
+    
+    .numberFr{
+      font-size: 13px;
+      color: rgba(249, 119, 63, 0.668);
+    }
+  }
+
+  // .customMenu {
+  //   .ant-menu-item-selected {
+  //     background-color: #ECE0CA !important; // Màu nền cho mục đã chọn
+  //     color: #F9773F !important; // Màu chữ cho mục đã chọn
+  //   }
+  
+  //   .ant-menu-item:hover {
+  //     background-color: #ECE0CA !important; // Màu nền khi hover
+  //     color: #F9773F !important; // Màu chữ khi hover
+  //   }
+  // }
+}

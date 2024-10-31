@@ -1,0 +1,83 @@
+.containerListFe {
+  padding: 20px;
+  background-color: #DFD9D9;
+  margin: 0;
+
+  .headList {
+    display: flex;
+    justify-content: space-between;
+
+    .nameList {
+      color: #000;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .numberList {
+      color: #00000090;
+      font-size: 15px;
+    }
+  }
+  .userListFr {
+    padding: 0; 
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 0.7%;
+
+    .iconFr {
+      background-color: #fff;
+      width: 16%;
+      margin-top: 13px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 10px;
+
+      .imgListFr {
+        width: 100%;
+        aspect-ratio: 1;
+        border-top-left-radius: 10px; 
+        border-top-right-radius: 10px;
+        object-fit: cover;
+      }
+      .nameListFr {
+        color: #000;
+        font-size: 20px;
+        font-weight: bold;
+        margin-top: 5px; 
+        background-color: #fff; 
+        width: 90%;
+        padding-left: 10px;
+      }
+      .btnItemFr{
+        margin: 5px 10px;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: #F06D35;
+        color: #fff;
+        font-size: 15px;
+        font-weight: bold;
+        border: 1px solid #fff;
+      }
+      .btnItemPr{
+        margin: 0 10px;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: #D3D3D3;
+        color: #000000;
+        font-size: 12px;
+        font-weight: bold;
+        border: 1px solid #fff;
+      }
+
+      .btnItemPr:hover, .btnItemFr:hover{
+        cursor: pointer;
+        box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    .iconFr:hover{
+      box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);
+    }
+  }
+}

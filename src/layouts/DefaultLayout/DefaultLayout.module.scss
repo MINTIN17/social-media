@@ -1,0 +1,38 @@
+.wrapper {
+    display: flex;
+}
+
+
+.container {
+    display: flex;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+} 
+
+.header {
+    width: 100%;
+    display: flex;
+    position: fixed;
+    z-index: 100;
+}
+
+.content {
+    display: flex;
+    width: 100%;
+    margin-top: 92px;
+    background-color: #ccc;
+    min-height: 1000px;
+    flex-direction: row;
+    .body {
+        width: 70%;
+    }
+    .side-bar {
+        position: fixed;
+        right: 0;
+        width: 30%;
+    }
+}
+
+

@@ -1,0 +1,21 @@
+.ant-menu {
+  flex: 1; 
+}
+
+.taskbar-admin {
+  display: flex;
+  position: fixed; 
+  top: 0;
+  left: 0;
+  height: 100vh; /* Chiều cao của Taskbar */
+  z-index: 1000;
+}
+
+.custom-menu {
+  width: 256px; /* Thay đổi giá trị theo nhu cầu của bạn */
+}
+
+.children-container {
+  padding: 20px; 
+  flex: 1;
+}

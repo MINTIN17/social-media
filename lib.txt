@@ -1,0 +1,6 @@
+npm install react-router-dom@6
+npm i customize-cra react-app-rewired -D
+npm i classnames
+npm normalize.css
+npm i react-select
+npm install axios
