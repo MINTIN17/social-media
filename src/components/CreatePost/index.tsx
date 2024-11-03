@@ -382,14 +382,14 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                         </div>
                     </HoverDiv>
                     <HoverDiv hoverText='Thêm Tag bạn bè'>
-                    <div onClick={toggleTagFriendVisibility}>
-                        <img src="/asset/img/tagfriend.png" alt="tag-friend" className={cx('tag-friend')} />
-                    </div>
+                        <div onClick={toggleTagFriendVisibility}>
+                            <img src="/asset/img/tagfriend.png" alt="tag-friend" className={cx('tag-friend')} />
+                        </div>
                     </HoverDiv>
                     <HoverDiv hoverText='Thêm HashTag'>
-                    <div onClick={toggleTagVisibility}>
-                        <img src="/asset/img/tag.png" alt="tag" className={cx('tag')} />
-                    </div>
+                        <div onClick={toggleTagVisibility}>
+                            <img src="/asset/img/tag.png" alt="tag" className={cx('tag')} />
+                        </div>
                     </HoverDiv>
                 </div>
 

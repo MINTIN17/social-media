@@ -10,6 +10,7 @@ interface account {
     userName: string
     userId: any
     accessToken: string;
+    image: string
 }
 
 const Login: React.FC = () => {
@@ -42,8 +43,8 @@ const Login: React.FC = () => {
                 console.log(data);
                 localStorage.setItem('userName', data.userName);
                 localStorage.setItem('userId', data.userId);
+                localStorage.setItem('avatar', data.image);
                 localStorage.setItem('accessToken', data.accessToken);
-                successNotification("Đăng nhập thành công");
                 navigate("/home");            
             } catch (err: any) {
                 if (err.response) {

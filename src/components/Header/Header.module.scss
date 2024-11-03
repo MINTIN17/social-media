@@ -22,29 +22,68 @@
         padding-left: 40px;
         padding-right: 30px;
     }
-    
     .search {
-        display: flex;
         position: relative;
         margin: 20px 0px;
         width: 400px;
-        input {
+        height: 48px;
+        .search-bar{
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            align-items: center;
             width: 100%;
-            margin: 0 30px;
-            border-radius: 24px;
-            background-color: var(--primary-color);
-            color: #924F0C;
-            text-align: left;
-            padding-left: 50px;
-            // font-size: 20px;
-            font-weight: 600;
-            outline: none;
+            transition: height 0.1s ease;
+            &.expanded {
+                background-color: #e7e7e7;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+                border-radius: 20px;
+            }
+            input {
+                margin: 0 30px;
+                width: 90%;
+                height: 48px;
+                margin: 0;
+                border-radius: 24px;
+                background-color: var(--primary-color);
+                color: #924F0C;
+                text-align: left;
+                padding-left: 50px;
+                // font-size: 20px;
+                font-weight: 600;
+                outline: none;
+            }
+            .search-icon {
+                width: 25px;
+                position: absolute;
+                top: 11px;
+                left: 30px;
+            }
         }
-        .search-icon {
-            width: 25px;
-            position: absolute;
-            top: 11px;
-            left: 45px;
+        .search-results{
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-height: 400px;
+            margin-top: 10px;
+            background-color: #e7e7e7;
+            border-radius: 20px;
+           
+            .result-item{
+                display: flex;
+                align-items: center;
+                padding: 10px 30px;
+                height: 50px;
+                color: #333;
+                cursor: pointer;
+                &:hover {
+                    background-color: #f0f0f0;
+                }
+                .result-avatar{
+                    width: 20px;
+                    height: 20px;
+                }
+            }
         }
     }
 }
@@ -108,6 +147,7 @@
         }
     }
 }
+
 
 
 

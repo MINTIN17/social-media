@@ -1,0 +1,16 @@
+.avatar-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px; /* Adjust margin as needed */
+}
+
+.avatar {
+    width: 64px;  /* Adjust size as needed */
+    height: 64px; /* Adjust size as needed */
+    border-radius: 50%; /* Make it circular */
+    background-color: #f0f0f0; /* Fallback background color */
+    background-size: cover;
+    background-position: center;
+    border: 1px solid #d9d9d9; /* Optional border for better visibility */
+}
