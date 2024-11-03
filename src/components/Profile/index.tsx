@@ -147,7 +147,7 @@ const ProfilePage: React.FC = () => {
                     </Menu>
                 </div>
             </div>
-            <div className={cx('post')}><Post apiUrl={apiPostUserUrl}/></div>
+            {/* <div className={cx('post')}><Post apiUrl={apiPostUserUrl}/></div> */}
             
         </div>
     );
