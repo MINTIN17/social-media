@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import { ReactNode } from 'react'; // Cập nhật từ ReactElement thành ReactNode
+import { ReactNode } from 'react'; 
 import styles from './DefaultLayout.module.scss';
 import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';

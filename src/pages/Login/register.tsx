@@ -1,7 +1,8 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Login.module.scss';
-
+import axios from 'axios'
+import { successNotification } from '../../components/Notification';
 const cx = classNames.bind(styles);
 
 const Register: React.FC = () => {
@@ -14,7 +15,7 @@ const Register: React.FC = () => {
     const [error, setError] = useState<string>('');
 
     // Event handler with proper types
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     
         // Kiểm tra xem có bất kỳ trường nào còn trống không
@@ -25,10 +26,26 @@ const Register: React.FC = () => {
         } else {
             setError('');
             // In ra các giá trị
-            console.log('Name:', name);
             console.log('Email:', email);
             console.log('Password:', password);
-            // Thực hiện các thao tác khác như gửi dữ liệu lên server
+            try {
+                const response = await axios.post(`${process.env.REACT_APP_link_server}/account/signup`, {
+                    email,
+                    password,
+                });
+                const data = response.data;
+                console.log(data);
+                
+                successNotification("Đăng kí thành công");
+            } catch (err: any) {
+                if (err.response) {
+                    // Lỗi từ server, in chi tiết phản hồi
+                    console.log('Server Response:', err.response.data);
+                    setError('Đăng kí thất bại: ' + err.response.data.message);
+                } else {
+                    setError('Có lỗi xảy ra, vui lòng thử lại.');
+                }
+            }         
         }
     };
 

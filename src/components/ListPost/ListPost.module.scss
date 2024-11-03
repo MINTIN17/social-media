@@ -1,0 +1,46 @@
+.txtListUs {
+  padding-bottom: 15px;
+  color: #4c3e37;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: "Tahoma", Geneva, Sans-Serif;
+}
+
+.tblListUs{
+  margin: 0px 40px;
+}
+
+.buttonContainer {
+  display: flex; 
+  justify-content: flex-start; 
+}
+
+.btnPrf {
+  width: 15%;
+  height: 15%;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btnPrf{
+  margin-left: 20px;
+  padding: 7px 15px;
+  background-color: greenyellow;
+}
+.btnPrf .anticon {
+  font-size: 20px;
+}
+
+.user-item .adForm .tblUser .ant-table-cell {
+  font-size: 105%;
+}
+
+.user-item .adForm .tblUser .ant-table-thead th {
+  font-size: 120%;
+}
+
+.ant-modal-content {
+  margin-top: 100px;
+}

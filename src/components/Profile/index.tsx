@@ -5,7 +5,11 @@ import Cropper from 'react-easy-crop';
 import getCroppedImg from './cropImage'; // Ensure this function is correctly defined
 import Post from '../../components/Post';
 import uploadFile from '../../api/uploadImage';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import { Menu } from 'antd';
+import { Link, Outlet } from 'react-router-dom';
 import axios from 'axios';
+import UserEditModal from '../EditProfile';
 
 const cx = classNames.bind(styles);
 const userId = localStorage.getItem('userId');
@@ -24,13 +28,13 @@ interface user {
     _id: string,
     username: string,
     email: string,
-    status: string,
     friend: string[],
+    image: string,
     background_image: string,
 }
 
 const ProfilePage: React.FC = () => {
-    const [userName, setUserName] = useState<string | null>(null);
+    const [user, setUser] = useState<user>();
     const [imageUrl, setImageUrl] = useState<string>(""); // Initialize as empty string
     const [cropperOpen, setCropperOpen] = useState<boolean>(false);
     const [image, setImage] = useState<File | null>(null);
@@ -39,11 +43,52 @@ const ProfilePage: React.FC = () => {
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<CroppedAreaPixels | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [visibleEdit, setVisibleEdit] = useState(false);
+
+    const handleEdit = () => {
+        setVisibleEdit(true);
+    };
+
+    const handleCancel = () => {
+        setVisibleEdit(false);
+    };
+
+    const handleSave = (userData: { username: string; avatar: string }) => {
+        console.log('Dữ liệu người dùng đã lưu:', userData);
+        setVisibleEdit(false);
+    };
+
+    const fetchUser = async (token: string) : Promise<user | null> => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_link_server}/account/me/info`,{
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            } );
+            const data = response.data;
+            console.log(data);
+            return data;
+        } catch (error) {
+            setError('Có lỗi xảy ra khi lấy dữ liệu.');
+            console.error('Error fetching data:', error);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    };
   
     useEffect(() => {
-        const userName = localStorage.getItem('userName');
-        if (userName) {
-            setUserName(userName);
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            const fetchData = async () => {
+                const data = await fetchUser(token); 
+                if (data) {
+                    setUser(data);
+                    setImageUrl(data.background_image);
+                }
+            };
+            fetchData();
+            console.log(apiPostUserUrl);
         }
     }, []);
 
@@ -54,8 +99,7 @@ const ProfilePage: React.FC = () => {
                 userId: userId
             };
             const response = await axios.put(apiSetBgImgUrl, payload);
-            // Uncomment if you need to check the response
-            // console.log(response.data);
+            console.log(response.data);
         } catch (error) {
             setError('Có lỗi xảy ra khi lấy dữ liệu.');
             console.error('Error fetching data:', error);
@@ -79,12 +123,17 @@ const ProfilePage: React.FC = () => {
     const handleSaveCrop = async () => {
         if (image && croppedAreaPixels) {
             const croppedImage = await getCroppedImg(image, croppedAreaPixels);
-            const uploadedImageUrl = await uploadFile(croppedImage); // Upload cropped image and get URL
-            setImageUrl(uploadedImageUrl); // Set the uploaded image URL
-            await fetchBgImg(uploadedImageUrl); // Fetch background image with the uploaded URL
+            const uploadedImageUrl = await uploadFile(croppedImage); 
+            setImageUrl(uploadedImageUrl); 
+            await fetchBgImg(uploadedImageUrl); 
             setCropperOpen(false);
         }
     };
+
+    const handleCancelCrop = () => {
+        setCropperOpen(false); 
+      };
+      
 
     return (  
         <div className={cx('wrapper')}>
@@ -107,33 +156,57 @@ const ProfilePage: React.FC = () => {
                             onChange={handleImageChange} 
                         />
                         <div className={cx('user-infor')}>
-                            <div className={cx('avatar')}>
+                            {/* <div className={cx('avatar')}>
                                 <img src='/asset/img/avatar.jpg' alt='' className={cx('avatar-img')}></img>
                             </div>
                             <div className={cx('infor')}>
-                                <div className={cx('user-name')}><p><span>{userName}</span></p></div>
-                                <div className={cx('friend-quantity')}><p><span>{userName} bạn bè</span></p></div>
+                                <div className={cx('user-name')}><p>{ userName }Nguyen Duc Thang</p></div>
+                                <div className={cx('friend-quantity')}><p><span>{ userName } bạn bè</span></p></div>
+                            </div> */}
+                            <img src='/asset/img/avatar.jpg' alt='' className={cx('avatar-img')}></img>
+                            <div className={styles.nameUs}>
+                              <p className={styles.nameUser}>{ user?.username }</p>
+                              <p className={styles.friendUs}>{ user?.friend.length } Bạn bè</p>
                             </div>
-                            <div className={cx('edit-profile')}>
+                            <div className={cx('edit-profile')} onClick={handleEdit}>
                                 <img src='/asset/icon/edit.svg' alt='edit-icon' className={cx('edit-icon')}/>
                                 Chỉnh sửa trang cá nhân
                             </div>
                         </div>
                     </div>  
+                    {visibleEdit && user && ( 
+                        <UserEditModal
+                            visible={visibleEdit}
+                            onCancel={() => setVisibleEdit(false)}
+                            onSave={handleSave}
+                            user={user} 
+                        />
+                    )}
                     {cropperOpen && (
                         <div className={cx('cropper')}>
                             <Cropper
                                 image={URL.createObjectURL(image!)} // Chuyển đổi file thành URL
                                 crop={crop}
                                 zoom={zoom}
-                                aspect={12 / 5}
+                                aspect={12 / 3}
                                 onCropChange={setCrop}
                                 onZoomChange={setZoom}
                                 onCropComplete={handleCropComplete}
                             />
                             <button className={cx('save-button')} onClick={handleSaveCrop}>Lưu ảnh bìa</button>
+                            <button className={cx('cancel-button')} onClick={handleCancelCrop}>Hủy</button>
                         </div>
                     )}
+                </div>
+                <div className={styles.headMenu}>
+                    <Menu mode="horizontal" theme="light" defaultSelectedKeys={['1']} style={{ lineHeight: '64px' }}>
+                        <Menu.Item key="1">
+                            <Link to="post">Bài viết</Link>
+                        </Menu.Item>
+                        <Menu.Item key="2">
+                            <Link to="about">Giới thiệu</Link>
+                        </Menu.Item>
+                    </Menu>
                 </div>
             </div>
             <div className={cx('post')}><Post apiUrl={apiPostUserUrl}/></div>

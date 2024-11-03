@@ -1,0 +1,18 @@
+.container{
+  display: flex;
+  .taskbar {
+    position: fixed; // Giữ thanh taskbar cố định
+    margin-top: 92px;
+  }
+  .content {
+    margin-left: 255px; // Khoảng cách cho nội dung
+    overflow-y: auto; // Cho phép cuộn dọc
+    height: calc(100vh - 92px);
+    margin-top: 92px;
+    background-color: #DFD9D9;
+  }
+}
+.header{
+  position: fixed;
+  width: 100%;
+}

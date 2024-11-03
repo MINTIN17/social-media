@@ -3,31 +3,31 @@ import {
   AppstoreOutlined,
   MailOutlined,
   CloseCircleOutlined,
-  CheckCircleOutlined,
 } from '@ant-design/icons';
 import { Menu } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd'; 
 import styles from "./Taskbaradmin.module.scss";
 import classNames from 'classnames/bind';
 
-const cx = classNames.bind(styles);  
+const cx = classNames.bind(styles);
 
-// Định nghĩa interface cho props
-interface TaskbarAdminProps {
-  children: React.ReactNode; // Chấp nhận prop children
-}
+const TaskbarAdmin: React.FC = () => {
+  const location = useLocation(); // Lấy đường dẫn hiện tại
+  const [mode] = useState<'vertical' | 'inline'>('inline');
 
-const TaskbarAdmin: React.FC<TaskbarAdminProps> = ({ children }) => {
-  const [mode, setMode] = useState<'vertical' | 'inline'>('inline');
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-
-  const changeMode = (value: boolean): void => {
-    setMode(value ? 'vertical' : 'inline');
-  };
-
-  const changeTheme = (value: boolean): void => {
-    setTheme(value ? 'dark' : 'light');
+  // Xác định key của mục dựa trên đường dẫn hiện tại
+  const getSelectedKey = () => {
+    switch (location.pathname) {
+      case '/admin/listUs':
+        return ['1'];
+      case '/admin/listPo':
+        return ['2'];
+      case '/admin/profile':
+        return ['4']; // Chỉnh sửa key cho hồ sơ cá nhân
+      default:
+        return []; // Không có mục nào được chọn
+    }
   };
 
   const items: MenuProps['items'] = [
@@ -60,7 +60,7 @@ const TaskbarAdmin: React.FC<TaskbarAdminProps> = ({ children }) => {
       key: '4',
       icon: <MailOutlined />,
       label: (
-        <Link className="pass-link" to="/forgot">
+        <Link className="pass-link" to="/admin/profile">
           Hồ sơ cá nhân
         </Link>
       ),
@@ -69,10 +69,11 @@ const TaskbarAdmin: React.FC<TaskbarAdminProps> = ({ children }) => {
 
   return (
     <div className={cx('taskbar-admin')}>
-      <Menu mode={mode} theme={theme} items={items} />
-      <div className={cx('children-container')}>
-        {children} {/* Hiển thị children ở đây */}
-      </div>
+      <Menu 
+        mode={mode} 
+        items={items} 
+        defaultSelectedKeys={getSelectedKey()} 
+      />
     </div>
   );
 };
