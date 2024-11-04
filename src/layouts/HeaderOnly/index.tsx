@@ -15,9 +15,7 @@ function HeaderOnly({ children }: HeaderOnlyProps) {
         <div className={cx('wrapper')}>
             <div className={cx('header')}><Header /></div>
             <div className={cx("container")}>
-                {/* <div className={cx("content")}>{children}</div> */}
-                <div className={cx("content")}><Profile /></div>
-                <div className={cx("contentPl")}>{children}</div>
+                <div className={cx("content")}>{children}</div>
             </div>
         </div>
     );
