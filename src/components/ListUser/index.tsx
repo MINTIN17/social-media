@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Button, Input, Modal, Space, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import { SearchOutlined, UserOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { successNotification, errorNotification, warningNotification } from '../Notification/index';
 import styles from "./ListUser.module.scss";
+import axios from 'axios';
 
 interface DataType {
-    key: React.Key;
-    id: string;
+    _id: React.Key;
     email: string;
-    gender: string;
-    phone: number;
+    username: string;
+    created_at: string;
     role: string;
     status: string;
 }
@@ -23,110 +23,33 @@ const ListUser: React.FC = () => {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    const dataSource: DataType[] = [
-        {
-            key: '1',
-            id: '001',
-            email: 'mike@example.com',
-            gender: 'Nam',
-            phone: 1234567890,
-            role: 'Quản trị viên',
-            status: 'Chưa khóa',
-        },
-        {
-            key: '2',
-            id: '002',
-            email: 'john@example.com',
-            gender: 'Nữ',
-            phone: 987654321,
-            role: 'Người dùng',
-            status: 'Đã khóa',
-        },
-        {
-            key: '3',
-            id: '003',
-            email: 'alice@example.com',
-            gender: 'Nữ',
-            phone: 1122334455,
-            role: 'Quản trị viên',
-            status: 'Chưa khóa',
-        },
-        {
-            key: '4',
-            id: '004',
-            email: 'bob@example.com',
-            gender: 'Nam',
-            phone: 2233445566,
-            role: 'Người dùng',
-            status: 'Đã khóa',
-        },
-        {
-            key: '5',
-            id: '005',
-            email: 'charlie@example.com',
-            gender: 'Nam',
-            phone: 3344556677,
-            role: 'Người dùng',
-            status: 'Chưa khóa',
-        },
-        {
-            key: '6',
-            id: '006',
-            email: 'diana@example.com',
-            gender: 'Nữ',
-            phone: 4455667788,
-            role: 'Người dùng',
-            status: 'Đã khóa',
-        },
-        {
-            key: '7',
-            id: '007',
-            email: 'eva@example.com',
-            gender: 'Nữ',
-            phone: 5566778899,
-            role: 'Quản trị viên',
-            status: 'Chưa khóa',
-        },
-        {
-            key: '8',
-            id: '008',
-            email: 'frank@example.com',
-            gender: 'Nam',
-            phone: 6677889900,
-            role: 'Người dùng',
-            status: 'Đã khóa',
-        },
-        {
-            key: '9',
-            id: '009',
-            email: 'grace@example.com',
-            gender: 'Nữ',
-            phone: 7788990011,
-            role: 'Quản trị viên',
-            status: 'Chưa khóa',
-        },
-        {
-            key: '10',
-            id: '010',
-            email: 'henry@example.com',
-            gender: 'Nam',
-            phone: 889900112,
-            role: 'Người dùng',
-            status: 'Đã khóa',
-        },
-        {
-            key: '11',
-            id: '011',
-            email: 'isabel@example.com',
-            gender: 'Nữ',
-            phone: 9900112233,
-            role: 'Quản trị viên',
-            status: 'Chưa khóa',
-        },
-    ];
+    const [dataSource, setDataSource] = useState([]);
+
+    const fetchDataUser = () => {
+        const token = localStorage.getItem('accessToken');
+        axios
+            .get(`${process.env.REACT_APP_link_server}/account`, {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Replace `token` with your actual token variable
+                },
+            })
+            .then((response) => {
+                setDataSource(response.data)
+                console.log(response.data);
+            })
+            .catch((error) => {
+                // Handle errors
+                console.error('Error fetching user data:', error);
+            });
+    };
+
+    useEffect(() => {
+        fetchDataUser();
+    }, []);
+
 
     const handleViewProfile = (record: DataType) => {
-        navigate(`./${record.email}`);
+        navigate(`/profile/${record._id}`);
     };
 
     const showModal = (record: DataType) => {
@@ -154,12 +77,12 @@ const ListUser: React.FC = () => {
     };
 
     const columns: TableProps<DataType>['columns'] = [
-        {
-            title: 'Mã',
-            dataIndex: 'id',
-            key: 'id',
-            sorter: (a: DataType, b: DataType) => a.id.localeCompare(b.id),
-        },
+        // {
+        //     title: 'Mã',
+        //     dataIndex: '_id',
+        //     key: '_id',
+        //     sorter: (a: DataType, b: DataType) => a._id.localeCompare(b._id),
+        // },
         {
             title: 'Email',
             dataIndex: 'email',
@@ -192,28 +115,49 @@ const ListUser: React.FC = () => {
             onFilter: (value, record) => record.email.includes(value as string),
         },
         {
-            title: 'Giới tính',
-            dataIndex: 'gender',
-            key: 'gender',
-            filters: [
-                { text: 'Nam', value: 'Nam' },
-                { text: 'Nữ', value: 'Nữ' },
-            ],
-            onFilter: (value, record) => record.gender.includes(value as string),
+            title: 'Tên hiển thị',
+            dataIndex: 'username',
+            key: 'username',
+            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }: any) => (
+                <div style={{ padding: 8 }}>
+                    <Input
+                        autoFocus
+                        placeholder="Nhập từ khóa"
+                        value={selectedKeys[0]}
+                        onChange={(e) => {
+                            setSelectedKeys(e.target.value ? [e.target.value] : []);
+                            confirm({ closeDropdown: false });
+                        }}
+                        onPressEnter={confirm}
+                        onBlur={confirm}
+                        style={{ marginBottom: 8, display: 'block' }}
+                    />
+                    <Button onClick={confirm} icon={<SearchOutlined />} size="small" type="primary">
+                        Tìm kiếm
+                    </Button>
+                    <Button onClick={clearFilters} size="small">
+                        Đặt lại
+                    </Button>
+                    <Button type="link" size="small" onClick={close}>
+                        Đóng
+                    </Button>
+                </div>
+            ),
+            onFilter: (value, record) => record.username.includes(value as string),        
         },
         {
-            title: 'SĐT',
-            dataIndex: 'phone',
-            key: 'phone',
-            sorter: (a: DataType, b: DataType) => a.phone - b.phone,
+            title: 'Ngày tạo',
+            dataIndex: 'created_at',
+            key: 'created_at',
+            // sorter: (a: DataType, b: DataType) => a.phone - b.phone,
         },
         {
             title: 'Chức vụ',
             dataIndex: 'role',
             key: 'role',
             filters: [
-                { text: 'Quản trị viên', value: 'Quản trị viên' },
-                { text: 'Người dùng', value: 'Người dùng' },
+                { text: 'admin', value: 'admin' },
+                { text: 'user', value: 'user' },
             ],
             onFilter: (value, record) => record.role.includes(value as string),
         },
@@ -222,6 +166,11 @@ const ListUser: React.FC = () => {
             dataIndex: 'status',
             key: 'status',
             render: (status: string) => <Tag color={status === 'Đã khóa' ? 'red' : 'green'}>{status}</Tag>,
+            filters: [
+                { text: 'normal', value: 'normal' },
+                { text: 'ban', value: 'ban' },
+            ],
+            onFilter: (value, record) => record.status.includes(value as string),
         },
         {
             title: 'Hành động',

@@ -17,6 +17,7 @@ import ProfileLayout from '../layouts/ProfileLayout';
 import ContentFriend from '../components/ContentFriend';
 import FriendLayout from '../layouts/FriendLayout';
 import FriendRequests from '../components/FriendRequests';
+import ProfileUser from '../components/Profile/id';
 
 const publicRoutes = [
     { path: '/home', component: Home, layout: DefaultLayout },
@@ -26,8 +27,9 @@ const publicRoutes = [
     { path: '/admin/listUs', component: ListUser, layout: AdminLayout },
     { path: '/admin/listPo', component: ListPost, layout: AdminLayout },
     { path: '/admin/listPo/post', component: PostUser, layout: null, },
-    { path: '/admin/profile', component: PostProfile, layout: ProfileLayout, },
+    { path: '/admin/profile', component: ProfilePage, layout: ProfileLayout, },
     { path: '/profile', component: ProfilePage, layout: HeaderOnly },
+    { path: '/profile/:_id', component: ProfileUser, layout: HeaderOnly },
     { path: '/profile/post', component: PostProfile, layout: HeaderOnly },
     { path: '/diary', component: Diary, layout: null },
     { path: '/message', component: Message, layout: null },
