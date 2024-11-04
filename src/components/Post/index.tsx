@@ -42,10 +42,12 @@ const Post: React.FC<PostProps> = ({apiUrl, initialData = []}) => {
     const [images, setImages] = useState<string[]>([]); // Trường này để lưu danh sách ảnh hiện tại
 
     const fetchPosts = async () => {
+        console.log(apiUrl)
         try {
             const response = await axios.get(apiUrl);
             const data: Post[] = await response.data;
             setItems(data);
+            console.log(data)
         } catch (error) {
             setError('Có lỗi xảy ra khi lấy dữ liệu.');
             console.error('Error fetching data:', error);
@@ -58,7 +60,7 @@ const Post: React.FC<PostProps> = ({apiUrl, initialData = []}) => {
         if (!initialData.length) {
           fetchPosts();
         }
-      }, [apiUrl]);
+      }, []);
 
     if (loading) {
         return <div style={{ backgroundColor: '#17181C', display: 'flex', justifyContent: 'center', color: '#DFD9D9' }}>Loading...</div>;

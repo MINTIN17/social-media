@@ -15,7 +15,7 @@ function HeaderOnly({ children }: HeaderOnlyProps) {
       <div className={cx("containerLayout")}>
         <div className={cx("taskbar")}><TaskbarAdmin /></div>
         <div className={cx("container")}>
-          <div className={cx("content")}><Profile /></div>
+          {/* <div className={cx("content")}><Profile /></div> */}
           <div className={cx("contentPl")}>{children}</div>
         </div>
       </div>

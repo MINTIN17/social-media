@@ -3,11 +3,15 @@ import styles from './Header.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import HoverDiv from '../HoverDiv';
+import axios from 'axios';
+import { debounce, result } from 'lodash';
 
 const cx = classNames.bind(styles);
 
 function Header() {
-    const navigate = useNavigate(); // Hook để điều hướng
+    const [searchResults, setSearchResults] = useState<any[]>([]);
+
+    const navigate = useNavigate();
 
     const DiaryPage = () => {
         navigate('/diary');
@@ -25,13 +29,44 @@ function Header() {
         navigate('/profile');
     };
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value; 
+        handleSearch(value); 
+    };
+
+    const handleSearch = debounce(async (query: string) => {
+        setSearchResults([]);
+        if (query.length > 0) {
+
+            try {
+                let response; 
+                if (!query.startsWith('#')) {
+                    const payload = {
+                        partialName: query
+                    };
+                    response = await axios.post(`${process.env.REACT_APP_link_server}/account/search`, payload);
+                    setSearchResults(response.data);
+                    console.log(searchResults);
+                }
+
+            } catch (error) {
+                console.error('Error fetching search results:', error);
+            }
+        }
+    }, 300); // Adjust debounce time as needed
+
     const [userName, setUserName] = useState<string | null>(null);
+    const [avatar, setAvatar] = useState<string>();
 
     useEffect(() => {
         const userName = localStorage.getItem('userName');
+        const avatar = localStorage.getItem('avatar');
 
         if (userName) {
             setUserName(userName); // Lấy tên người dùng từ localStorage
+        }
+        if(avatar){
+            setAvatar(avatar)
         }
     }, []);
 
@@ -40,9 +75,21 @@ function Header() {
             <div className={cx('part_1')}>
                 <div className={cx('logo')}>Trinity</div>
                 <div className={cx('search')}>
-                    <input type="text" id="name" name="name" placeholder="Tìm kiếm trên Trinity" />
-                    <img src='/asset/icon/search.svg' alt='search-icon' className={cx('search-icon')}/>
-                </div>
+                    <div className={cx('search-bar', { 'expanded': searchResults.length > 0 })}>
+                        <input type="text" id="name" name="name" placeholder="Tìm kiếm trên Trinity" onChange={handleInputChange}/>
+                        <img src='/asset/icon/search.svg' alt='search-icon' className={cx('search-icon')}/>
+                        {searchResults.length > 0 && (
+                            <div className={cx('search-results')}>
+                                {searchResults.slice(0, 5).map((result, index) => (                            
+                                    <div key={index} className={cx('result-item')}>
+                                        <div className={cx('result-avatar')}>{result.image}</div>
+                                        <div className='user'>{result.username}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>    
             </div>
             <div className={cx('part_2')}>
                 <div className={cx('menu')}>
@@ -85,7 +132,7 @@ function Header() {
                 </div>
                 <HoverDiv hoverText="Tài khoản">
                     <div className={cx('avtar')} onClick={ProfilePage}>
-                        <img src="/asset/img/avatar.jpg" alt="group-img" className={cx('img-avatar')} />
+                        <img src={avatar} alt="img-avatar" className={cx('img-avatar')} />
                     </div>
                 </HoverDiv>
             </div>

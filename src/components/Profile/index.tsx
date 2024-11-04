@@ -9,6 +9,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import { Link, Outlet } from 'react-router-dom';
 import axios from 'axios';
+import UserEditModal from '../EditProfile';
 
 const cx = classNames.bind(styles);
 const userId = localStorage.getItem('userId');
@@ -23,9 +24,18 @@ interface CroppedAreaPixels {
     height: number;
 }
 
+interface user {
+    _id: string,
+    username: string,
+    email: string,
+    friend: string[],
+    image: string,
+    background_image: string,
+}
+
 const ProfilePage: React.FC = () => {
-    const [userName, setUserName] = useState<string | null>(null);
-    const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [user, setUser] = useState<user>();
+    const [imageUrl, setImageUrl] = useState<string>(""); // Initialize as empty string
     const [cropperOpen, setCropperOpen] = useState<boolean>(false);
     const [image, setImage] = useState<File | null>(null);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -33,22 +43,63 @@ const ProfilePage: React.FC = () => {
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<CroppedAreaPixels | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [visibleEdit, setVisibleEdit] = useState(false);
+
+    const handleEdit = () => {
+        setVisibleEdit(true);
+    };
+
+    const handleCancel = () => {
+        setVisibleEdit(false);
+    };
+
+    const handleSave = (userData: { username: string; avatar: string }) => {
+        console.log('Dữ liệu người dùng đã lưu:', userData);
+        setVisibleEdit(false);
+    };
+
+    const fetchUser = async (token: string) : Promise<user | null> => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_link_server}/account/me/info`,{
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            } );
+            const data = response.data;
+            console.log(data);
+            return data;
+        } catch (error) {
+            setError('Có lỗi xảy ra khi lấy dữ liệu.');
+            console.error('Error fetching data:', error);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    };
   
     useEffect(() => {
-        const userName = localStorage.getItem('userName');
-        if (userName) {
-            setUserName(userName);
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            const fetchData = async () => {
+                const data = await fetchUser(token); 
+                if (data) {
+                    setUser(data);
+                    setImageUrl(data.background_image);
+                }
+            };
+            fetchData();
+            console.log(apiPostUserUrl);
         }
     }, []);
 
-    const fetchBgImg = async (file: any) => {
+    const fetchBgImg = async (img_crop_url: string) => {
         try {
             const payload = {
-                backgroundLink: uploadFile(file),
+                backgroundLink: img_crop_url,
                 userId: userId
-            }
-            const response = await axios.put(apiSetBgImgUrl);
-            const data = await response.data;
+            };
+            const response = await axios.put(apiSetBgImgUrl, payload);
+            console.log(response.data);
         } catch (error) {
             setError('Có lỗi xảy ra khi lấy dữ liệu.');
             console.error('Error fetching data:', error);
@@ -57,24 +108,24 @@ const ProfilePage: React.FC = () => {
         }
     };
 
-    const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
             const file = event.target.files[0];
             setImage(file);
             setCropperOpen(true);
-            fetchBgImg(file);
         }
     };
 
-    // Explicitly type the parameters for handleCropComplete
     const handleCropComplete = (croppedArea: any, pixels: CroppedAreaPixels) => {
         setCroppedAreaPixels(pixels);
     };
 
     const handleSaveCrop = async () => {
         if (image && croppedAreaPixels) {
-            const croppedImageUrl = await getCroppedImg(image, croppedAreaPixels);
-            setImageUrl(croppedImageUrl);
+            const croppedImage = await getCroppedImg(image, croppedAreaPixels);
+            const uploadedImageUrl = await uploadFile(croppedImage); 
+            setImageUrl(uploadedImageUrl); 
+            await fetchBgImg(uploadedImageUrl); 
             setCropperOpen(false);
         }
     };
@@ -89,8 +140,11 @@ const ProfilePage: React.FC = () => {
             <div className={cx('profile-container')}>
                 <div className={cx('profile')}>
                     <div className={cx('background-img')}>
-                        {imageUrl ? (<img src={imageUrl} alt="Loaded" className={cx('img')}/>) 
-                        : (<p style={{color: '#fff'}}>Không có ảnh bìa</p>)}
+                        {imageUrl ? (
+                            <img src={imageUrl} alt="Loaded" className={cx('img')}/> 
+                        ) : (
+                            <p style={{color: '#fff'}}>Không có ảnh bìa</p>
+                        )}
                         <div className={cx('add-background-img')} onClick={() => document.getElementById('file-input')?.click()}>
                             Thêm ảnh bìa
                         </div>
@@ -111,15 +165,23 @@ const ProfilePage: React.FC = () => {
                             </div> */}
                             <img src='/asset/img/avatar.jpg' alt='' className={cx('avatar-img')}></img>
                             <div className={styles.nameUs}>
-                              <p className={styles.nameUser}>{ userName }Nguyen Duc Thang</p>
-                              <p className={styles.friendUs}>{ userName }299 Bạn bè</p>
+                              <p className={styles.nameUser}>{ user?.username }</p>
+                              <p className={styles.friendUs}>{ user?.friend.length } Bạn bè</p>
                             </div>
-                            <div className={cx('edit-profile')}>
+                            <div className={cx('edit-profile')} onClick={handleEdit}>
                                 <img src='/asset/icon/edit.svg' alt='edit-icon' className={cx('edit-icon')}/>
                                 Chỉnh sửa trang cá nhân
                             </div>
                         </div>
                     </div>  
+                    {visibleEdit && user && ( 
+                        <UserEditModal
+                            visible={visibleEdit}
+                            onCancel={() => setVisibleEdit(false)}
+                            onSave={handleSave}
+                            user={user} 
+                        />
+                    )}
                     {cropperOpen && (
                         <div className={cx('cropper')}>
                             <Cropper
@@ -147,7 +209,8 @@ const ProfilePage: React.FC = () => {
                     </Menu>
                 </div>
             </div>
-            <div className={cx('post')}><Post apiUrl={apiPostUserUrl}/></div>
+            {/* <div className={cx('post')}><Post apiUrl={apiPostUserUrl}/></div> */}
+            
         </div>
     );
 };
