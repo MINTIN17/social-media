@@ -1,15 +1,22 @@
 import classNames from 'classnames/bind';
+import { useNavigate } from 'react-router-dom';
 import styles from './Sidebar.module.scss';
 
 const cx = classNames.bind(styles)
 
 function Sidebar() {
+    const navigate = useNavigate();
+
+    const handleProfilePage = () => {
+        navigate('/friend');
+    };
+
     return <aside className={cx('wrapper')}>
         
         <div className={cx('menu')}>
             <div className={cx('invite-fr')}>
                 <div> Lời mời kết bạn</div>
-                <div className={cx('more')}>
+                <div className={cx('more')} onClick={handleProfilePage}>
                     Xem tất cả
                 </div>
                 
@@ -30,7 +37,7 @@ function Sidebar() {
                     </div>
                 </div>
             </div>
-            <div className={cx('read-more')}>XEM THÊM</div>
+            <div className={cx('read-more')} onClick={handleProfilePage}>XEM THÊM</div>
         </div>
 
         <div className={cx('friend')}>

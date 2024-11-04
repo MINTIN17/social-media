@@ -148,7 +148,6 @@ const ProfilePage: React.FC = () => {
                 </div>
             </div>
             <div className={cx('post')}><Post apiUrl={apiPostUserUrl}/></div>
-            
         </div>
     );
 };

@@ -27,7 +27,7 @@ const publicRoutes = [
     { path: '/admin/listPo', component: ListPost, layout: AdminLayout },
     { path: '/admin/listPo/post', component: PostUser, layout: null, },
     { path: '/admin/profile', component: PostProfile, layout: ProfileLayout, },
-    { path: '/profile', component: PostProfile, layout: HeaderOnly },
+    { path: '/profile', component: ProfilePage, layout: HeaderOnly },
     { path: '/profile/post', component: PostProfile, layout: HeaderOnly },
     { path: '/diary', component: Diary, layout: null },
     { path: '/message', component: Message, layout: null },
