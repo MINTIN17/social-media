@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import HoverDiv from '../HoverDiv';
 import axios from 'axios';
 import { debounce, result } from 'lodash';
+import { Flex } from 'antd';
 
 const cx = classNames.bind(styles);
 
@@ -12,6 +13,10 @@ function Header() {
     const [searchResults, setSearchResults] = useState<any[]>([]);
 
     const navigate = useNavigate();
+
+    const ViewProfile = () => {
+        
+    }
 
     const DiaryPage = () => {
         navigate('/diary');
@@ -81,14 +86,23 @@ function Header() {
                         {searchResults.length > 0 && (
                             <div className={cx('search-results')}>
                                 {searchResults.slice(0, 5).map((result, index) => (                            
-                                    <div key={index} className={cx('result-item')}>
-                                        <div className={cx('result-avatar')}>{result.image}</div>
-                                        <div className='user'>{result.username}</div>
+                                    <div key={index} className={cx('result-item')} style={{display: 'flex', flexDirection: 'row', alignItems:'center'}} onClick={ViewProfile}>
+                                        <div className={cx('result-avatar')}>
+                                            <img  
+                                                src={result.image || '/asset/img/avatar.jpg'}
+                                                alt="img-avatar" 
+                                                className={cx('img-avatar')} 
+                                                style={{width: 30, height: 30, borderRadius: '50%'}}
+                                                />
+                                            
+                                        </div>
+                                        <div className='user' style={{marginLeft: 30}} key={index}>{result.username}</div>
                                     </div>
                                 ))}
                             </div>
                         )}
                     </div>
+
                 </div>    
             </div>
             <div className={cx('part_2')}>
@@ -132,7 +146,11 @@ function Header() {
                 </div>
                 <HoverDiv hoverText="Tài khoản">
                     <div className={cx('avtar')} onClick={ProfilePage}>
-                        <img src={avatar} alt="img-avatar" className={cx('img-avatar')} />
+                    <img 
+                        src={avatar || '/asset/img/avatar.jpg'} 
+                        alt="img-avatar" 
+                        className={cx('img-avatar')} 
+                        />
                     </div>
                 </HoverDiv>
             </div>
