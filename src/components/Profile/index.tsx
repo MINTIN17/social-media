@@ -58,13 +58,9 @@ const ProfilePage: React.FC = () => {
         setVisibleEdit(false);
     };
 
-    const fetchUser = async (token: string) : Promise<user | null> => {
+    const fetchUser = async () : Promise<user | null> => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_link_server}/account/me/info`,{
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            } );
+            const response = await axios.get(`${process.env.REACT_APP_link_server}/account/user/${userId}`);
             const data = response.data;
             console.log(data);
             return data;
@@ -78,18 +74,16 @@ const ProfilePage: React.FC = () => {
     };
   
     useEffect(() => {
-        const token = localStorage.getItem('accessToken');
-        if (token) {
-            const fetchData = async () => {
-                const data = await fetchUser(token); 
-                if (data) {
-                    setUser(data);
-                    setImageUrl(data.background_image);
-                }
-            };
-            fetchData();
-            console.log(apiPostUserUrl);
-        }
+        const fetchData = async () => {
+            const data = await fetchUser(); 
+            if (data) {
+                setUser(data);
+                setImageUrl(data.background_image);
+            }
+        };
+        fetchData();
+        console.log(apiPostUserUrl);
+
     }, []);
 
     const fetchBgImg = async (img_crop_url: string) => {

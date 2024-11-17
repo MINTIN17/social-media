@@ -17,10 +17,18 @@ import ProfileLayout from '../layouts/ProfileLayout';
 import ContentFriend from '../components/ContentFriend';
 import FriendLayout from '../layouts/FriendLayout';
 import FriendRequests from '../components/FriendRequests';
+import ProfileOther from '../components/Profile/ProfileOther';
 
 const publicRoutes = [
     { path: '/home', component: Home, layout: DefaultLayout },
     { path: '/login', component: LoginPage, layout: null },
+    { path: '/profile/:id', component: ProfileOther, layout: DefaultLayout },
+
+
+
+
+
+
     { path: '/forgot_password', component: ForgotPassword, layout: null },
     { path: '/', component: Overview, layout: null },
     { path: '/admin/listUs', component: ListUser, layout: AdminLayout },

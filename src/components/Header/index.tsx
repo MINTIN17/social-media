@@ -14,9 +14,9 @@ function Header() {
 
     const navigate = useNavigate();
 
-    const ViewProfile = () => {
+    // function ViewProfile (id : string): {
         
-    }
+    // }
 
     const DiaryPage = () => {
         navigate('/diary');
@@ -86,7 +86,8 @@ function Header() {
                         {searchResults.length > 0 && (
                             <div className={cx('search-results')}>
                                 {searchResults.slice(0, 5).map((result, index) => (                            
-                                    <div key={index} className={cx('result-item')} style={{display: 'flex', flexDirection: 'row', alignItems:'center'}} onClick={ViewProfile}>
+                                    <div key={index} className={cx('result-item')} style={{display: 'flex', flexDirection: 'row', alignItems:'center'}}
+                                    onClick={() => navigate(`/profile/${result._id}`)}>
                                         <div className={cx('result-avatar')}>
                                             <img  
                                                 src={result.image || '/asset/img/avatar.jpg'}
