@@ -3,7 +3,6 @@ import styles from './Profile.module.scss';
 import { useEffect, useState } from 'react';
 import Cropper from 'react-easy-crop';
 import getCroppedImg from './cropImage'; // Ensure this function is correctly defined
-import Post from '../../components/Post';
 import uploadFile from '../../api/uploadImage';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
