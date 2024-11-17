@@ -327,7 +327,7 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                 {isTagFriendVisible && (
                     <div className={cx('modal-add-friend-tag')}>
                         <div className={cx('header')}>
-                            Thêm HashTag vào bài viết
+                            Thêm HashTag vào bài viết 1
                             <div className={cx('circle')} onClick={toggleTagFriendVisibility}>
                                 <span className={cx('cross')}>&#x2715;</span>
                             </div>

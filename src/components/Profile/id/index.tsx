@@ -1,15 +1,14 @@
 import classNames from 'classnames/bind';
-import styles from './Profile.module.scss';
+import styles from '../Profile.module.scss';
 import { useEffect, useState } from 'react';
 import Cropper from 'react-easy-crop';
-import getCroppedImg from './cropImage'; // Ensure this function is correctly defined
-import Post from '../../components/Post';
-import uploadFile from '../../api/uploadImage';
+import getCroppedImg from '../cropImage'; // Ensure this function is correctly defined
+import uploadFile from '../../../api/uploadImage';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useParams } from 'react-router-dom';
 import axios from 'axios';
-import UserEditModal from '../EditProfile';
+import UserEditModal from '../../EditProfile';
 
 const cx = classNames.bind(styles);
 const userId = localStorage.getItem('userId');
@@ -25,17 +24,17 @@ interface CroppedAreaPixels {
 }
 
 interface user {
-    _id: string,
-    username: string,
-    email: string,
-    friend: string[],
-    image: string,
-    background_image: string,
+    _id: string;
+    username: string;
+    email: string;
+    friend: string[];
+    image: string;
+    background_image: string;
 }
 
 const ProfilePage: React.FC = () => {
     const [user, setUser] = useState<user>();
-    const [imageUrl, setImageUrl] = useState<string>(""); // Initialize as empty string
+    const [imageUrl, setImageUrl] = useState<string>(''); // Initialize as empty string
     const [cropperOpen, setCropperOpen] = useState<boolean>(false);
     const [image, setImage] = useState<File | null>(null);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -58,9 +57,15 @@ const ProfilePage: React.FC = () => {
         setVisibleEdit(false);
     };
 
-    const fetchUser = async () : Promise<user | null> => {
+    const id = useParams();
+    const fetchUser = async (token: string): Promise<user | null> => {
+      console.log(id)
         try {
-            const response = await axios.get(`${process.env.REACT_APP_link_server}/account/user/${userId}`);
+            const response = await axios.get(`${process.env.REACT_APP_link_server}/account/${id._id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             const data = response.data;
             console.log(data);
             return data;
@@ -72,25 +77,27 @@ const ProfilePage: React.FC = () => {
             setLoading(false);
         }
     };
-  
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await fetchUser(); 
-            if (data) {
-                setUser(data);
-                setImageUrl(data.background_image);
-            }
-        };
-        fetchData();
-        console.log(apiPostUserUrl);
 
+    useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            const fetchData = async () => {
+                const data = await fetchUser(token);
+                if (data) {
+                    setUser(data);
+                    setImageUrl(data.background_image);
+                }
+            };
+            fetchData();
+            console.log(apiPostUserUrl);
+        }
     }, []);
 
     const fetchBgImg = async (img_crop_url: string) => {
         try {
             const payload = {
                 backgroundLink: img_crop_url,
-                userId: userId
+                userId: userId,
             };
             const response = await axios.put(apiSetBgImgUrl, payload);
             console.log(response.data);
@@ -117,37 +124,39 @@ const ProfilePage: React.FC = () => {
     const handleSaveCrop = async () => {
         if (image && croppedAreaPixels) {
             const croppedImage = await getCroppedImg(image, croppedAreaPixels);
-            const uploadedImageUrl = await uploadFile(croppedImage); 
-            setImageUrl(uploadedImageUrl); 
-            await fetchBgImg(uploadedImageUrl); 
+            const uploadedImageUrl = await uploadFile(croppedImage);
+            setImageUrl(uploadedImageUrl);
+            await fetchBgImg(uploadedImageUrl);
             setCropperOpen(false);
         }
     };
 
     const handleCancelCrop = () => {
-        setCropperOpen(false); 
-      };
-      
+        setCropperOpen(false);
+    };
 
-    return (  
+    return (
         <div className={cx('wrapper')}>
             <div className={cx('profile-container')}>
                 <div className={cx('profile')}>
                     <div className={cx('background-img')}>
                         {imageUrl ? (
-                            <img src={imageUrl} alt="Loaded" className={cx('img')}/> 
+                            <img src={imageUrl} alt="Loaded" className={cx('img')} />
                         ) : (
-                            <p style={{color: '#fff'}}>Không có ảnh bìa</p>
+                            <p style={{ color: '#fff' }}>Không có ảnh bìa</p>
                         )}
-                        <div className={cx('add-background-img')} onClick={() => document.getElementById('file-input')?.click()}>
+                        <div
+                            className={cx('add-background-img')}
+                            onClick={() => document.getElementById('file-input')?.click()}
+                        >
                             Thêm ảnh bìa
                         </div>
-                        <input 
-                            id="file-input" 
-                            type="file" 
-                            accept="image/*" 
-                            style={{ display: 'none' }} 
-                            onChange={handleImageChange} 
+                        <input
+                            id="file-input"
+                            type="file"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            onChange={handleImageChange}
                         />
                         <div className={cx('user-infor')}>
                             {/* <div className={cx('avatar')}>
@@ -157,23 +166,23 @@ const ProfilePage: React.FC = () => {
                                 <div className={cx('user-name')}><p>{ userName }Nguyen Duc Thang</p></div>
                                 <div className={cx('friend-quantity')}><p><span>{ userName } bạn bè</span></p></div>
                             </div> */}
-                            <img src='/asset/img/avatar.jpg' alt='' className={cx('avatar-img')}></img>
+                            <img src="/asset/img/avatar.jpg" alt="" className={cx('avatar-img')}></img>
                             <div className={styles.nameUs}>
-                              <p className={styles.nameUser}>{ user?.username }</p>
-                              <p className={styles.friendUs}>{ user?.friend.length } Bạn bè</p>
+                                <p className={styles.nameUser}>{user?.username}</p>
+                                <p className={styles.friendUs}>{user?.friend.length} Bạn bè</p>
                             </div>
                             <div className={cx('edit-profile')} onClick={handleEdit}>
-                                <img src='/asset/icon/edit.svg' alt='edit-icon' className={cx('edit-icon')}/>
+                                <img src="/asset/icon/edit.svg" alt="edit-icon" className={cx('edit-icon')} />
                                 Chỉnh sửa trang cá nhân
                             </div>
                         </div>
-                    </div>  
-                    {visibleEdit && user && ( 
+                    </div>
+                    {visibleEdit && user && (
                         <UserEditModal
                             visible={visibleEdit}
                             onCancel={() => setVisibleEdit(false)}
                             onSave={handleSave}
-                            user={user} 
+                            user={user}
                         />
                     )}
                     {cropperOpen && (
@@ -187,8 +196,12 @@ const ProfilePage: React.FC = () => {
                                 onZoomChange={setZoom}
                                 onCropComplete={handleCropComplete}
                             />
-                            <button className={cx('save-button')} onClick={handleSaveCrop}>Lưu ảnh bìa</button>
-                            <button className={cx('cancel-button')} onClick={handleCancelCrop}>Hủy</button>
+                            <button className={cx('save-button')} onClick={handleSaveCrop}>
+                                Lưu ảnh bìa
+                            </button>
+                            <button className={cx('cancel-button')} onClick={handleCancelCrop}>
+                                Hủy
+                            </button>
                         </div>
                     )}
                 </div>
@@ -204,7 +217,6 @@ const ProfilePage: React.FC = () => {
                 </div>
             </div>
             {/* <div className={cx('post')}><Post apiUrl={apiPostUserUrl}/></div> */}
-            
         </div>
     );
 };
