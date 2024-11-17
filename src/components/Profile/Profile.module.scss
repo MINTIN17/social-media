@@ -91,6 +91,26 @@
                         color: #000000a2;
                       }
                 }
+                .button-container {
+                    position: absolute;
+                    height: 40px;
+                    right: 30px; /* Căn sang bên phải */
+                    top: 50%; /* Căn giữa theo chiều dọc */
+                    transform: translateY(-50%);
+                    .friend-request-btn {
+                        height: 100%;
+                        padding: 10px 20px;
+                        font-size: 14px;
+                        border: none;
+                        background-color: #6DE0F0;
+                        color: #000000;
+                        border-radius: 10px;
+                        cursor: pointer;
+                        &:hover{
+                            background-color: #35b9ca;
+                        }
+                    }
+                }
                 // .infor {
                 //     display: flex;
                 //     flex-direction: column;
@@ -217,4 +237,36 @@
             }
           }
       }
+}
+
+.send-btn {
+    background-color: #4CAF50; /* Màu nút khi gửi yêu cầu */
+    color: white;
+}
+
+.send-btn:hover {
+    background-color: #45a049; /* Màu khi hover */
+}
+
+.pending-btn {
+    background-color: #FF9800; /* Màu nút khi đang chờ phản hồi */
+    color: white;
+}
+
+.pending-btn:hover {
+    background-color: #e68900; /* Màu khi hover */
+}
+
+.friend-btn {
+    background-color: #2196F3; /* Màu nút khi là bạn bè */
+    color: white;
+}
+
+.friend-btn:hover {
+    background-color: #1976D2; /* Màu khi hover */
+}
+
+.friend-request-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
 }

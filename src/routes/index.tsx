@@ -25,10 +25,6 @@ const publicRoutes = [
     { path: '/profile/:id', component: ProfileOther, layout: DefaultLayout },
 
 
-
-
-
-
     { path: '/forgot_password', component: ForgotPassword, layout: null },
     { path: '/', component: Overview, layout: null },
     { path: '/admin/listUs', component: ListUser, layout: AdminLayout },

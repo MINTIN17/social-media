@@ -42,12 +42,13 @@ function Header() {
     const handleSearch = debounce(async (query: string) => {
         setSearchResults([]);
         if (query.length > 0) {
-
+            const userId = localStorage.getItem('userId');
             try {
                 let response; 
                 if (!query.startsWith('#')) {
                     const payload = {
-                        partialName: query
+                        partialName: query,
+                        selfId: userId,
                     };
                     response = await axios.post(`${process.env.REACT_APP_link_server}/account/search`, payload);
                     setSearchResults(response.data);
@@ -66,6 +67,7 @@ function Header() {
     useEffect(() => {
         const userName = localStorage.getItem('userName');
         const avatar = localStorage.getItem('avatar');
+        
 
         if (userName) {
             setUserName(userName); // Lấy tên người dùng từ localStorage
@@ -74,6 +76,11 @@ function Header() {
             setAvatar(avatar)
         }
     }, []);
+
+    const handleSearchResultClick = (id: string)  => {
+        setSearchResults([]);
+        navigate(`/profile/${id}`);
+    };
 
     return (
         <header className={cx('wrapper')}>
@@ -87,7 +94,7 @@ function Header() {
                             <div className={cx('search-results')}>
                                 {searchResults.slice(0, 5).map((result, index) => (                            
                                     <div key={index} className={cx('result-item')} style={{display: 'flex', flexDirection: 'row', alignItems:'center'}}
-                                    onClick={() => navigate(`/profile/${result._id}`)}>
+                                    onClick={() => handleSearchResultClick(result._id)}>
                                         <div className={cx('result-avatar')}>
                                             <img  
                                                 src={result.image || '/asset/img/avatar.jpg'}

@@ -60,7 +60,10 @@ const Post: React.FC<PostProps> = ({apiUrl, initialData = []}) => {
         if (!initialData.length) {
           fetchPosts();
         }
-      }, []);
+        else{
+            setItems(initialData);
+        }
+      }, [apiUrl]);
 
     if (loading) {
         return <div style={{ backgroundColor: '#17181C', display: 'flex', justifyContent: 'center', color: '#DFD9D9' }}>Loading...</div>;
