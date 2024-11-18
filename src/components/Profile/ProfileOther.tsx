@@ -25,12 +25,18 @@ function ProfileOther() {
     const [buttonState, setButtonState] = useState<string>(''); // 'friend', 'pending', 'send', 'sent'
     const [friendRequestSent, setFriendRequestSent] = useState<boolean>(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isModalVisiblePending, setIsModalVisiblePending] = useState(false);
+    const [isModalVisibleSent, setIsModalVisibleSent] = useState(false);
 
     const { id } = useParams();
     const apiPostUserUrl = `${process.env.REACT_APP_link_server}/post/user/${id}`;
 
     const showModal = () => setIsModalVisible(true);
     const handleCancel = () => setIsModalVisible(false);
+    const showModalPending = () => setIsModalVisiblePending(true);
+    const handleCancelPending = () => setIsModalVisiblePending(false);
+    const showModalSent = () => setIsModalVisibleSent(true);
+    const handleCancelSent = () => setIsModalVisibleSent(false);
 
     const fetchUser = async () : Promise<user | null> => {
         try {
@@ -102,6 +108,8 @@ function ProfileOther() {
 
         } catch (error) {
             console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
+        } finally {
+            window.location.reload();
         }
     };
 
@@ -121,6 +129,29 @@ function ProfileOther() {
 
         } catch (error) {
             console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
+        } finally {
+            window.location.reload();
+        }
+    };
+
+    const handleRemoveFriendRequestSent = async () => {
+        try {
+            const currentUserId = localStorage.getItem('userId');
+
+            const response = await axios.put(`${process.env.REACT_APP_link_server}/account/remove-friend-invite`, {
+                friendId: id,
+                userId: currentUserId,
+            });
+
+            const message = response.data;
+            if(message === "Xóa bạn thành công")
+                setButtonState("send");
+            console.log(message);
+
+        } catch (error) {
+            console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
+        } finally {
+            window.location.reload();
         }
     };
 
@@ -142,8 +173,27 @@ function ProfileOther() {
             console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
         }finally {
             setIsModalVisible(false);
+            window.location.reload();
         }
     };
+
+    const handleSendFriendConfirm = async () => {
+        try {
+            const currentUserId = localStorage.getItem('userId');
+
+            const response = await axios.put(`${process.env.REACT_APP_link_server}/account/confirm-friend`, {
+                friendId: id,
+                userId: currentUserId,
+            });
+
+            const message = response.data;
+        } catch (error) {
+            console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
+        } finally{
+            window.location.reload();
+        }
+    };
+
     
     return (  
         <div className={cx('wrapper')}>
@@ -172,7 +222,7 @@ function ProfileOther() {
                                 )}
                                 {buttonState === 'pending' && (
                                     <button className={cx('friend-request-btn', 'pending-btn')} 
-                                        onClick={() => handleRemoveFriendRequest()}
+                                        onClick={showModalPending}
                                     >
                                         Đang chờ phản hồi
                                     </button>
@@ -180,6 +230,7 @@ function ProfileOther() {
                                 {buttonState === 'sent' && (
                                     <button
                                         className={cx('friend-request-btn', 'sent-btn')}
+                                        onClick={showModalSent}
                                     >
                                         Phản hồi yêu cầu
                                     </button>
@@ -202,6 +253,29 @@ function ProfileOther() {
                                     cancelText="Hủy"
                                 >
                                     <p>Bạn có chắc chắn muốn xóa bạn bè?</p>
+                                </Modal>
+
+                                {/* Modal xác nhận hủy gửi lời mời */}
+                                <Modal
+                                    title="Xác nhận"
+                                    visible={isModalVisiblePending}
+                                    onOk={handleRemoveFriendRequest}
+                                    onCancel={handleCancelPending}
+                                    okText="Xóa"
+                                    cancelText="Hủy"
+                                >
+                                    <p>Bạn có chắc chắn muốn hủy lời mời kết bạn?</p>
+                                </Modal>
+                                {/* Modal xác nhận lời mời */}
+                                <Modal
+                                    title="Xác nhận"
+                                    visible={isModalVisibleSent}
+                                    onOk={handleSendFriendConfirm}
+                                    onCancel={handleRemoveFriendRequestSent}
+                                    okText="Chấp nhận"
+                                    cancelText="Hủy"
+                                >
+                                    <p>Bạn có muốn chấp nhận kết bạn?</p>
                                 </Modal>
                             </div>                    
                         </div>

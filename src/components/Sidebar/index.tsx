@@ -51,6 +51,8 @@ function Sidebar() {
             const message = response.data;
         } catch (error) {
             console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
+        } finally{
+            window.location.reload();
         }
     };
 
@@ -68,6 +70,8 @@ function Sidebar() {
 
         } catch (error) {
             console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
+        } finally {
+            window.location.reload();
         }
     };
 
