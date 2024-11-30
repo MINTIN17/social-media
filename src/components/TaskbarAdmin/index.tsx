@@ -3,6 +3,7 @@ import {
   AppstoreOutlined,
   MailOutlined,
   CloseCircleOutlined,
+  MessageOutlined
 } from '@ant-design/icons';
 import { Menu } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
@@ -50,11 +51,20 @@ const TaskbarAdmin: React.FC = () => {
           icon: <CloseCircleOutlined />,
           label: (
             <Link className="pass-link" to="/admin/listPo">
-              Bài viết chưa duyệt
+              Bài viết bị report
             </Link>
           ),
         },
       ],
+    },
+    {
+      key: '3',
+      icon: <MessageOutlined />,
+      label: (
+        <Link className="link" to="/admin/listUs">
+          Nhắn tin
+        </Link>
+      ),
     },
     {
       key: '4',
