@@ -18,6 +18,7 @@ import ContentFriend from '../components/ContentFriend';
 import FriendLayout from '../layouts/FriendLayout';
 import FriendRequests from '../components/FriendRequests';
 import ProfileOther from '../components/Profile/ProfileOther';
+import Conversation from '../pages/Conversation';
 
 const publicRoutes = [
     { path: '/home', component: Home, layout: DefaultLayout },
@@ -34,7 +35,7 @@ const publicRoutes = [
     { path: '/profile', component: ProfilePage, layout: HeaderOnly },
     { path: '/profile/post', component: PostProfile, layout: HeaderOnly },
     { path: '/diary', component: Diary, layout: null },
-    { path: '/message', component: Message, layout: null },
+    { path: '/message/:id', component: Conversation, layout: null },
     { path: '/friend/friendlist', component: ContentFriend, layout: FriendLayout },
     { path: '/friend/friendRequests', component: FriendRequests, layout: FriendLayout },
     { path: '/friend', component: ContentFriend, layout: FriendLayout },

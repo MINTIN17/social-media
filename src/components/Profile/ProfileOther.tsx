@@ -4,6 +4,7 @@ import styles from './Profile.module.scss';
 import classNames from 'classnames/bind';
 import { Menu, Modal } from "antd";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const cx = classNames.bind(styles);
@@ -18,6 +19,7 @@ interface user {
 }
 
 function ProfileOther() {
+    const navigate = useNavigate();
     const [user, setUser] = useState<user>();
     const [imageUrl, setImageUrl] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
@@ -38,7 +40,7 @@ function ProfileOther() {
     const showModalSent = () => setIsModalVisibleSent(true);
     const handleCancelSent = () => setIsModalVisibleSent(false);
 
-    const fetchUser = async () : Promise<user | null> => {
+    const fetchUser = async (): Promise<user | null> => {
         try {
             const response = await axios.get(`${process.env.REACT_APP_link_server}/account/user/${id}`);
             const data = response.data;
@@ -56,14 +58,14 @@ function ProfileOther() {
     const checkFriendStatus = async () => {
         try {
             const currentUserId = localStorage.getItem('userId');
-    
+
             const response = await axios.post(`${process.env.REACT_APP_link_server}/account/friend-status`, {
                 senderId: currentUserId,
                 receiverId: id,
             });
-    
+
             const { isFriend, isPending, isRequestSent } = response.data;
-    
+
             // Kiểm tra ưu tiên: đã là bạn bè > đang chờ phản hồi > đã gửi yêu cầu
             if (isFriend) {
                 setButtonState('friend'); // Đã là bạn bè
@@ -81,7 +83,7 @@ function ProfileOther() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await fetchUser(); 
+            const data = await fetchUser();
             checkFriendStatus();
             if (data) {
                 setUser(data);
@@ -103,13 +105,30 @@ function ProfileOther() {
             });
 
             const message = response.data;
-            if(message === "Friend added successfully")
+            if (message === "Friend added successfully")
                 setButtonState("pending");
 
         } catch (error) {
             console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
         } finally {
             window.location.reload();
+        }
+    };
+
+    const handleMessage = async () => {
+        try {
+            const currentUserId = localStorage.getItem('userId');
+
+            const response = await axios.post(`${process.env.REACT_APP_link_server}/conversation`, {
+                user_id_1: id,
+                user_id_2: currentUserId,
+            }).then(res => {
+                navigate(`/message/${res?.data._id}`)
+
+            });
+        } catch (error) {
+            console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
+        } finally {
         }
     };
 
@@ -123,7 +142,7 @@ function ProfileOther() {
             });
 
             const message = response.data;
-            if(message === "Xóa bạn thành công")
+            if (message === "Xóa bạn thành công")
                 setButtonState("send");
             console.log(message);
 
@@ -144,7 +163,7 @@ function ProfileOther() {
             });
 
             const message = response.data;
-            if(message === "Xóa bạn thành công")
+            if (message === "Xóa bạn thành công")
                 setButtonState("send");
             console.log(message);
 
@@ -165,13 +184,13 @@ function ProfileOther() {
             });
 
             const message = response.data;
-            if(message === "Xóa bạn thành công")
+            if (message === "Xóa bạn thành công")
                 setButtonState("send");
             console.log(message);
 
         } catch (error) {
             console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
-        }finally {
+        } finally {
             setIsModalVisible(false);
             window.location.reload();
         }
@@ -189,29 +208,36 @@ function ProfileOther() {
             const message = response.data;
         } catch (error) {
             console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
-        } finally{
+        } finally {
             window.location.reload();
         }
     };
 
-    
-    return (  
+
+    return (
         <div className={cx('wrapper')}>
             <div className={cx('profile-container')}>
                 <div className={cx('profile')}>
                     <div className={cx('background-img')}>
                         {imageUrl ? (
-                            <img src={imageUrl} alt="Loaded" className={cx('img')}/> 
+                            <img src={imageUrl} alt="Loaded" className={cx('img')} />
                         ) : (
-                            <p style={{color: '#fff'}}>Không có ảnh bìa</p>
+                            <p style={{ color: '#fff' }}>Không có ảnh bìa</p>
                         )}
                         <div className={cx('user-infor')}>
                             <img src='/asset/img/avatar.jpg' alt='' className={cx('avatar-img')}></img>
                             <div className={styles.nameUs}>
-                              <p className={styles.nameUser}>{ user?.username }</p>
-                              <p className={styles.friendUs}>{ user?.friend.length } Bạn bè</p>
-                            </div>        
+                                <p className={styles.nameUser}>{user?.username}</p>
+                                <p className={styles.friendUs}>{user?.friend.length} Bạn bè</p>
+                            </div>
+
                             <div className={cx('button-container')}>
+                                <button
+                                    className={cx('friend-request-btn', 'send-btn')}
+                                    onClick={() => handleMessage()}
+                                >
+                                    Nhắn tin
+                                </button>
                                 {buttonState === 'send' && (
                                     <button
                                         className={cx('friend-request-btn', 'send-btn')}
@@ -221,7 +247,7 @@ function ProfileOther() {
                                     </button>
                                 )}
                                 {buttonState === 'pending' && (
-                                    <button className={cx('friend-request-btn', 'pending-btn')} 
+                                    <button className={cx('friend-request-btn', 'pending-btn')}
                                         onClick={showModalPending}
                                     >
                                         Đang chờ phản hồi
@@ -236,8 +262,8 @@ function ProfileOther() {
                                     </button>
                                 )}
                                 {buttonState === 'friend' && (
-                                    <button className={cx('friend-request-btn', 'friend-btn')} 
-                                    onClick={showModal}
+                                    <button className={cx('friend-request-btn', 'friend-btn')}
+                                        onClick={showModal}
                                     >
                                         Bạn bè
                                     </button>
@@ -277,9 +303,9 @@ function ProfileOther() {
                                 >
                                     <p>Bạn có muốn chấp nhận kết bạn?</p>
                                 </Modal>
-                            </div>                    
+                            </div>
                         </div>
-                    </div>  
+                    </div>
                 </div>
                 <div className={styles.headMenu}>
                     <Menu mode="horizontal" theme="light" defaultSelectedKeys={['1']} style={{ lineHeight: '64px' }}>
@@ -292,7 +318,7 @@ function ProfileOther() {
                     </Menu>
                 </div>
             </div>
-            <div className={cx('post')}><Post apiUrl={apiPostUserUrl}/></div>
+            <div className={cx('post')}><Post apiUrl={apiPostUserUrl} /></div>
         </div>
     );
 }

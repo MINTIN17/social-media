@@ -3,7 +3,7 @@ import classNames from 'classnames/bind';
 import styles from './Post.module.scss';
 import axios from 'axios';
 import HoverDiv from '../HoverDiv';
-
+import { useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
 interface Post {
@@ -40,7 +40,7 @@ const Post: React.FC<PostProps> = ({apiUrl, initialData = []}) => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [images, setImages] = useState<string[]>([]); // Trường này để lưu danh sách ảnh hiện tại
-
+    const navigate = useNavigate()
     const fetchPosts = async () => {
         console.log(apiUrl)
         try {
@@ -98,6 +98,9 @@ const Post: React.FC<PostProps> = ({apiUrl, initialData = []}) => {
         setCurrentIndex(prevIndex);
         setSelectedImage(images[prevIndex]);
     }
+    const goToProfile = (id: any) => {
+        navigate(`/profile/${id}`)
+    }
 
     return (
         <div className={cx('wrapper')}>
@@ -107,7 +110,7 @@ const Post: React.FC<PostProps> = ({apiUrl, initialData = []}) => {
                 <div className={cx('Posts')}>
                     {items.map((item) => (
                         <div key={item._id} className={cx('Post')}>
-                            <div className={cx('post-infor')}>
+                            <div className={cx('post-infor')} onClick={() => goToProfile(item.user_id)}>
                                 <div className={cx('avatar')}>
                                     <img src="/asset/img/avatar.jpg" alt="avatar-img" className={cx('avatar-img')} />
                                 </div>

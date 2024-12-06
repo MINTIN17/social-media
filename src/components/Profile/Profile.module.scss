@@ -97,6 +97,8 @@
                     right: 30px; /* Căn sang bên phải */
                     top: 50%; /* Căn giữa theo chiều dọc */
                     transform: translateY(-50%);
+                    display: flex;
+                    gap: 20px;
                     .friend-request-btn {
                         height: 100%;
                         padding: 10px 20px;
