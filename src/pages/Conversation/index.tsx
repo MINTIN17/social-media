@@ -138,7 +138,7 @@ const Conversation: React.FC = () => {
 
     fetchData();
 
-    const wsConnection = new WebSocket('ws://localhost:5000');
+    const wsConnection = new WebSocket('ws://10.10.31.91:5000');
     console.log(wsConnection)
     wsConnection.onopen = () => {
       setTimeout(() => {
