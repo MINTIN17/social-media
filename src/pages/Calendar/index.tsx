@@ -25,11 +25,21 @@ const CalendarPage = () => {
     const emotionLabels = Object.keys(emotionCounts);
     const emotionData = Object.values(emotionCounts);
 
+    const emotionToVietnameseMap: Record<string, string> = {
+        Happy: 'Hạnh phúc',
+        Sad: 'Buồn',
+        Surprise: 'Ngạc nhiên',
+        Angry: 'Tức giận',
+        Bored: 'Chán nản',
+        Anxious: 'Lo lắng',
+        Neutral: 'Bình thường',
+    };
+
     const chartData = {
-        labels: emotionLabels,
+        labels: emotionLabels.map((label) => emotionToVietnameseMap[label] || label),
         datasets: [
             {
-                label: 'Emotion Counts',
+                label: 'Số lượng cảm xúc',
                 data: emotionData,
                 backgroundColor: [
                     '#FF6384',
@@ -43,6 +53,7 @@ const CalendarPage = () => {
             },
         ],
     };
+
     const chartOptions = {
         indexAxis: 'y' as const, // Horizontal chart
         responsive: true,
@@ -61,14 +72,15 @@ const CalendarPage = () => {
             tooltip: {
                 callbacks: {
                     label: function (context: any) {
-                        // Use the dataset label (emotion name)
-                        return `Cảm xúc: ${context.label}`;
+                        const emotionName = emotionToVietnameseMap[context.label] || context.label;
+                        return `Cảm xúc: ${emotionName}`;
                     },
                 },
                 font: {
-                    size: 15, // Adjust the size here (default is 12)
-                },
+                    size: 15
+                }
             },
+
         },
         scales: {
             x: {
@@ -76,6 +88,7 @@ const CalendarPage = () => {
             },
         },
     };
+
 
     const happyGif = '/asset/gif/happy.gif';
     const sadGif = '/asset/gif/sad.gif';
@@ -104,7 +117,7 @@ const CalendarPage = () => {
         Anxious: '#4BC0C0',
         Neutral: '#C9CBCF',
     };
-    
+
 
 
     const generateCalendarDays = (year: number, month: number) => {
@@ -185,7 +198,7 @@ const CalendarPage = () => {
     };
 
     const weeks = generateCalendarDays(year, month);
-    const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const weekDays = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
 
     useEffect(() => {
         fetchDiary();
@@ -264,7 +277,7 @@ const CalendarPage = () => {
 
             <div className="weekday-header">
                 {weekDays.map((day, index) => (
-                    <div key={index} className="weekday">
+                    <div style={{ backgroundColor: "#f6a620", color: "white" }} key={index} className="weekday">
                         {day}
                     </div>
                 ))}
@@ -315,7 +328,7 @@ const CalendarPage = () => {
                                                 <div className="emotions">
                                                     {emotions.map((emotion, idx) => (
                                                         <div key={idx} className="emotion">
-                                                            {emotion.emotion_name}: {emotion.emotion_percent}%
+                                                            {emotionToVietnameseMap[emotion.emotion_name] || emotion.emotion_name}: {emotion.emotion_percent}%
                                                         </div>
                                                     ))}
                                                 </div>

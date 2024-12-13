@@ -41,20 +41,31 @@ const Diary: React.FC = () => {
     return input.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
   }
 
+  const emotionToVietnameseMap: Record<string, string> = {
+    Happy: 'Hạnh phúc',
+    Sad: 'Buồn',
+    Surprise: 'Ngạc nhiên',
+    Angry: 'Tức giận',
+    Bored: 'Chán nản',
+    Anxious: 'Lo lắng',
+    Neutral: 'Bình thường',
+  };
+
+
   const handleSubmit = async () => {
     try {
       const response = await axios.post('http://localhost:7000/predict', {
         text: removeHtmlTags(diaryContent),
         date: date.toISOString(),
       })
-      .then(res => {
-        const top = res.data.top_labels;
-        setTopLabel(top)
-        setIsModalVisible(true)
-      })
-      .catch(err => {
-        console.error(err);
-      })
+        .then(res => {
+          const top = res.data.top_labels;
+          setTopLabel(top)
+          setIsModalVisible(true)
+        })
+        .catch(err => {
+          console.error(err);
+        })
     } catch (error) {
       console.error('Error posting diary entry:', error);
     }
@@ -80,7 +91,7 @@ const Diary: React.FC = () => {
         emotion_percent: topLabel[index].probability
       });
     });
-    
+
     console.log(topLabel)
     console.log(emotion); // Debugging: Ensure the correct structure of the emotion array.
     const diaryDay = new Date(year, month - 1, day)
@@ -91,21 +102,21 @@ const Diary: React.FC = () => {
       day: diaryDay,
       images: imageUrls,
     })
-    .then(response => {
-      console.log('Diary entry created successfully:', response.data);
-      setIsModalVisible(false);
-      console.log(day, month, year, diaryDay)
-    })
-    .catch(error => {
-      console.error('Error creating diary entry:', error);
-    })
-    .finally(
-      () => {
-        navigate('/calendar')
-      }
-    )
+      .then(response => {
+        console.log('Diary entry created successfully:', response.data);
+        setIsModalVisible(false);
+        console.log(day, month, year, diaryDay)
+      })
+      .catch(error => {
+        console.error('Error creating diary entry:', error);
+      })
+      .finally(
+        () => {
+          navigate('/calendar')
+        }
+      )
   };
-  
+
 
   return (
     <div>
@@ -136,6 +147,7 @@ const Diary: React.FC = () => {
       {isModalVisible ? (
         <div className="diary-modal">
           <div className="modal-content">
+            <div style={{ position: "absolute", right: "40px", top: "40px", color: "#f6a620", fontWeight: "600", cursor: "pointer" }} onClick={() => { setIsModalVisible(false)}}>X</div>
             <div className="modal-text">
               Các cảm xúc nhận diện được của bạn<span>{':>'}</span>
             </div>
@@ -143,13 +155,15 @@ const Diary: React.FC = () => {
               {topLabel.map((item: { label: string; probability: number }, index: number) => (
                 <div className={`emotion `} key={index} onClick={() => handleEmotionSelect(index)}>
                   <div className={`emotion_item ${selectedItems.has(index) ? 'emotion_item_selected' : 'emotion_item_unselected'}`}>
-                    <span 
+                    <span
                       className={`emotion_item_option ${selectedItems.has(index) ? 'emotion_item_option_enable' : 'emotion_item_option_unenable'}`}
                     >
                     </span>
                     <div className="emotion_item_number">{index + 1}</div>
                     <div className="emotion_item_index">
-                      <div className="emotion_item_index_label">{item.label}</div>
+                      <div className="emotion_item_index_label">
+                        {emotionToVietnameseMap[item.label] || item.label}
+                      </div>
                       <div className="emotion_item_index_probability">{(item.probability).toFixed(2)}%</div>
                     </div>
                   </div>
