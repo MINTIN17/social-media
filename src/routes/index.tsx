@@ -18,14 +18,14 @@ import ContentFriend from '../components/ContentFriend';
 import FriendLayout from '../layouts/FriendLayout';
 import FriendRequests from '../components/FriendRequests';
 import ProfileOther from '../components/Profile/ProfileOther';
+import CalendarPage from '../pages/Calendar';
 import Conversation from '../pages/Conversation';
 
 const publicRoutes = [
     { path: '/home', component: Home, layout: DefaultLayout },
     { path: '/login', component: LoginPage, layout: null },
     { path: '/profile/:id', component: ProfileOther, layout: DefaultLayout },
-
-
+    { path: '/calendar', component: CalendarPage, layout: HeaderOnly},
     { path: '/forgot_password', component: ForgotPassword, layout: null },
     { path: '/', component: Overview, layout: null },
     { path: '/admin/listUs', component: ListUser, layout: AdminLayout },

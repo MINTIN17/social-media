@@ -30,6 +30,7 @@ const Register: React.FC = () => {
             console.log('Password:', password);
             try {
                 const response = await axios.post(`${process.env.REACT_APP_link_server}/account/signup`, {
+                    username: name,
                     email,
                     password,
                 });
