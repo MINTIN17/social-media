@@ -148,8 +148,13 @@
     }
 }
 
-
-
+.menu-item.selected {
+    background-color: #ECE0CA;
+    .menu-icon {
+        transform: scale(1.2);
+        filter: brightness(0) saturate(100%) invert(43%) sepia(99%) saturate(2550%) hue-rotate(1deg) brightness(98%) contrast(99%);
+    }
+}
 
 
 
