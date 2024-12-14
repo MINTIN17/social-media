@@ -19,7 +19,7 @@ function Sidebar() {
     const GetListUser = async () : Promise<friend_request[]| null> => {
         try {
             const currentUserId = localStorage.getItem('userId');
-            const response = await axios.get(`${process.env.REACT_APP_link_server}/account/list-friend/${currentUserId}`);
+            const response = await axios.get(`${process.env.REACT_APP_link_server}/account/list-friend_request/${currentUserId}`);
             const data = response.data;
             console.log(data);
             return data;

@@ -4,6 +4,7 @@ import styles from './Post.module.scss';
 import axios from 'axios';
 import HoverDiv from '../HoverDiv';
 import { useNavigate } from 'react-router-dom';
+
 const cx = classNames.bind(styles);
 
 interface Post {
@@ -19,6 +20,8 @@ interface Post {
     },
     like_user_id: string[],
     dislike_user_id: string[],
+    haha_user_id: string[],
+    angry_user_id: string[],
     comment_user_id: string[],
     tag: string[],
     group_id: string,
@@ -40,12 +43,21 @@ const Post: React.FC<PostProps> = ({apiUrl, initialData = []}) => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [images, setImages] = useState<string[]>([]); // Trường này để lưu danh sách ảnh hiện tại
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [idPost, setIdPost] = useState("");
+    const [reactions, setReactions] = useState<{ [postId: string]: string }>({});
+
+    const apiLikePost = `${process.env.REACT_APP_link_server}/post/${idPost}/like`;
+    const apiDislikePost = `${process.env.REACT_APP_link_server}/${idPost}/dislike/`;
+    const apiHahaPost = `${process.env.REACT_APP_link_server}/post/${idPost}/haha`;
+    const apiAngryPost = `${process.env.REACT_APP_link_server}/post/${idPost}/angry`;
+    
     const fetchPosts = async () => {
         console.log(apiUrl)
         try {
             const response = await axios.get(apiUrl);
             const data: Post[] = await response.data;
+
             setItems(data);
             console.log(data)
         } catch (error) {
@@ -68,6 +80,19 @@ const Post: React.FC<PostProps> = ({apiUrl, initialData = []}) => {
     if (loading) {
         return <div style={{ backgroundColor: '#17181C', display: 'flex', justifyContent: 'center', color: '#DFD9D9' }}>Loading...</div>;
     }
+
+    const ReactionPost = async (reaciton: string) => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_link_server}/post/${idPost}/${reaciton}`);
+            const data = response.data;
+            console.log(data);
+            return data;
+        } catch (error) {
+            setError('Có lỗi xảy ra khi lấy dữ liệu.');
+            console.error('Error fetching data:', error);
+            return null;
+        } 
+    };
 
     const formatDate = (isoDate: string): string => {
         const date = new Date(isoDate);
@@ -102,6 +127,14 @@ const Post: React.FC<PostProps> = ({apiUrl, initialData = []}) => {
         navigate(`/profile/${id}`)
     }
 
+    const ChangeReaction = (postId: string, emotion: string) => {
+        setReactions((prev) => ({
+            ...prev,
+            [postId]: prev[postId] === emotion ? "" : emotion,
+        }));
+        ReactionPost(emotion);
+    };
+
     return (
         <div className={cx('wrapper')}>
             {items.length === 0 ? (
@@ -109,6 +142,7 @@ const Post: React.FC<PostProps> = ({apiUrl, initialData = []}) => {
             ) : (
                 <div className={cx('Posts')}>
                     {items.map((item) => (
+
                         <div key={item._id} className={cx('Post')}>
                             <div className={cx('post-infor')} onClick={() => goToProfile(item.user_id)}>
                                 <div className={cx('avatar')}>
@@ -191,25 +225,37 @@ const Post: React.FC<PostProps> = ({apiUrl, initialData = []}) => {
                             <div className={cx('infor-post')}>1234</div>
                             <div className={cx('line')}></div>
                             <div className={cx('action')}>
-                                <div className={cx('reaction', 'child')}>
-                                    <img src='/asset/icon/like.svg' alt='like-icon' className={cx('like-icon')} />
-                                    Thích
-                                    <div className={cx('reaction-icons')}>
-                                        <HoverDiv hoverText='Thích'>
-                                            <img src='/asset/img/thumb-up.png' alt='like-icon' className={cx('like-icon-post')} />
-                                        </HoverDiv>
-                                        <HoverDiv hoverText='Không thích'>
-                                            <img src='/asset/img/thumb-down.png' alt='dislike-icon' className={cx('dislike-icon')} />
-                                        </HoverDiv>                                        
-                                        <HoverDiv hoverText='Ha ha'>
-                                            <img src='/asset/icon/Post/haha.svg' alt='haha-icon' className={cx('haha-icon')} />
-                                        </HoverDiv>
-                                        <HoverDiv hoverText='Phẫn nộ'>
-                                            <img src='/asset/img/angry.png' alt='angry-icon' className={cx('angry-icon')} />
-                                        </HoverDiv>
-                                        
-                                    </div>
+                            <div className={cx('reaction', 'child')}>
+                                <img
+                                    src={
+                                        reactions[item._id] === 'like' ? '/asset/img/thumb-up.png' :
+                                        reactions[item._id] === 'dislike' ? '/asset/img/thumb-down.png' :
+                                        reactions[item._id] === 'haha' ? '/asset/icon/Post/haha.svg' :
+                                        reactions[item._id] === 'angry' ? '/asset/img/angry.png' :
+                                        '/asset/icon/like.svg'
+                                    }
+                                    alt='like-icon'
+                                    className={cx('like-icon')}
+                                />
+                                {reactions[item._id] === 'like' ? 'Thích' : 
+                                reactions[item._id] === 'dislike' ? 'Không thích' :
+                                reactions[item._id] === 'haha' ? 'Haha' :
+                                reactions[item._id] === 'angry' ? 'Giận dữ' : 'Thả cảm xúc'}
+                                <div className={cx('reaction-icons')}>
+                                    <HoverDiv hoverText='Thích'>
+                                        <img src='/asset/img/thumb-up.png' alt='like-icon' className={cx('like-icon-post')} onClick={() => ChangeReaction(item._id, "like")}/>
+                                    </HoverDiv>
+                                    <HoverDiv hoverText='Không thích'>
+                                        <img src='/asset/img/thumb-down.png' alt='dislike-icon' className={cx('dislike-icon')} onClick={() => ChangeReaction(item._id, "dislike")}/>
+                                    </HoverDiv>                                        
+                                    <HoverDiv hoverText='Ha ha'>
+                                        <img src='/asset/icon/Post/haha.svg' alt='haha-icon' className={cx('haha-icon')} onClick={() => ChangeReaction(item._id, "haha")}/>
+                                    </HoverDiv>
+                                    <HoverDiv hoverText='Phẫn nộ'>
+                                        <img src='/asset/img/angry.png' alt='angry-icon' className={cx('angry-icon')} onClick={() => ChangeReaction(item._id, "angry")}/>
+                                    </HoverDiv>
                                 </div>
+                            </div>
                                 <div className={cx('comment', 'child')}>
                                     <img src='/asset/icon/comment.svg' alt='comment-icon' className={cx('comment-icon')} />
                                     Bình luận
@@ -232,7 +278,7 @@ const Post: React.FC<PostProps> = ({apiUrl, initialData = []}) => {
                     </div>
                 </div>
             )}
-        </div>
+        </div> 
     );
 };
 

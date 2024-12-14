@@ -55,15 +55,6 @@ interface ModalProps {
     onClose: () => void;
 }
 
-// interface post {
-//     userId: string
-//     content: string;
-//     groupId: string;
-//     tag: string[];
-//     status: string;
-//     photo: string[];
-// }
-
 const Modal: React.FC<ModalProps> = ({ onClose }) => {
     const [selectedOption, setSelectedOption] = useState<string>('Công khai');
     const [content, setContent] = useState<string>('');
@@ -84,9 +75,10 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
         const userName = localStorage.getItem('userName');
 
         if (userName) {
-            setUserName(userName); // Lấy tên người dùng từ localStorage
+            setUserName(userName);
         }
     }, []);
+
     const openModalimg = () => setIsModalimgOpen(true);
 
     const closeModalimg = () => setIsModalimgOpen(false);
