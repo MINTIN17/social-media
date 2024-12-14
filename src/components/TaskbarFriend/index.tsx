@@ -30,7 +30,7 @@ const items: MenuItem[] = [
     key: '3',
     icon: <UserSwitchOutlined />,
     label: (
-      <Link className="link" to="/friend/sentRequests">
+      <Link className="link" to="/friend/friendsent">
         Lời mời đã gửi
       </Link>
     ),
@@ -48,7 +48,7 @@ const TaskBarFriend: React.FC = () => {
         return '1';
       case '/friend/friendRequests':
         return '2';
-      case '/friend/sentRequests':
+      case '/friend/friendsent':
         return '3';
       default:
         return '1'; 

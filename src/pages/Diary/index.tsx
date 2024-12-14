@@ -54,7 +54,7 @@ const Diary: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('http://localhost:7000/predict', {
+      const response = await axios.post('https://339s3kl4-7000.asse.devtunnels.ms/predict', {
         text: removeHtmlTags(diaryContent),
         date: date.toISOString(),
       })

@@ -24,8 +24,6 @@ const TaskbarAdmin: React.FC = () => {
         return ['1'];
       case '/admin/listPo':
         return ['2'];
-      case '/admin/profile':
-        return ['4']; // Chỉnh sửa key cho hồ sơ cá nhân
       default:
         return []; // Không có mục nào được chọn
     }
@@ -56,24 +54,6 @@ const TaskbarAdmin: React.FC = () => {
           ),
         },
       ],
-    },
-    {
-      key: '3',
-      icon: <MessageOutlined />,
-      label: (
-        <Link className="link" to="/admin/listUs">
-          Nhắn tin
-        </Link>
-      ),
-    },
-    {
-      key: '4',
-      icon: <MailOutlined />,
-      label: (
-        <Link className="pass-link" to="/admin/profile">
-          Hồ sơ cá nhân
-        </Link>
-      ),
     },
   ];
 

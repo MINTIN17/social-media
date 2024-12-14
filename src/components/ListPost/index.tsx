@@ -1,38 +1,92 @@
-import React from 'react';
-import { Table, Button, Input, DatePicker, Space, Tooltip } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Table, Button, Input, Space, Tooltip } from 'antd';
 import type { TableColumnsType, TableProps } from 'antd';
-import { SearchOutlined, DashOutlined, DeleteOutlined, UnlockOutlined } from '@ant-design/icons';
+import { SearchOutlined, DeleteOutlined, UnlockOutlined } from '@ant-design/icons';
 import styles from './ListPost.module.scss';
-import moment from 'moment';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { successNotification, errorNotification } from '../Notification';
 
 interface DataType {
-  id: string;
   key: React.Key;
+  id: string;
   email: string;
-  number: string;
-  status: string;
+  number: number;
+  postId: string;
 }
 
-// Hàm để rút gọn nội dung
-const truncateContent = (content: string, limit: number = 10): string => {
-  const words = content.split(' ');
-  return words.length > limit ? words.slice(0, limit).join(' ') + ' ...' : content;
-};
-
 const ListPost: React.FC = () => {
-  const navigate = useNavigate();
+  const [data, setData] = useState<DataType[]>([]);
 
-  const handleLoginClick = (): void => {
-    navigate('./post');
+  const handleDeletePost = async (postId: string) => {
+    const token = localStorage.getItem('accessToken');
+    try {
+      await axios.delete(`${process.env.REACT_APP_link_server}/post/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Xóa bài viết trong danh sách hiện tại
+      setData((prevData) => prevData.filter((item) => item.postId !== postId));
+      successNotification('Đã xóa vĩnh viễn bài viết');
+    } catch (error) {
+      errorNotification('Error')
+      console.error('Error deleting post:', error);
+    }
   };
+
+  const handleUnlockReport = async (postId: string) => {
+    const token = localStorage.getItem('accessToken');
+    try {
+      await axios.delete(`${process.env.REACT_APP_link_server}/post/report/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      // Cập nhật danh sách dữ liệu sau khi mở report
+      setData((prevData) => prevData.filter((item) => item.postId !== postId));
+      successNotification('Đã xóa bài viết khỏi danh sách report');
+    } catch (error) {
+      errorNotification('Error');
+      console.error('Error unlocking report:', error);
+    }
+  };
+  
+  
+
+  const fetchDataReportPost = async () => {
+    const token = localStorage.getItem('accessToken');
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_link_server}/post/report`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // Xử lý dữ liệu trả về từ API
+      const fetchedData = response.data.map((item: any, index: number) => ({
+        key: index + 1,
+        id: item.post_owner.user_id,
+        email: item.post_owner.email,
+        number: item.report_count,
+        postId: item.post_id,
+      }));
+
+      setData(fetchedData);
+    } catch (error) {
+      console.error('Error fetching report data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDataReportPost();
+  }, []);
 
   const columns: TableColumnsType<DataType> = [
     {
       title: 'STT',
-      dataIndex: 'id',
-      key: 'id',
-      sorter: (a, b) => a.id.localeCompare(b.id),
+      dataIndex: 'key',
+      key: 'key',
     },
     {
       title: 'Email',
@@ -69,42 +123,33 @@ const ListPost: React.FC = () => {
       title: 'Lượt report',
       dataIndex: 'number',
       key: 'number',
-      sorter: (a, b) => a.id.localeCompare(b.id),
+      sorter: (a, b) => a.number - b.number,
     },
     {
-      title: 'Tình trạng',
-      dataIndex: 'status',
-      
-    },
-    { 
       title: 'Quản lý bài viết',
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-            <Tooltip title="Mở khóa bài viết">
-              <Button className={styles.btnPrf} style={{ background: "greenyellow" }}>
-                <UnlockOutlined />
+          <Tooltip title="Mở report bài viết">
+              <Button className={styles.btnPrf} style={{ background: "greenyellow" }} onClick={() => handleUnlockReport(record.postId)}>
+                <UnlockOutlined style={{ color: "#fff" }}/>
               </Button>
             </Tooltip>
-
-            <Tooltip title="Xóa bài viết">
-              <Button className={styles.btnPrf} style={{ background: "red" }}>
-                <DeleteOutlined />
-              </Button>
-            </Tooltip>
-            <Tooltip title="Xem bài viết">
-              <a href="">View</a>
-            </Tooltip>
+          <Tooltip title="Xóa bài viết">
+            <Button
+              className={styles.btnPrf}
+              style={{ background: 'red' }}
+              onClick={() => handleDeletePost(record.postId)} // Gọi hàm xóa
+            >
+              <DeleteOutlined style={{ color: "#fff" }} />
+            </Button>
+          </Tooltip>
+          <Tooltip title="Xem bài viết">
+            <a href={`/post/view/${record.postId}`}>View</a>
+          </Tooltip>
         </Space>
       ),
-    },
-  ];
-
-  const data: DataType[] = [
-    { key: '1', id: '001', email: 'John Brown', number: '3', status: 'Chưa khóa' },
-    { key: '2', id: '002', email: 'Jim Green', number: '4', status: 'Cảnh báo' },
-    { key: '3', id: '003', email: 'Joe Black', number: '6', status: 'Cảnh báo' },
-    { key: '4', id: '004', email: 'Jim Red', number: '10', status: 'Đã khóa' },
+    }    
   ];
 
   const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
