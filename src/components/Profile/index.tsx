@@ -54,6 +54,7 @@ const ProfilePage: React.FC = () => {
 
     const handleSave = (userData: { username: string; avatar: string }) => {
         console.log('Dữ liệu người dùng đã lưu:', userData);
+        
         setVisibleEdit(false);
     };
 
@@ -156,7 +157,7 @@ const ProfilePage: React.FC = () => {
                                 <div className={cx('user-name')}><p>{ userName }Nguyen Duc Thang</p></div>
                                 <div className={cx('friend-quantity')}><p><span>{ userName } bạn bè</span></p></div>
                             </div> */}
-                            <img src='/asset/img/avatar.jpg' alt='' className={cx('avatar-img')}></img>
+                            <img src={user?.image || '/asset/img/avatar.jpg'}  alt='' className={cx('avatar-img')}></img>
                             <div className={styles.nameUs}>
                               <p className={styles.nameUser}>{ user?.username }</p>
                               <p className={styles.friendUs}>{ user?.friend.length } Bạn bè</p>

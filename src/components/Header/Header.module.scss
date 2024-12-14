@@ -34,6 +34,7 @@
             align-items: center;
             width: 100%;
             transition: height 0.1s ease;
+            z-index: 1000;
             &.expanded {
                 background-color: #e7e7e7;
                 box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 

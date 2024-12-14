@@ -9,6 +9,7 @@ import { Menu } from 'antd';
 import { Link, Outlet, useParams } from 'react-router-dom';
 import axios from 'axios';
 import UserEditModal from '../../EditProfile';
+import { errorNotification, successNotification } from '../../Notification';
 
 const cx = classNames.bind(styles);
 const userId = localStorage.getItem('userId');
@@ -52,8 +53,25 @@ const ProfilePage: React.FC = () => {
         setVisibleEdit(false);
     };
 
-    const handleSave = (userData: { username: string; avatar: string }) => {
+    const handleSave = async (userData: { username: string; avatar: string }) => {
         console.log('Dữ liệu người dùng đã lưu:', userData);
+        const token = localStorage.getItem('accessToken');
+        try {
+          await axios.put(`${process.env.REACT_APP_link_server}/account/change-info`, {
+            username: userData.username,
+            image: userData.avatar
+          }, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then(res => {
+            console.log(res.data)
+          });
+        } catch (error) {
+          errorNotification('Error')
+          console.error('Error deleting post:', error);
+        }
         setVisibleEdit(false);
     };
 
