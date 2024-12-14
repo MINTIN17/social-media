@@ -19,7 +19,7 @@ function Header() {
     // }
 
     const DiaryPage = () => {
-        navigate('/diary');
+        navigate('/calendar');
     };
 
     const HomePage = () => {
