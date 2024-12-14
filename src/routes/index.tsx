@@ -20,6 +20,7 @@ import FriendRequests from '../components/FriendRequests';
 import ProfileOther from '../components/Profile/ProfileOther';
 import CalendarPage from '../pages/Calendar';
 import Conversation from '../pages/Conversation';
+import FriendSent from '../components/FriendSent';
 
 const publicRoutes = [
     { path: '/home', component: Home, layout: DefaultLayout },
@@ -38,6 +39,7 @@ const publicRoutes = [
     { path: '/message/:id', component: Conversation, layout: null },
     { path: '/friend/friendlist', component: ContentFriend, layout: FriendLayout },
     { path: '/friend/friendRequests', component: FriendRequests, layout: FriendLayout },
+    { path: '/friend/friendsent', component: FriendSent, layout: FriendLayout },
     { path: '/friend', component: ContentFriend, layout: FriendLayout },
 ];
 
