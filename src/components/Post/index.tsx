@@ -5,6 +5,8 @@ import axios from 'axios';
 import HoverDiv from '../HoverDiv';
 import { useNavigate } from 'react-router-dom';
 import { set } from 'lodash';
+import { notification } from 'antd';
+import { successNotification } from '../Notification';
 
 const cx = classNames.bind(styles);
 
@@ -127,6 +129,18 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
         navigate(`/profile/${id}`)
     }
 
+    const sharePost = (postId: string) => {
+        const user_id = localStorage.getItem('userId')
+        axios.post(`${process.env.REACT_APP_link_server}/user-post-share`, {
+            user_id,
+            post_id: postId
+        })
+            .then(res => {
+                console.log(res.data)
+                successNotification("Chia sẻ bài viết thành công")
+            })
+    }
+
     const ChangeReaction = (postId: string, emotion: string) => {
         const user_id = localStorage.getItem('userId');
 
@@ -172,12 +186,13 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
     };
 
     const getUserReaction = (post: Post, userId: string): string => {
-        if (post.like_user_id.includes(userId)) return "like";
-        if (post.dislike_user_id.includes(userId)) return "dislike";
-        if (post.haha_user_id.includes(userId)) return "haha";
-        if (post.angry_user_id.includes(userId)) return "angry";
+        if (post.like_user_id?.includes(userId)) return "like";
+        if (post.dislike_user_id?.includes(userId)) return "dislike";
+        if (post.haha_user_id?.includes(userId)) return "haha";
+        if (post.angry_user_id?.includes(userId)) return "angry";
         return "";
     };
+
 
     return (
         <div className={cx('wrapper')}>
@@ -307,7 +322,7 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                             <img src='/asset/icon/comment.svg' alt='comment-icon' className={cx('comment-icon')} />
                                             Bình luận
                                         </div>
-                                        <div className={cx('share', 'child')}>
+                                        <div className={cx('share', 'child')} onClick={() => sharePost(item._id)}>
                                             <img src='/asset/icon/share.svg' alt='share-icon' className={cx('share-icon')} />
                                             Chia sẻ
                                         </div>
