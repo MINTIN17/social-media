@@ -6,6 +6,7 @@ import HoverDiv from '../HoverDiv';
 import axios from 'axios';
 import { debounce, delay } from 'lodash';
 import { TIMEOUT } from 'dns';
+import { useLocation } from 'react-router-dom'; 
 
 const cx = classNames.bind(styles);
 
@@ -13,6 +14,7 @@ function Header() {
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [selected, setSelected] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
 
     const DiaryPage = () => {
         navigate('/calendar');
@@ -74,6 +76,26 @@ function Header() {
         setSearchResults([]);
         navigate(`/profile/${id}`);
     };
+
+    useEffect(() => {
+        // Theo dõi sự thay đổi của URL và cập nhật selected
+        switch (location.pathname) {
+            case '/friend':
+            case '/friend/friendlist':
+            case '/friend/friendRequests':
+            case '/friend/friendsent':
+                setSelected('friend');
+                break;
+            case '/calendar':
+                setSelected('diary');
+                break;
+            case '/Home':
+                setSelected('home');
+                break;
+            default:
+                setSelected('');
+        }
+    }, [location.pathname]);
 
     const handleMenuClick = (menu: string) => {
         setSelected(menu); 
