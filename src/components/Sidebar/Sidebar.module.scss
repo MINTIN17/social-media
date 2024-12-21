@@ -148,3 +148,17 @@
     height: 1px;
     background-color: #0b76b4;
 }
+
+.friend-item {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px; /* Optional: Add rounded corners */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    transition: background-color 0.3s; /* Smooth transition */
+
+    &:hover {
+        background-color: #f0f0f0; /* Light gray background on hover */
+    }
+}

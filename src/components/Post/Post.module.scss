@@ -24,10 +24,10 @@
             background-color: #fff;
             border-radius: 25px;
             .post-infor {
+                position: relative;
                 display: flex;
                 flex-direction: row;
                 height: 80px;
-                cursor: pointer;
                 .avatar {
                     width: 50px;
                     height: 50px;
@@ -37,6 +37,7 @@
                     justify-content: center;
                     align-items: center;
                     margin: 20px 10px 0px 20px;
+                    cursor: pointer;
                     .avatar-img {
                         width: 100%;
                         height: 100%;
@@ -48,6 +49,7 @@
                     flex-direction: column;
                     font-size: 20px;
                     font-weight: 600;
+                    cursor: pointer;
                     .user-name {
                         height: 30px;
                         color: #000;
@@ -59,6 +61,12 @@
                         font-size: 15px;
                         font-weight: 500;
                     }
+                }
+                .option{
+                    position: absolute;
+                    top: 10px;
+                    right: 20px;
+                    cursor: pointer;
                 }
             }
             .content {
@@ -269,4 +277,26 @@
     pointer-events: none;
     opacity: 0.5;        
     cursor: not-allowed;  
+}
+
+.share.disabled {
+    pointer-events: none;
+    opacity: 0.5;        
+    cursor: not-allowed;  
+}
+
+.bg-like {
+    background-color: #8cb9fc; /* Xanh lá */
+}
+
+.bg-dislike {
+    background-color: #fa948d; /* Đỏ */
+}
+
+.bg-haha {
+    background-color: #fff598; /* Vàng */
+}
+
+.bg-angry {
+    background-color: #ff9d7f; /* Cam đậm */
 }

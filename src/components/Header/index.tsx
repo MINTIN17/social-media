@@ -118,7 +118,7 @@ function Header() {
     return (
         <header className={cx('wrapper')}>
             <div className={cx('part_1')}>
-                <div className={cx('logo')}>Trinity</div>
+                <div className={cx('logo')} onClick={() => handleMenuClick('home')}>Trinity</div>
                 <div className={cx('search')}>
                     <div className={cx('search-bar', { 'expanded': searchResults.length > 0 })}>
                         <input 

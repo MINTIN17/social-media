@@ -36,7 +36,7 @@ const publicRoutes = [
     { path: '/profile', component: ProfilePage, layout: HeaderOnly },
     { path: '/profile/post', component: PostProfile, layout: HeaderOnly },
     { path: '/diary', component: Diary, layout: null },
-    { path: '/message/:id', component: Conversation, layout: null },
+    { path: '/message/:id', component: Conversation, layout: HeaderOnly },
     { path: '/friend/friendlist', component: ContentFriend, layout: FriendLayout },
     { path: '/friend/friendRequests', component: FriendRequests, layout: FriendLayout },
     { path: '/friend/friendsent', component: FriendSent, layout: FriendLayout },

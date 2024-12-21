@@ -9,6 +9,7 @@ import { Menu } from 'antd';
 import { Link, Outlet } from 'react-router-dom';
 import axios from 'axios';
 import UserEditModal from '../EditProfile';
+import Post from '../Post';
 
 const cx = classNames.bind(styles);
 const userId = localStorage.getItem('userId');
@@ -203,7 +204,7 @@ const ProfilePage: React.FC = () => {
                     </Menu>
                 </div>
             </div>
-            {/* <div className={cx('post')}><Post apiUrl={apiPostUserUrl}/></div> */}
+            <div className={cx('post')}><Post apiUrl={apiPostUserUrl}/></div>
             
         </div>
     );
