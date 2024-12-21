@@ -1,29 +1,33 @@
-import React from 'react';
-import { successNotification, errorNotification, warningNotification } from '../Notification/index';
+import React, { useEffect, useState } from 'react';
+import { successNotification, errorNotification } from '../Notification/index';
 import Styles from './friendRequests.module.scss';
+import axios from 'axios';
 
 interface Friend {
-    id: number;
-    name: string;
-    avatar: string;
+    id: string;
+    username: string;
+    imageUrl: string;
 }
 
-const friends: Friend[] = [
-    { id: 1, name: 'Nguyen Duc Thang', avatar: `${process.env.PUBLIC_URL}/asset/img/avt1.jfif` },
-    { id: 2, name: 'Nguyen Duc Thang', avatar: `${process.env.PUBLIC_URL}/asset/img/avt2.jpg` },
-    { id: 3, name: 'Nguyen Duc Thang', avatar: `${process.env.PUBLIC_URL}/asset/img/avt3.jpg` },
-    { id: 4, name: 'Nguyen Duc Thang', avatar: `${process.env.PUBLIC_URL}/asset/img/avt4.jpg` },
-];
-
 const ContentFriend: React.FC = () => {
+    const [friends, setFriends] = useState<Friend[]>([]);
 
-    const handleConfirm = (friendName: string) => {
-      successNotification(`Bạn đã chấp nhận lời yêu cầu kết bạn của ${friendName}`);
+    const getFriendRequest = async () => {
+        try {
+            const id = localStorage.getItem('userId');
+            const response = await axios.get(`${process.env.REACT_APP_link_server}/account/list-friend-sent/${id}`);
+            const data: Friend[] = response.data;
+            setFriends(data); // Cập nhật state với danh sách bạn bè
+            console.log(data);
+        } catch (error) {
+            console.error('Error fetching friend requests:', error);
+        }
     };
 
-    const handleCancel = (friendName: string) => {
-      errorNotification(`Bạn đã hủy lời yêu cầu kết bạn của ${friendName}`);
-  };
+
+    useEffect(() => {
+        getFriendRequest();
+    }, []);
 
     return (
         <div>
@@ -33,21 +37,15 @@ const ContentFriend: React.FC = () => {
                     <p className={Styles.numberList}>{friends.length} Lời mời</p>
                 </div>
                 <div className={Styles.userListFr}>
-                    {friends.map(friend => (
+                    {friends.map((friend) => (
                         <div className={Styles.iconFr} key={friend.id}>
-                            <img src={friend.avatar} alt={`avatar-${friend.id}`} className={Styles.imgListFr} />
-                            <p className={Styles.nameListFr}>{friend.name}</p>
-                            <button 
-                              className={Styles.btnItemFr}
-                              onClick={() => handleConfirm(friend.name)}
-                            >
-                                Xem thông tin
+                            <img src={friend.imageUrl} alt={`avatar-${friend.id}`} className={Styles.imgListFr} />
+                            <p className={Styles.nameListFr}>{friend.username}</p>
+                            <button className={Styles.btnItemFr}>
+                                Hủy lời mời kết bạn
                             </button>
-                            <button 
-                              className={Styles.btnItemPr}
-                              onClick={() => handleCancel(friend.name)}
-                            >
-                              Hủy
+                            <button className={Styles.btnItemPr}>
+                                Xem thông tin
                             </button>
                         </div>
                     ))}
@@ -58,3 +56,7 @@ const ContentFriend: React.FC = () => {
 };
 
 export default ContentFriend;
+function setButtonState(arg0: string) {
+    throw new Error('Function not implemented.');
+}
+

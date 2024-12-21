@@ -19,7 +19,8 @@ interface Post {
         username: string,
         email: string,
         role: string,
-        status: string
+        status: string,
+        image: string,
     },
     like_user_id: string[],
     dislike_user_id: string[],
@@ -228,7 +229,11 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                 <div key={item._id} className={cx('Post')}>
                                     <div className={cx('post-infor')}>
                                         <div className={cx('avatar')} onClick={() => goToProfile(item.user_id)}>
-                                            <img src="/asset/img/avatar.jpg" alt="avatar-img" className={cx('avatar-img')} />
+                                        <img 
+                                          src={item.userInfo?.image || '/asset/img/avatar.jpg'} 
+                                          alt="avatar-img" 
+                                          className={cx('avatar-img')} 
+                                        />
                                         </div>
                                         <div className={cx('name')} onClick={() => goToProfile(item.user_id)}>
                                             <div className={cx('user-name')}>{item.userInfo?.username || 'Người dùng không xác định'}</div>
