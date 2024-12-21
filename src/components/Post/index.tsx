@@ -143,11 +143,24 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
 
     const ChangeReaction = (postId: string, emotion: string) => {
         const user_id = localStorage.getItem('userId');
-
-        // Update the reactions in local state immediately
+        if (!user_id) return;
         setItems((prevItems) =>
             prevItems.map((post) => {
                 if (post._id === postId) {
+                    const isCurrentReaction =
+                    (emotion === "like" && post.like_user_id.includes(user_id)) ||
+                    (emotion === "dislike" && post.dislike_user_id.includes(user_id)) ||
+                    (emotion === "haha" && post.haha_user_id.includes(user_id)) ||
+                    (emotion === "angry" && post.angry_user_id.includes(user_id));
+
+                // Nếu đang chọn cùng reaction, xóa user_id khỏi tất cả các mảng
+                if (isCurrentReaction) {
+                    post.like_user_id = post.like_user_id.filter((id) => id !== user_id);
+                    post.dislike_user_id = post.dislike_user_id.filter((id) => id !== user_id);
+                    post.haha_user_id = post.haha_user_id.filter((id) => id !== user_id);
+                    post.angry_user_id = post.angry_user_id.filter((id) => id !== user_id);
+                    return post;
+                }
                     // Remove the user from all possible reaction arrays to ensure no duplicates
                     post.like_user_id = post.like_user_id.filter((id) => id !== user_id);
                     post.dislike_user_id = post.dislike_user_id.filter((id) => id !== user_id);
@@ -193,6 +206,13 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
         return "";
     };
 
+    const editPost = (itemId : string) => {
+        // axios.post(`${process.env.REACT_APP_link_server}/user-post-share`, {
+        //     user_id,
+        //     post_id: postId
+        // })
+    };
+
 
     return (
         <div className={cx('wrapper')}>
@@ -206,13 +226,16 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
 
                             return (
                                 <div key={item._id} className={cx('Post')}>
-                                    <div className={cx('post-infor')} onClick={() => goToProfile(item.user_id)}>
-                                        <div className={cx('avatar')}>
+                                    <div className={cx('post-infor')}>
+                                        <div className={cx('avatar')} onClick={() => goToProfile(item.user_id)}>
                                             <img src="/asset/img/avatar.jpg" alt="avatar-img" className={cx('avatar-img')} />
                                         </div>
-                                        <div className={cx('name')}>
+                                        <div className={cx('name')} onClick={() => goToProfile(item.user_id)}>
                                             <div className={cx('user-name')}>{item.userInfo?.username || 'Người dùng không xác định'}</div>
                                             <div className={cx('time-post')}>{formatDate(item.created_time)}</div>
+                                        </div>
+                                        <div className={cx('option')} onClick={() => editPost(item._id)}>
+                                            ...
                                         </div>
                                     </div>
                                     {typeof item.content === 'string' && (
@@ -287,22 +310,27 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                     <div className={cx('infor-post')}>1234</div>
                                     <div className={cx('line')}></div>
                                     <div className={cx('action')}>
-                                        <div className={cx('reaction', 'child')}>
+                                        <div className={cx('reaction', 'child',{
+                                            'bg-like': userReaction === 'like',
+                                            'bg-dislike': userReaction === 'dislike',
+                                            'bg-haha': userReaction === 'haha',
+                                            'bg-angry': userReaction === 'angry',
+                                        })}>
                                             <img
                                                 src={
                                                     userReaction === 'like' ? '/asset/img/thumb-up.png' :
-                                                        userReaction === 'dislike' ? '/asset/img/thumb-down.png' :
-                                                            userReaction === 'haha' ? '/asset/icon/Post/haha.svg' :
-                                                                userReaction === 'angry' ? '/asset/img/angry.png' :
-                                                                    '/asset/icon/like.svg'
+                                                    userReaction === 'dislike' ? '/asset/img/thumb-down.png' :
+                                                    userReaction === 'haha' ? '/asset/icon/Post/haha.svg' :
+                                                    userReaction === 'angry' ? '/asset/img/angry.png' :
+                                                    '/asset/icon/like.svg'
                                                 }
                                                 alt='like-icon'
                                                 className={cx('like-icon')}
                                             />
                                             {userReaction === 'like' ? 'Thích' :
-                                                userReaction === 'dislike' ? 'Không thích' :
-                                                    userReaction === 'haha' ? 'Haha' :
-                                                        userReaction === 'angry' ? 'Giận dữ' : 'Thả cảm xúc'}
+                                            userReaction === 'dislike' ? 'Không thích' :
+                                            userReaction === 'haha' ? 'Haha' :
+                                            userReaction === 'angry' ? 'Giận dữ' : 'Thả cảm xúc'}
                                             <div className={cx('reaction-icons')}>
                                                 <HoverDiv hoverText='Thích'>
                                                     <img src='/asset/img/thumb-up.png' alt='like-icon' className={cx('like-icon-post')} onClick={() => ChangeReaction(item._id, "like")} />
