@@ -132,6 +132,7 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
 
     const sharePost = (postId: string) => {
         const user_id = localStorage.getItem('userId')
+        console.log(postId)
         axios.post(`${process.env.REACT_APP_link_server}/user-post-share`, {
             user_id,
             post_id: postId
@@ -327,10 +328,18 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                             <img src='/asset/icon/comment.svg' alt='comment-icon' className={cx('comment-icon')} />
                                             Bình luận
                                         </div>
-                                        <div className={cx('share', 'child')} onClick={() => sharePost(item._id)}>
+                                        <div
+                                            className={cx('share', 'child', { disabled: item.user_id === currentUserId })}
+                                            onClick={() => {
+                                                if (item.user_id !== currentUserId) {
+                                                    sharePost(item._id);
+                                                }
+                                            }}
+                                        >
                                             <img src='/asset/icon/share.svg' alt='share-icon' className={cx('share-icon')} />
                                             Chia sẻ
                                         </div>
+
                                     </div>
                                 </div>
                             );

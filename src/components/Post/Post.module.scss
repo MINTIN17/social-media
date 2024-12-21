@@ -264,3 +264,9 @@
         z-index: 2; // Đảm bảo chữ nằm trên ảnh
     }
 }
+
+.share.disabled {
+    pointer-events: none;
+    opacity: 0.5;        
+    cursor: not-allowed;  
+}
