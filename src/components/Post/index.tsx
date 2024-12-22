@@ -6,7 +6,7 @@ import HoverDiv from '../HoverDiv';
 import { useNavigate } from 'react-router-dom';
 import { set } from 'lodash';
 import { notification } from 'antd';
-import { successNotification } from '../Notification';
+import { errorNotification, successNotification } from '../Notification';
 import EditPost from '../EditPost';
 import CommentSection from './CommentSection';
 const cx = classNames.bind(styles);
@@ -250,6 +250,29 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
             })
     };
 
+    const reportPost = (itemId: string) => {
+        axios.post(`${process.env.REACT_APP_link_server}/post/report`, {
+            user_id: localStorage.getItem('userId'),
+            post_id: itemId
+        })
+            .then(res => {
+                console.log(res.data);
+                if (res.data.message === "You have already reported this post.") {
+                    errorNotification("Bạn đã báo cáo vi phạm rồi")
+                }
+                else {
+
+                    successNotification("Báo vi phạm thành công")
+                }
+            })
+            .catch(err => {
+                console.log(err.data);
+                errorNotification(err.data)
+            })
+            .finally(() => {
+            })
+    };
+
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
@@ -306,15 +329,20 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                         {
                                             item.user_id === localStorage.getItem('userId')
                                                 ?
-                                                <div>
-                                                    <div className={cx('option')} onClick={() => editPost(item._id)}>
+                                                <div className={cx('option')}>
+                                                    <div onClick={() => editPost(item._id)}>
                                                         <HoverDiv hoverText='Chỉnh sửa'>...</HoverDiv>
                                                     </div>
-                                                    <div className={cx('delete_option')} onClick={() => deletePost(item._id)}>
+                                                    <div onClick={() => deletePost(item._id)}>
                                                         <HoverDiv hoverText='Xóa'>...</HoverDiv>
                                                     </div>
                                                 </div>
-                                                : <div></div>
+                                                :
+                                                <div className={cx('option')}>
+                                                    <div onClick={() => reportPost(item._id)}>
+                                                        <HoverDiv hoverText='Báo vi phạm'>...</HoverDiv>
+                                                    </div>
+                                                </div>
                                         }
                                     </div>
                                     {typeof item.content === 'string' && (
