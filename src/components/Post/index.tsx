@@ -7,12 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { set } from 'lodash';
 import { notification } from 'antd';
 import { successNotification } from '../Notification';
-<<<<<<< HEAD
 import EditPost from '../EditPost';
-
-=======
 import CommentSection from './CommentSection';
->>>>>>> 9f7cbbe2f103dd6f54768fd6f4ea83faa506bb40
 const cx = classNames.bind(styles);
 
 interface Post {
@@ -63,10 +59,8 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
     const navigate = useNavigate();
     const [reactions, setReactions] = useState<{ [postId: string]: string }>({});
     const currentUserId = localStorage.getItem('userId');
-<<<<<<< HEAD
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalData, setModalData] = useState<Post>();
-=======
     const [active, setActive] = useState<string[]>([])
 
     const toggleActive = (postId: string) => {
@@ -74,7 +68,6 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
             prev.includes(postId) ? prev.filter((id) => id !== postId) : [...prev, postId]
         );
     };
->>>>>>> 9f7cbbe2f103dd6f54768fd6f4ea83faa506bb40
 
     const fetchPosts = async () => {
         console.log(apiUrl)
@@ -229,35 +222,25 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
         return "";
     };
 
-<<<<<<< HEAD
     // const handleOpenModalEdit = () => {
     //     setIsModalOpen(true);
     //   };
-    
+
     //   const handleCloseModalEdit = () => {
     //     setIsModalOpen(false);
     //   };
 
-    const editPost = (itemId : string) => {
+    const editPost = (itemId: string) => {
         axios.get(`${process.env.REACT_APP_link_server}/post/${itemId}`)
-        .then(res => {
-            console.log(res.data);
-            setModalData(res.data);
-        })
+            .then(res => {
+                console.log(res.data);
+                setModalData(res.data);
+            })
         setIsModalOpen(true);
     };
 
-    
-      const handleCloseModal = () => {
+    const handleCloseModal = () => {
         setIsModalOpen(false);
-      };
-
-=======
-    const editPost = (itemId: string) => {
-        // axios.post(`${process.env.REACT_APP_link_server}/user-post-share`, {
-        //     user_id,
-        //     post_id: postId
-        // })
     };
 
     if (loading) {
@@ -280,7 +263,6 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
             </div>
         )
     }
->>>>>>> 9f7cbbe2f103dd6f54768fd6f4ea83faa506bb40
 
     return (
 
@@ -289,9 +271,9 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                 <div className={cx('no-post')}>Không có bài viết nào</div>
             ) : (
                 <div className={cx('Posts')}>
-                    {isModalOpen && modalData != null &&<EditPost post={modalData} 
+                    {isModalOpen && modalData != null && <EditPost post={modalData}
                         isOpen={isModalOpen}
-                        onClose={handleCloseModal}/>}
+                        onClose={handleCloseModal} />}
                     {items.map((item) => (
                         (() => {
                             const userReaction = getUserReaction(item, currentUserId || '');
@@ -440,9 +422,9 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
 
                                     </div>
                                     <div>
-                                        {isActive ? 
-                                        <CommentSection comments={item.comments || []} parentCommentId='' postId={item._id} onCommentSuccess={fetchPosts}/>
-                                        : <div></div>
+                                        {isActive ?
+                                            <CommentSection comments={item.comments || []} parentCommentId='' postId={item._id} onCommentSuccess={fetchPosts} />
+                                            : <div></div>
                                         }
                                     </div>
                                 </div>
