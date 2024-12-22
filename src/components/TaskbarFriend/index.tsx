@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TeamOutlined, UserAddOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 import styles from "./TaskbarFriend.module.scss";
+import axios from 'axios';
 
 type MenuItem = Required<MenuProps>['items'][number];
-
+interface Friend {
+  id: string;
+  username: string;
+  imageUrl: string;
+}
 const items: MenuItem[] = [
   {
     key: '1',
@@ -39,7 +44,9 @@ const items: MenuItem[] = [
 
 const TaskBarFriend: React.FC = () => {
   const location = useLocation();
-  const [friendCount, setFriendCount] = useState<number>(20);
+  const [friends, setFriends] = useState<Friend[]>([]);
+
+  const [friendCount, setFriendCount] = useState<number>();
 
   // Logic để chuyển đổi URL thành key
   const selectedKey = (() => {
@@ -51,15 +58,31 @@ const TaskBarFriend: React.FC = () => {
       case '/friend/friendsent':
         return '3';
       default:
-        return '1'; 
+        return '1';
     }
   })();
+
+  const getFriendList = async () => {
+    try {
+      const id = localStorage.getItem('userId');
+      const response = await axios.get(`${process.env.REACT_APP_link_server}/account/list-friend/${id}`);
+      const data: Friend[] = response.data;
+      setFriends(data); // Cập nhật state với danh sách bạn bè
+      console.log(data);
+    } catch (error) {
+      console.error('Error fetching friend requests:', error);
+    }
+  };
+
+  useEffect(() => {
+    getFriendList();
+  }, []);
 
   return (
     <div className={styles.taskbarList}>
       <div className={styles.headMenu}>
         <p className={styles.nameMenu}>Bạn bè</p>
-        <p className={styles.numberFr}>{friendCount} Bạn bè</p>
+        <p className={styles.numberFr}>{friends.length} Bạn bè</p>
       </div>
       <Menu
         selectedKeys={[selectedKey]}

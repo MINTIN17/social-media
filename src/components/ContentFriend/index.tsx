@@ -1,29 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Styles from "./ContentFriend.module.scss";
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 interface Friend {
     id: number;
-    name: string;
-    avatar: string;
+    username: string;
+    imageUrl: string;
 }
-
-const friends: Friend[] = [
-    { id: 1, name: 'Nguyen Duc Thang', avatar: `${process.env.PUBLIC_URL}/asset/img/avt1.jfif` },
-    { id: 2, name: 'Nguyen Duc Thang', avatar: `${process.env.PUBLIC_URL}/asset/img/avt2.jpg` },
-    { id: 3, name: 'Nguyen Duc Thang', avatar: `${process.env.PUBLIC_URL}/asset/img/avt3.jpg` },
-    { id: 4, name: 'Nguyen Duc Thang', avatar: `${process.env.PUBLIC_URL}/asset/img/avt4.jpg` },
-    { id: 5, name: 'Nguyen Duc Thang', avatar: `${process.env.PUBLIC_URL}/asset/img/avt5.jfif` },
-    { id: 6, name: 'Nguyen Duc Thang', avatar: `${process.env.PUBLIC_URL}/asset/img/avt1.jfif` },
-    { id: 7, name: 'Nguyen Duc Thang', avatar: `${process.env.PUBLIC_URL}/asset/img/avt1.jfif` },
-];
 
 const ContentFriend: React.FC = () => {
     const navigate = useNavigate();
+    const [friends, setFriends] = useState<Friend[]>([]);
+
 
     const handleProfilePage = () => {
         navigate('/profile');
     };
+
+    const getFriendList = async () => {
+        try {
+            const id = localStorage.getItem('userId');
+            const response = await axios.get(`${process.env.REACT_APP_link_server}/account/list-friend/${id}`);
+            const data: Friend[] = response.data;
+            setFriends(data); // Cập nhật state với danh sách bạn bè
+            console.log(data);
+        } catch (error) {
+            console.error('Error fetching friend requests:', error);
+        }
+    };
+
+    const handleMessage = async (id: string) => {
+        try {
+            const currentUserId = localStorage.getItem('userId');
+
+            const response = await axios.post(`${process.env.REACT_APP_link_server}/conversation`, {
+                user_id_1: id,
+                user_id_2: currentUserId,
+            }).then(res => {
+                navigate(`/message/${res?.data._id}`)
+
+            });
+        } catch (error) {
+            console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
+        } finally {
+        }
+    };
+
+    useEffect(() => {
+        getFriendList();
+    }, []);
 
     return (
         <div>
@@ -35,9 +61,9 @@ const ContentFriend: React.FC = () => {
                 <div className={Styles.userListFr}>
                     {friends.map(friend => (
                         <div className={Styles.iconFr} key={friend.id}>
-                            <img src={friend.avatar} alt={`avatar-${friend.id}`} className={Styles.imgListFr} />
-                            <p className={Styles.nameListFr}>{friend.name}</p>
-                            <button className={Styles.btnItemFr}>Nhắn tin</button>
+                            <img src={friend.imageUrl != "" ? friend.imageUrl : '/asset/img/avatar.jpg'} alt={`avatar-${friend.id}`} className={Styles.imgListFr} />
+                            <p className={Styles.nameListFr}>{friend.username}</p>
+                            <button className={Styles.btnItemFr} onClick={() => handleMessage(friend.id.toString())}>Nhắn tin</button>
                             <button className={Styles.btnItemPr} onClick={handleProfilePage}>Xem trang cá nhân</button>
                         </div>
                     ))}

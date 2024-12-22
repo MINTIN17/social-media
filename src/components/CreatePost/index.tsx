@@ -15,6 +15,16 @@ const CreatePost: React.FC = () => {
     const toggleModal = () => {
         setIsModalVisible(!isModalVisible);
     };
+        const [avatar, setAvatar] = useState<string | undefined>(undefined);
+    
+
+    useEffect(() => {
+        const avatar = localStorage.getItem('avatar');
+
+        if (avatar) {
+            setAvatar(avatar); // Get avatar from localStorage
+        }
+    }, []);
 
     useEffect(() => {
         // Khóa thanh cuộn khi modal mở
@@ -31,7 +41,7 @@ const CreatePost: React.FC = () => {
             <div className={cx('create-post')}>
                 <div className={cx('content')}>
                     <div className={cx('avatar')}>
-                        <img src="/asset/img/avatar.jpg" alt="avatar-img" className={cx('avatar-img')} />
+                        <img src={avatar !== "" ? avatar :  "/asset/img/avatar.jpg"} alt="avatar-img" className={cx('avatar-img')} />
                     </div>
                     <input
                         onClick={toggleModal}

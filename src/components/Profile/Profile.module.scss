@@ -71,8 +71,10 @@
                 // }
                 .avatar-img{
                     width: 150px;
+                    height: 150px;
                     border-radius: 50%;
                     border: 3px solid #4e4f505e;
+                    object-fit: cover;
                 }
                 .nameUs {
                     margin-top: 10px;

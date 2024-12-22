@@ -78,11 +78,25 @@ const UserEditModal: React.FC<UserEditModalProps> = ({ visible, onCancel, onSave
                 onCancel={handleCancel}
                 footer={null}
             >
-                <Form form={form} onFinish={handleFinish}>
+                <Form
+                    className="form"
+                    form={form}
+                    onFinish={handleFinish}
+                    layout="horizontal"
+                    labelCol={{ span: 8 }} // Adjust the width of the label column
+                    wrapperCol={{ span: 18 }} // Adjust the width of the input column
+                    
+                    labelAlign='left'
+                >
                     <Form.Item
                         label="Tên người dùng"
                         name="username"
                         rules={[{ required: true, message: 'Vui lòng nhập tên người dùng!' }]}
+                        style={{
+                            width: "100%",
+                            textAlign: "left",
+                            marginTop: "20px"
+                        }}
                     >
                         <Input />
                     </Form.Item>
@@ -90,15 +104,23 @@ const UserEditModal: React.FC<UserEditModalProps> = ({ visible, onCancel, onSave
                     <Form.Item
                         label="Email"
                         name="email"
+                        style={{
+                            width: "100%",
+                            textAlign: "left"
+                        }}
                     >
                         <Input readOnly />
                     </Form.Item>
 
-                    <Form.Item label="Avatar">
+                    <Form.Item label="Avatar"
+                        style={{
+                            width: "100%",
+                            textAlign: "left"
+                        }}>
                         <div className="avatar-container">
                             {avatar && <div className="avatar" style={{ backgroundImage: `url(${avatar})` }} />}
                         </div>
-                        <Upload 
+                        <Upload
                             beforeUpload={beforeUpload}
                             onChange={handleUploadChange}
                             showUploadList={false} // Hide default upload list
@@ -107,7 +129,10 @@ const UserEditModal: React.FC<UserEditModalProps> = ({ visible, onCancel, onSave
                         </Upload>
                     </Form.Item>
 
-                    <Form.Item>
+                    <Form.Item wrapperCol={{ offset: 4, span: 17 }} style={{
+                        width: "100%",
+                        justifyContent: "center"
+                    }}>
                         <Button type="primary" htmlType="submit">
                             Lưu
                         </Button>
@@ -116,17 +141,20 @@ const UserEditModal: React.FC<UserEditModalProps> = ({ visible, onCancel, onSave
                         </Button>
                     </Form.Item>
 
-                    <Button 
-                        type="dashed" 
-                        style={{ marginTop: 16, width: '100%' }}
-                        onClick={() => setIsPasswordModalVisible(true)}
-                    >
-                        Sửa mật khẩu
-                    </Button>
+                    <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
+                        <Button
+                            type="dashed"
+                            style={{ marginTop: 16, width: '100%' }}
+                            onClick={() => setIsPasswordModalVisible(true)}
+                        >
+                            Sửa mật khẩu
+                        </Button>
+                    </Form.Item>
                 </Form>
             </Modal>
 
-            <PasswordModal 
+
+            <PasswordModal
                 visible={isPasswordModalVisible}
                 onCancel={() => setIsPasswordModalVisible(false)}
             />

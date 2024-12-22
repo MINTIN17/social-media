@@ -84,7 +84,7 @@ const ContentFriend: React.FC = () => {
                 <div className={Styles.userListFr}>
                     {friends.map((friend) => (
                         <div className={Styles.iconFr} key={friend.id}>
-                            <img src={friend.imageUrl} alt={`avatar-${friend.id}`} className={Styles.imgListFr} />
+                            <img src={friend.imageUrl != "" ? friend.imageUrl : '/asset/img/avatar.jpg'} alt={`avatar-${friend.id}`} className={Styles.imgListFr} />
                             <p className={Styles.nameListFr}>{friend.username}</p>
                             <button className={Styles.btnItemFr} onClick={() => handleSendFriendConfirm(friend.id)}>
                                 Xác nhận

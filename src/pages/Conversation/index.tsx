@@ -85,7 +85,7 @@ const Conversation: React.FC = () => {
 
   const sendMessage = () => {
     if (message.trim() === "") return;
-  
+
     console.log(recipient?._id)
     axios
       .post(`${process.env.REACT_APP_link_server}/message`, {
@@ -98,13 +98,13 @@ const Conversation: React.FC = () => {
         // Update the message list with the new message
         setMessages((prevMessages) => [...prevMessages, res.data]);
         setMessage(""); // Clear the message input
-  
+
         // Prepare the data to send over WebSocket
         const dataToSend = {
           ...res.data, // Include the data from the server response
           type: "privateMessage", // Add the type key
         };
-  
+
 
         if (connection && connection.readyState === WebSocket.OPEN) {
           connection.send(JSON.stringify(dataToSend)); // Send the message to WebSocket
@@ -114,7 +114,7 @@ const Conversation: React.FC = () => {
         console.log(err.response); // Handle any errors from the POST request
       });
   };
-  
+
   useEffect(() => {
     const fetchData = async () => {
       await fetchConversation(); // Wait for conversation data to be fetched
@@ -150,7 +150,7 @@ const Conversation: React.FC = () => {
         }
       }, 100);
     };
-    
+
 
     wsConnection.onmessage = (event) => {
       const data = event.data;
@@ -172,7 +172,7 @@ const Conversation: React.FC = () => {
         setMessages((prevMessages) => [...prevMessages, msg]);
       }
     };
-    
+
 
     wsConnection.onclose = () => {
       console.log('Disconnected from server');
@@ -250,12 +250,20 @@ const Conversation: React.FC = () => {
                   {/* Avatar */}
                   {msg.sender_id !== localStorage.getItem("userId") && (
                     <img
-                      src={msg.sender_id !== localStorage.getItem("userId")?.toString()
-                        ? msg.receiver_data.image : msg.sender_data.image}
+                      src={
+                        msg.sender_id === localStorage.getItem("userId")?.toString()
+                          ? msg.receiver_data.image !== ""
+                            ? msg.receiver_data.image
+                            : "/asset/img/avatar.jpg"
+                          : msg.sender_data.image !== ""
+                            ? msg.sender_data.image
+                            : "/asset/img/avatar.jpg"
+                      }
                       alt="Avatar"
                       className="avatar"
                     />
                   )}
+
                   {/* Message Content */}
                   <div
                     style={{

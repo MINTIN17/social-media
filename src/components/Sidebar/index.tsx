@@ -5,9 +5,13 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const cx = classNames.bind(styles)
-
-interface friend_request{
-    id : string,
+interface Friend {
+    id: number;
+    username: string;
+    imageUrl: string;
+}
+interface friend_request {
+    id: string,
     username: string,
     imageUrl: string
 }
@@ -15,8 +19,9 @@ interface friend_request{
 function Sidebar() {
     const navigate = useNavigate();
     const [list_friend, setListFriend] = useState<friend_request[]>();
+    const [friends, setFriends] = useState<Friend[]>([]);
 
-    const GetListUser = async () : Promise<friend_request[]| null> => {
+    const GetListUser = async (): Promise<friend_request[] | null> => {
         try {
             const currentUserId = localStorage.getItem('userId');
             const response = await axios.get(`${process.env.REACT_APP_link_server}/account/list-friend_request/${currentUserId}`);
@@ -31,8 +36,9 @@ function Sidebar() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await GetListUser(); 
+            const data = await GetListUser();
             if (data) {
+                console.log(data)
                 setListFriend(data);
             }
         };
@@ -51,7 +57,7 @@ function Sidebar() {
             const message = response.data;
         } catch (error) {
             console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
-        } finally{
+        } finally {
             window.location.reload();
         }
     };
@@ -79,53 +85,128 @@ function Sidebar() {
         navigate('/friend');
     };
 
-    const ProfileUser = (id: string)  => {
+    const ProfileUser = (id: string) => {
         navigate(`/profile/${id}`);
     };
 
+    const getFriendList = async () => {
+        try {
+            const id = localStorage.getItem('userId');
+            const response = await axios.get(`${process.env.REACT_APP_link_server}/account/list-friend/${id}`);
+            const data: Friend[] = response.data;
+            setFriends(data); // Cập nhật state với danh sách bạn bè
+            console.log(data);
+        } catch (error) {
+            console.error('Error fetching friend requests:', error);
+        }
+    };
+
+    const handleMessage = async (id: string) => {
+        try {
+            const currentUserId = localStorage.getItem('userId');
+
+            const response = await axios.post(`${process.env.REACT_APP_link_server}/conversation`, {
+                user_id_1: id,
+                user_id_2: currentUserId,
+            }).then(res => {
+                navigate(`/message/${res?.data._id}`)
+
+            });
+        } catch (error) {
+            console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
+        } finally {
+        }
+    };
+
+    useEffect(() => {
+        getFriendList();
+    }, []);
+
     return <aside className={cx('wrapper')}>
-        
+
         <div className={cx('menu')}>
             <div className={cx('invite-fr')}>
                 <div> Lời mời kết bạn</div>
                 <div className={cx('more')} onClick={handleProfilePage}>
                     Xem tất cả
                 </div>
-                
+
             </div>
             <div className={cx('line')}></div>
-            {list_friend?.slice(0, 2).map((friend, index) => (
-                <div key={friend.id} className={cx('friend-makers')}>
-                    <div className={cx('avatar')} onClick={() =>ProfileUser(friend.id)}>
-                        <img 
-                            src={friend.imageUrl } 
-                            alt='avatar-img' 
-                            className={cx('avatar-img')} 
-                        />
-                    </div>
-                    <div className={cx('infor')}>
-                        <div className={cx('name-time')}>
-                            <div className={cx('name')}>{friend.username}</div>
-                            <div className={cx('time')}>1 tuần</div> {/* Thời gian mặc định */}
+            {list_friend != null && list_friend?.length > 0 ?
+                <><div>
+
+                    {list_friend?.slice(0, 2).map((friend: any) => (
+                        <div key={friend.id} className={cx('friend-makers')}>
+                            <div className={cx('avatar')} onClick={() => ProfileUser(friend.id)}>
+                                <img
+                                    src={friend?.imageUrl !== "" ? friend.imageUrl : "/asset/img/avatar.jpg"}
+                                    alt='avatar-img'
+                                    className={cx('avatar-img')} />
+                            </div>
+                            <div className={cx('infor')}>
+                                <div className={cx('name-time')}>
+                                    <div className={cx('name')}>{friend.username}</div>
+                                    <div className={cx('time')}>1 tuần</div> {/* Thời gian mặc định */}
+                                </div>
+                                <div className={cx('acp-ref')}>
+                                    <div className={cx('acp')} onClick={() => handleSendFriendConfirm(friend.id)}>Xác nhận</div>
+                                    <div className={cx('refuse')} onClick={() => handleRemoveFriendRequest(friend.id)}>Hủy</div>
+                                </div>
+                            </div>
                         </div>
-                        <div className={cx('acp-ref')}>
-                            <div className={cx('acp')} onClick={() =>handleSendFriendConfirm(friend.id)}>Xác nhận</div>
-                            <div className={cx('refuse')} onClick={() =>handleRemoveFriendRequest(friend.id)}>Hủy</div>
-                        </div>
-                    </div>
-                </div>
-            ))}
-            <div className={cx('read-more')} onClick={handleProfilePage}>XEM THÊM</div>
+                    ))}
+                </div><div className={cx('read-more')} onClick={handleProfilePage}>XEM THÊM</div></>
+                : <div style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    height: "100%",
+                    alignItems: "center",
+                    color: "gray"
+                }}> Không có lời mời kết bạn nào</div>
+            }
         </div>
 
         <div className={cx('friend')}>
             <div className={cx('header')}>
-                <div style={{padding: 10}}>Người liên hệ</div>
-                <img src='/asset/icon/search.svg' alt='search-icon' className={cx('search-icon')}/>
+                <div style={{ padding: 10 }}>Người liên hệ</div>
+                <img src='/asset/icon/search.svg' alt='search-icon' className={cx('search-icon')} />
             </div>
             <div className={cx('line')}></div>
+            <div style={{
+                width: "100%", height: "100%", padding: " 10px", display: "flex",
+                flexDirection: "column",
+                gap: "5px"
+            }}>
+                {friends.map((friend) => (
+                    <div key={friend.id} className={cx('friend-item')}
+                        style={{
+                            display: "flex",
+                            gap: "20px",
+                            alignItems: "center"
+                        }}
+                        onClick={() => handleMessage(friend.id.toString())}
+                        >
+                        <div className={cx('avatar')} onClick={() => ProfileUser(friend.id.toString())}>
+                            <img
+                                src={friend.imageUrl !== '' ? friend.imageUrl : '/asset/img/avatar.jpg'}
+                                alt="avatar-img"
+                                style={{
+                                    width: "40px",
+                                    height: "40px",
+                                    borderRadius: "100%",
+                                }}
+                            />
+                        </div>
+                        <div className={cx('info')}>
+                            <div className={cx('name')}>{friend.username}</div>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
-        
+
 
     </aside>
 }

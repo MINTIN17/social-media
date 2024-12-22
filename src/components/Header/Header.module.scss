@@ -21,6 +21,7 @@
         color: #F06D35;
         padding-left: 40px;
         padding-right: 30px;
+        cursor: pointer;
     }
     .search {
         position: relative;
@@ -144,7 +145,7 @@
         .img-avatar {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
         }
     }
 }

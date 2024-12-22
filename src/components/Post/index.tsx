@@ -7,8 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import { set } from 'lodash';
 import { notification } from 'antd';
 import { successNotification } from '../Notification';
+<<<<<<< HEAD
 import EditPost from '../EditPost';
 
+=======
+import CommentSection from './CommentSection';
+>>>>>>> 9f7cbbe2f103dd6f54768fd6f4ea83faa506bb40
 const cx = classNames.bind(styles);
 
 interface Post {
@@ -34,6 +38,7 @@ interface Post {
     updateAt: Date,
     __v: number,
     photo: string[],
+    comments: []
 }
 
 interface PostProps {
@@ -41,9 +46,16 @@ interface PostProps {
     initialData?: Post[]; // Dữ liệu có thể được truyền vào từ bên ngoài
 }
 
+interface CommentProps {
+    username: string; // The username of the person commenting
+    image: string;    // The profile image URL
+    content: string;  // The content of the comment
+}
+
 const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
     const [items, setItems] = useState<Post[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [comments, setComments] = useState<CommentProps[]>();
     const [error, setError] = useState<string | null>(null);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -51,8 +63,18 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
     const navigate = useNavigate();
     const [reactions, setReactions] = useState<{ [postId: string]: string }>({});
     const currentUserId = localStorage.getItem('userId');
+<<<<<<< HEAD
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalData, setModalData] = useState<Post>();
+=======
+    const [active, setActive] = useState<string[]>([])
+
+    const toggleActive = (postId: string) => {
+        setActive((prev) =>
+            prev.includes(postId) ? prev.filter((id) => id !== postId) : [...prev, postId]
+        );
+    };
+>>>>>>> 9f7cbbe2f103dd6f54768fd6f4ea83faa506bb40
 
     const fetchPosts = async () => {
         console.log(apiUrl)
@@ -79,9 +101,6 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
         }
     }, [apiUrl]);
 
-    if (loading) {
-        return <div style={{ backgroundColor: '#17181C', display: 'flex', justifyContent: 'center', color: '#DFD9D9' }}>Loading...</div>;
-    }
 
     const ReactionPost = async (reaciton: string, postId: string) => {
         const userId = localStorage.getItem('userId');
@@ -134,6 +153,7 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
 
     const sharePost = (postId: string) => {
         const user_id = localStorage.getItem('userId')
+        console.log(postId)
         axios.post(`${process.env.REACT_APP_link_server}/user-post-share`, {
             user_id,
             post_id: postId
@@ -151,19 +171,19 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
             prevItems.map((post) => {
                 if (post._id === postId) {
                     const isCurrentReaction =
-                    (emotion === "like" && post.like_user_id.includes(user_id)) ||
-                    (emotion === "dislike" && post.dislike_user_id.includes(user_id)) ||
-                    (emotion === "haha" && post.haha_user_id.includes(user_id)) ||
-                    (emotion === "angry" && post.angry_user_id.includes(user_id));
+                        (emotion === "like" && post.like_user_id.includes(user_id)) ||
+                        (emotion === "dislike" && post.dislike_user_id.includes(user_id)) ||
+                        (emotion === "haha" && post.haha_user_id.includes(user_id)) ||
+                        (emotion === "angry" && post.angry_user_id.includes(user_id));
 
-                // Nếu đang chọn cùng reaction, xóa user_id khỏi tất cả các mảng
-                if (isCurrentReaction) {
-                    post.like_user_id = post.like_user_id.filter((id) => id !== user_id);
-                    post.dislike_user_id = post.dislike_user_id.filter((id) => id !== user_id);
-                    post.haha_user_id = post.haha_user_id.filter((id) => id !== user_id);
-                    post.angry_user_id = post.angry_user_id.filter((id) => id !== user_id);
-                    return post;
-                }
+                    // Nếu đang chọn cùng reaction, xóa user_id khỏi tất cả các mảng
+                    if (isCurrentReaction) {
+                        post.like_user_id = post.like_user_id.filter((id) => id !== user_id);
+                        post.dislike_user_id = post.dislike_user_id.filter((id) => id !== user_id);
+                        post.haha_user_id = post.haha_user_id.filter((id) => id !== user_id);
+                        post.angry_user_id = post.angry_user_id.filter((id) => id !== user_id);
+                        return post;
+                    }
                     // Remove the user from all possible reaction arrays to ensure no duplicates
                     post.like_user_id = post.like_user_id.filter((id) => id !== user_id);
                     post.dislike_user_id = post.dislike_user_id.filter((id) => id !== user_id);
@@ -209,6 +229,7 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
         return "";
     };
 
+<<<<<<< HEAD
     // const handleOpenModalEdit = () => {
     //     setIsModalOpen(true);
     //   };
@@ -231,8 +252,38 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
         setIsModalOpen(false);
       };
 
+=======
+    const editPost = (itemId: string) => {
+        // axios.post(`${process.env.REACT_APP_link_server}/user-post-share`, {
+        //     user_id,
+        //     post_id: postId
+        // })
+    };
+
+    if (loading) {
+        return (
+            <div style={{
+                display: "flex",
+                justifyContent: "center",
+                width: "100%",
+            }} className={cx('wrapper')}>
+                <img
+                    src="/asset/gif/loading.gif"
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        width: "100px",
+                        height: "100px",
+                    }}
+                    alt="Loading"
+                />
+            </div>
+        )
+    }
+>>>>>>> 9f7cbbe2f103dd6f54768fd6f4ea83faa506bb40
 
     return (
+
         <div className={cx('wrapper')}>
             {items.length === 0 ? (
                 <div className={cx('no-post')}>Không có bài viết nào</div>
@@ -244,16 +295,16 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                     {items.map((item) => (
                         (() => {
                             const userReaction = getUserReaction(item, currentUserId || '');
-
+                            const isActive = active.includes(item._id);
                             return (
                                 <div key={item._id} className={cx('Post')}>
                                     <div className={cx('post-infor')}>
                                         <div className={cx('avatar')} onClick={() => goToProfile(item.user_id)}>
-                                        <img 
-                                          src={item.userInfo?.image || '/asset/img/avatar.jpg'} 
-                                          alt="avatar-img" 
-                                          className={cx('avatar-img')} 
-                                        />
+                                            <img
+                                                src={item.userInfo?.image || '/asset/img/avatar.jpg'}
+                                                alt="avatar-img"
+                                                className={cx('avatar-img')}
+                                            />
                                         </div>
                                         <div className={cx('name')} onClick={() => goToProfile(item.user_id)}>
                                             <div className={cx('user-name')}>{item.userInfo?.username || 'Người dùng không xác định'}</div>
@@ -335,7 +386,7 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                     <div className={cx('infor-post')}>1234</div>
                                     <div className={cx('line')}></div>
                                     <div className={cx('action')}>
-                                        <div className={cx('reaction', 'child',{
+                                        <div className={cx('reaction', 'child', {
                                             'bg-like': userReaction === 'like',
                                             'bg-dislike': userReaction === 'dislike',
                                             'bg-haha': userReaction === 'haha',
@@ -344,18 +395,18 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                             <img
                                                 src={
                                                     userReaction === 'like' ? '/asset/img/thumb-up.png' :
-                                                    userReaction === 'dislike' ? '/asset/img/thumb-down.png' :
-                                                    userReaction === 'haha' ? '/asset/icon/Post/haha.svg' :
-                                                    userReaction === 'angry' ? '/asset/img/angry.png' :
-                                                    '/asset/icon/like.svg'
+                                                        userReaction === 'dislike' ? '/asset/img/thumb-down.png' :
+                                                            userReaction === 'haha' ? '/asset/icon/Post/haha.svg' :
+                                                                userReaction === 'angry' ? '/asset/img/angry.png' :
+                                                                    '/asset/icon/like.svg'
                                                 }
                                                 alt='like-icon'
                                                 className={cx('like-icon')}
                                             />
                                             {userReaction === 'like' ? 'Thích' :
-                                            userReaction === 'dislike' ? 'Không thích' :
-                                            userReaction === 'haha' ? 'Haha' :
-                                            userReaction === 'angry' ? 'Giận dữ' : 'Thả cảm xúc'}
+                                                userReaction === 'dislike' ? 'Không thích' :
+                                                    userReaction === 'haha' ? 'Haha' :
+                                                        userReaction === 'angry' ? 'Giận dữ' : 'Thả cảm xúc'}
                                             <div className={cx('reaction-icons')}>
                                                 <HoverDiv hoverText='Thích'>
                                                     <img src='/asset/img/thumb-up.png' alt='like-icon' className={cx('like-icon-post')} onClick={() => ChangeReaction(item._id, "like")} />
@@ -371,14 +422,28 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                                 </HoverDiv>
                                             </div>
                                         </div>
-                                        <div className={cx('comment', 'child')}>
+                                        <div className={cx('comment', 'child')} onClick={() => toggleActive(item._id)}>
                                             <img src='/asset/icon/comment.svg' alt='comment-icon' className={cx('comment-icon')} />
                                             Bình luận
                                         </div>
-                                        <div className={cx('share', 'child')} onClick={() => sharePost(item._id)}>
+                                        <div
+                                            className={cx('share', 'child', { disabled: item.user_id === currentUserId })}
+                                            onClick={() => {
+                                                if (item.user_id !== currentUserId) {
+                                                    sharePost(item._id);
+                                                }
+                                            }}
+                                        >
                                             <img src='/asset/icon/share.svg' alt='share-icon' className={cx('share-icon')} />
                                             Chia sẻ
                                         </div>
+
+                                    </div>
+                                    <div>
+                                        {isActive ? 
+                                        <CommentSection comments={item.comments || []} parentCommentId='' postId={item._id} onCommentSuccess={fetchPosts}/>
+                                        : <div></div>
+                                        }
                                     </div>
                                 </div>
                             );
@@ -396,7 +461,9 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                     </div>
                 </div>
             )}
+
         </div>
+
     );
 };
 
