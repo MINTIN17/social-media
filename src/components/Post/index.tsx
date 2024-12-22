@@ -239,6 +239,17 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
         setIsModalOpen(true);
     };
 
+    const deletePost = (itemId: string) => {
+        axios.delete(`${process.env.REACT_APP_link_server}/post/${itemId}`)
+            .then(res => {
+                console.log(res.data);
+                successNotification("Xóa thành công")
+                fetchPosts();
+            })
+            .finally(() => {
+            })
+    };
+
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
@@ -292,9 +303,19 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                             <div className={cx('user-name')}>{item.userInfo?.username || 'Người dùng không xác định'}</div>
                                             <div className={cx('time-post')}>{formatDate(item.created_time)}</div>
                                         </div>
-                                        <div className={cx('option')} onClick={() => editPost(item._id)}>
-                                            <HoverDiv hoverText='Chỉnh sửa'>...</HoverDiv>
-                                        </div>
+                                        {
+                                            item.user_id === localStorage.getItem('userId')
+                                                ?
+                                                <div>
+                                                    <div className={cx('option')} onClick={() => editPost(item._id)}>
+                                                        <HoverDiv hoverText='Chỉnh sửa'>...</HoverDiv>
+                                                    </div>
+                                                    <div className={cx('delete_option')} onClick={() => deletePost(item._id)}>
+                                                        <HoverDiv hoverText='Xóa'>...</HoverDiv>
+                                                    </div>
+                                                </div>
+                                                : <div></div>
+                                        }
                                     </div>
                                     {typeof item.content === 'string' && (
                                         <div className={cx('content')}>

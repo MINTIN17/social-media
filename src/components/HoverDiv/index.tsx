@@ -63,7 +63,7 @@ const HoverDiv: React.FC<HoverDivProps> = ({ hoverText, children }) => {
             left: '50%',
             transform: 'translateX(-50%)',
             marginTop: '10px',
-            backgroundColor: '#b9b4aa',
+            backgroundColor: '#ffffff',
             color: "#505050",
             padding: '10px',
             textAlign: 'center',
