@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { set } from 'lodash';
 import { notification } from 'antd';
 import { successNotification } from '../Notification';
+import EditPost from '../EditPost';
 
 const cx = classNames.bind(styles);
 
@@ -48,9 +49,10 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [images, setImages] = useState<string[]>([]); // Trường này để lưu danh sách ảnh hiện tại
     const navigate = useNavigate();
-    const [idPost, setIdPost] = useState("");
     const [reactions, setReactions] = useState<{ [postId: string]: string }>({});
     const currentUserId = localStorage.getItem('userId');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalData, setModalData] = useState<Post>();
 
     const fetchPosts = async () => {
         console.log(apiUrl)
@@ -207,12 +209,27 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
         return "";
     };
 
+    // const handleOpenModalEdit = () => {
+    //     setIsModalOpen(true);
+    //   };
+    
+    //   const handleCloseModalEdit = () => {
+    //     setIsModalOpen(false);
+    //   };
+
     const editPost = (itemId : string) => {
-        // axios.post(`${process.env.REACT_APP_link_server}/user-post-share`, {
-        //     user_id,
-        //     post_id: postId
-        // })
+        axios.get(`${process.env.REACT_APP_link_server}/post/${itemId}`)
+        .then(res => {
+            console.log(res.data);
+            setModalData(res.data);
+        })
+        setIsModalOpen(true);
     };
+
+    
+      const handleCloseModal = () => {
+        setIsModalOpen(false);
+      };
 
 
     return (
@@ -221,6 +238,9 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                 <div className={cx('no-post')}>Không có bài viết nào</div>
             ) : (
                 <div className={cx('Posts')}>
+                    {isModalOpen && modalData != null &&<EditPost post={modalData} 
+                        isOpen={isModalOpen}
+                        onClose={handleCloseModal}/>}
                     {items.map((item) => (
                         (() => {
                             const userReaction = getUserReaction(item, currentUserId || '');
@@ -240,7 +260,7 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                             <div className={cx('time-post')}>{formatDate(item.created_time)}</div>
                                         </div>
                                         <div className={cx('option')} onClick={() => editPost(item._id)}>
-                                            ...
+                                            <HoverDiv hoverText='Chỉnh sửa'>...</HoverDiv>
                                         </div>
                                     </div>
                                     {typeof item.content === 'string' && (

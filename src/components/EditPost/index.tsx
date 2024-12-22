@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import classNames from 'classnames/bind';
-import styles from './CreatePost.module.scss';
+import styles from './EditPost.module.scss';
 import uploadFile from '../../api/uploadImage';
 import { useNavigate } from 'react-router-dom';
 import { successNotification } from '../Notification';
@@ -9,51 +9,39 @@ import HoverDiv from '../HoverDiv';
 
 const cx = classNames.bind(styles);
 
-const CreatePost: React.FC = () => {
-    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+interface Post {
+    _id: string,
+    user_id: string,
+    content: string,
+    status: string,
+    userInfo: {
+        username: string,
+        email: string,
+        role: string,
+        status: string,
+        image: string,
+    },
+    like_user_id: string[],
+    dislike_user_id: string[],
+    haha_user_id: string[],
+    angry_user_id: string[],
+    comment_user_id: string[],
+    tag: string[],
+    group_id: string,
+    created_time: string,
+    updateAt: Date,
+    __v: number,
+    photo: string[],
+}
 
-    const toggleModal = () => {
-        setIsModalVisible(!isModalVisible);
-    };
-
-    useEffect(() => {
-        // Khóa thanh cuộn khi modal mở
-        document.body.style.overflow = isModalVisible ? 'hidden' : 'auto';
-
-        // Cleanup khi component unmount
-        return () => {
-            document.body.style.overflow = 'auto';
-        };
-    }, [isModalVisible]);
-
-    return (
-        <div className={cx('wrapper')}>
-            <div className={cx('create-post')}>
-                <div className={cx('content')}>
-                    <div className={cx('avatar')}>
-                        <img src="/asset/img/avatar.jpg" alt="avatar-img" className={cx('avatar-img')} />
-                    </div>
-                    <input
-                        onClick={toggleModal}
-                        type="text"
-                        readOnly
-                        id="name"
-                        name="name"
-                        placeholder="Bạn đang nghĩ gì ?"
-                    />
-                </div>
-            </div>
-
-            {isModalVisible && <Modal onClose={toggleModal} />}
-        </div>
-    );
-};
-
-interface ModalProps {
+interface EditPostProps {
+    post: Post;
+    isOpen: boolean;
     onClose: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ onClose }) => {
+const EditPost: React.FC<EditPostProps> = ({ post, isOpen, onClose }) => {
+
     const [selectedOption, setSelectedOption] = useState<string>('Công khai');
     const [content, setContent] = useState<string>('');
     const [isFocused, setIsFocused] = useState(false);
@@ -63,19 +51,21 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
     const [isTagVisible, setIsTagVisible] = useState(false);
     const [images, setImages] = useState<File[]>([]);
     const [tagFriends, setTagFriend] = useState<string[]>([]);
-    const [tags, setTags] = useState<string[]>([]);
+    const [tags, setTags] = useState<string[]>(post.tag);
     const navigate = useNavigate();
     const [isModalimgOpen, setIsModalimgOpen] = useState(false);
-    const [userName, setUserName] = useState<string | null>(null);
     const [inputTagValue, setInputTagValue] = useState('');
-
+    // console.log(tags)
     useEffect(() => {
-        const userName = localStorage.getItem('userName');
+        setContent(post.content);
+        
+        const fileObjects: File[] = post.photo.map((photo) => {
+            
+            return new File([new Blob()], photo.split('/').pop() || 'unknown.jpg', { type: 'image/jpeg' });
+          });
+        setImages(fileObjects);
+    }, [post]);
 
-        if (userName) {
-            setUserName(userName);
-        }
-    }, []);
 
     const openModalimg = () => setIsModalimgOpen(true);
 
@@ -116,32 +106,32 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
         }
     };
 
-    const toggleImageVisibility = (e : React.MouseEvent) => {
+    const toggleImageVisibility = (e: React.MouseEvent) => {
         setIsImageVisible(!isImageVisible);
         setImages([]);
         e.stopPropagation();
     };
 
-    const toggleTagFriendVisibility = (e : React.MouseEvent) => {
+    const toggleTagFriendVisibility = (e: React.MouseEvent) => {
         setIsTagFriendVisible(!isTagFriendVisible);
         setTagFriend([]);
         e.stopPropagation();
     };
 
-        const toggleTagVisibility = (e : React.MouseEvent) => {
-            setIsTagVisible(!isTagVisible);
-            setTags([]);
-            e.stopPropagation();
-        };
+    const toggleTagVisibility = (e: React.MouseEvent) => {
+        setIsTagVisible(!isTagVisible);
+        setTags([]);
+        e.stopPropagation();
+    };
 
     const handleInputTagChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputTagValue(event.target.value);
     };
-    
-      const handleKeyDownTag = (event: React.KeyboardEvent<HTMLInputElement>) => {
+
+    const handleKeyDownTag = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter' && inputTagValue.trim() !== '') {
-          setTags([...tags, inputTagValue.trim()]); // Thêm tag mới vào mảng tags
-          setInputTagValue(''); // Xóa giá trị trong input sau khi thêm
+            setTags([...tags, inputTagValue.trim()]); // Thêm tag mới vào mảng tags
+            setInputTagValue(''); // Xóa giá trị trong input sau khi thêm
         }
     };
 
@@ -151,7 +141,7 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
         setTags(newTags);
     };
 
-    const TagOk = (e : React.MouseEvent) => {
+    const TagOk = (e: React.MouseEvent) => {
         setIsTagVisible(!isTagVisible);
         e.stopPropagation();
     }
@@ -177,12 +167,10 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
             const group_id = ""
             const tag = tags
             const photo = []
-            for (let i = 0; i < images.length; i++)
-            {
+            for (let i = 0; i < images.length; i++) {
                 const res = await uploadFile(images[i])
                 photo.push(res)
             }
-            onClose();
             const response = await axios.post(`${process.env.REACT_APP_link_server}/post`, {
                 user_id,
                 content,
@@ -194,7 +182,7 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
             setTagFriend([]);
             setTags([]);
             successNotification("Đăng bài thành công");
-            navigate("/home");            
+            navigate("/home");
         } catch (err: any) {
             if (err.response) {
                 // Lỗi từ server, in chi tiết phản hồi
@@ -203,15 +191,22 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
             } else {
                 setError('Có lỗi xảy ra, vui lòng thử lại.');
             }
-        } 
+        }
 
     }
+    useEffect(() => {
+        if (contentEditableRef.current) {
+            contentEditableRef.current.innerHTML = content; // Đồng bộ nội dung từ state
+        }
+    }, [content]);
+    
+    if (!isOpen) return null;
 
     return (
         <div className={cx('modal-overlay')}>
             <div className={cx('modal-content', { 'expanded': isImageVisible })}>
                 <div className={cx('modal-title')}>
-                    <h3>Tạo bài viết</h3>
+                    <h3>Sửa bài viết</h3>
                     <div className={cx('circle')} onClick={onClose}>
                         <span className={cx('cross')}>&#x2715;</span>
                     </div>
@@ -221,10 +216,10 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
 
                 <div className={cx('modal-user-infor')}>
                     <div className={cx('modal-avatar')}>
-                        <img src="/asset/img/avatar.jpg" alt="avatar-img" className={cx('modal-avatar-img')} />
+                        <img src={post.userInfo.image} alt="avatar-img" className={cx('modal-avatar-img')} />
                     </div>
                     <div className={cx('modal-status')}>
-                        <div className={cx('modal-username')}>{userName}</div>
+                        <div className={cx('modal-username')}>{post.userInfo.username}</div>
                         <div className={cx('modal-user-status')}>
                             <select value={selectedOption} onChange={handleChange}>
                                 <option value="Công khai" className={cx('option-with-icon option1')}>Công khai</option>
@@ -235,16 +230,16 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                     </div>
                 </div>
 
-                <div 
-                    className={cx('modal-post-content')} 
-                    contentEditable="true" 
+                <div
+                    className={cx('modal-post-content')}
+                    contentEditable="true"
                     onInput={handleInput}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
                     onKeyDown={handleKeyDown}
                     ref={contentEditableRef}
                 />
-                
+
                 <input
                     type="file"
                     accept="image/*"
@@ -253,17 +248,17 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                     style={{ display: 'none' }}
                     id="upload-input"
                 />
-                
+
                 {(!content.trim() && !isFocused) && (
-                    <div className={cx('placeholder')}>
-                        Bạn đang nghĩ gì thế, hãy chia sẻ nào?
-                    </div>
+                <div className={cx('placeholder')}>
+                    {content == null ? 'Bạn đang nghĩ gì thế, hãy chia sẻ nào?' : content}
+                </div>
                 )}
-                
+
                 {isImageVisible && (
-                    <div 
-                        className={cx("modal-add-img")} 
-                        onDrop={handleDrop} 
+                    <div
+                        className={cx("modal-add-img")}
+                        onDrop={handleDrop}
                         onDragOver={handleDragOver}
                         onClick={() => {
                             if (images.length === 0) {  // Nếu chưa có ảnh nào thì mở input
@@ -276,12 +271,12 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                         )}
                         {images.length > 0 && (
                             <div className={cx('edit-img')}
-                            onClick={openModalimg}
+                                onClick={openModalimg}
                             > Chỉnh sửa ảnh</div>
                         )}
                         {images.length > 0 && (
                             <div className={cx('add-more-img')}
-                            onClick={() => { document.getElementById('upload-input')?.click();}}
+                                onClick={() => { document.getElementById('upload-input')?.click(); }}
                             >Thêm ảnh</div>
                         )}
                         <div className={cx('circle')} onClick={toggleImageVisibility}>
@@ -289,10 +284,10 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                         </div>
                         <div className={cx('image-preview')}>
                             {images.slice(0, 4).map((image, index) => (
-                                <img 
-                                    key={index} 
-                                    src={URL.createObjectURL(image)}  
-                                    alt="preview" 
+                                <img
+                                    key={index}
+                                    src={URL.createObjectURL(image)}
+                                    alt="preview"
                                     className={cx('preview-img')}
                                 />
                             ))}
@@ -303,7 +298,7 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                                         alt="preview"
                                         className={cx('preview-img')} // Làm mờ ảnh thứ 5 nếu số lượng ảnh > 5
                                     />
-                                    {images.length > 5 && ( 
+                                    {images.length > 5 && (
                                         <div className={cx('image-overlay')}>
                                             <span className={cx('more-count')}>+{images.length - 5}</span>
                                         </div>
@@ -325,12 +320,12 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                         <div className={cx('line')}></div>
                         <div className={cx('body')}>
                             <div className={cx('tag-content')}>
-                                <input type='text' placeholder='Tìm kiếm bạn bè'/>
-                                <img src='/asset/icon/search.svg' alt='search-icon' className={cx('search-icon')}/>
+                                <input type='text' placeholder='Tìm kiếm bạn bè' />
+                                <img src='/asset/icon/search.svg' alt='search-icon' className={cx('search-icon')} />
                             </div>
                         </div>
                         <div className={cx('friend-tags')}></div>
-                        
+
                     </div>
                 )}
 
@@ -345,18 +340,18 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                         <div className={cx('line')}></div>
                         <div className={cx('body')}>
                             <div className={cx('tag-content')}>
-                                <input type='text' placeholder='Thêm HashTag' value={inputTagValue} onChange={handleInputTagChange} onKeyDown={handleKeyDownTag}/>
+                                <input type='text' placeholder='Thêm HashTag' value={inputTagValue} onChange={handleInputTagChange} onKeyDown={handleKeyDownTag} />
                             </div>
                         </div>
                         <div className={cx('tag-container')}>
                             <div className={cx('tags')}>
-                                {tags.map((tag, index) => (
-                                <span key={index} className={cx('tag')}>
-                                    #{tag}
-                                    <button onClick={() => handleRemoveTag(index)}>
-                                        x
-                                    </button>
-                                </span>
+                                {post.tag.map((tag, index) => (
+                                    <span key={index} className={cx('tag')}>
+                                        #{tag}
+                                        <button onClick={() => handleRemoveTag(index)}>
+                                            x
+                                        </button>
+                                    </span>
                                 ))}
                             </div>
                         </div>
@@ -383,31 +378,31 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
                     </HoverDiv>
                 </div>
 
-                <div className={cx("button-post")} 
+                <div className={cx("button-post")}
                     style={{
-                        cursor: (content.trim() || images.length > 0) ? 'pointer' : 'not-allowed', 
-                        backgroundColor: (content.trim() || images.length > 0) ? '#0866FF' : '#505151', 
+                        cursor: (content.trim() || images.length > 0) ? 'pointer' : 'not-allowed',
+                        backgroundColor: (content.trim() || images.length > 0) ? '#0866FF' : '#505151',
                         color: (content.trim() || images.length > 0) ? '#fff' : '#757676'
                     }}
                     onClick={CreateNewPost}
-                    >
+                >
                     Đăng
                 </div>
             </div>
 
             {isModalimgOpen && (
-            <div className={cx('modalimg-overlay')} onClick={closeModalimg}>
-                <div className={cx('modalimg-content')} onClick={(e) => e.stopPropagation()}>
-                    <h2>Chỉnh sửa ảnh</h2>
-                    <button onClick={closeModalimg}>Close Modal</button>
+                <div className={cx('modalimg-overlay')} onClick={closeModalimg}>
+                    <div className={cx('modalimg-content')} onClick={(e) => e.stopPropagation()}>
+                        <h2>Chỉnh sửa ảnh</h2>
+                        <button onClick={closeModalimg}>Close Modal</button>
+                    </div>
                 </div>
-            </div>
             )}
         </div>
     );
 };
 
-export default CreatePost;
+export default EditPost;
 function setError(arg0: string) {
     throw new Error('Function not implemented.');
 }
