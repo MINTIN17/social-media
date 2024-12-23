@@ -6,10 +6,9 @@ import HoverDiv from '../HoverDiv';
 import { useNavigate } from 'react-router-dom';
 import { set } from 'lodash';
 import { notification } from 'antd';
-import { successNotification } from '../Notification';
+import { errorNotification, successNotification } from '../Notification';
 import EditPost from '../EditPost';
 import CommentSection from './CommentSection';
-
 const cx = classNames.bind(styles);
 
 interface Post {
@@ -62,8 +61,6 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
     const currentUserId = localStorage.getItem('userId');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalData, setModalData] = useState<Post>();
-    const user_id = localStorage.getItem("userId");
-
     const [active, setActive] = useState<string[]>([])
 
     const toggleActive = (postId: string) => {
@@ -225,19 +222,60 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
         return "";
     };
 
-    const editPost = (itemId : string) => {
+    // const handleOpenModalEdit = () => {
+    //     setIsModalOpen(true);
+    //   };
+
+    //   const handleCloseModalEdit = () => {
+    //     setIsModalOpen(false);
+    //   };
+
+    const editPost = (itemId: string) => {
         axios.get(`${process.env.REACT_APP_link_server}/post/${itemId}`)
-        .then(res => {
-            console.log(res.data);
-            setModalData(res.data);
-        })
+            .then(res => {
+                console.log(res.data);
+                setModalData(res.data);
+            })
         setIsModalOpen(true);
     };
 
-    
-      const handleCloseModal = () => {
+    const deletePost = (itemId: string) => {
+        axios.delete(`${process.env.REACT_APP_link_server}/post/${itemId}`)
+            .then(res => {
+                console.log(res.data);
+                successNotification("Xóa thành công")
+                fetchPosts();
+            })
+            .finally(() => {
+            })
+    };
+
+    const reportPost = (itemId: string) => {
+        axios.post(`${process.env.REACT_APP_link_server}/post/report`, {
+            user_id: localStorage.getItem('userId'),
+            post_id: itemId
+        })
+            .then(res => {
+                console.log(res.data);
+                if (res.data.message === "You have already reported this post.") {
+                    errorNotification("Bạn đã báo cáo vi phạm rồi")
+                }
+                else {
+
+                    successNotification("Báo vi phạm thành công")
+                }
+            })
+            .catch(err => {
+                console.log(err.data);
+                errorNotification(err.data)
+            })
+            .finally(() => {
+            })
+    };
+
+    const handleCloseModal = () => {
         setIsModalOpen(false);
-      };
+    };
 
     if (loading) {
         return (
@@ -267,9 +305,9 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                 <div className={cx('no-post')}>Không có bài viết nào</div>
             ) : (
                 <div className={cx('Posts')}>
-                    {isModalOpen && modalData != null &&<EditPost post={modalData} 
+                    {isModalOpen && modalData != null && <EditPost post={modalData}
                         isOpen={isModalOpen}
-                        onClose={handleCloseModal}/>}
+                        onClose={handleCloseModal} />}
                     {items.map((item) => (
                         (() => {
                             const userReaction = getUserReaction(item, currentUserId || '');
@@ -288,12 +326,24 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                             <div className={cx('user-name')}>{item.userInfo?.username || 'Người dùng không xác định'}</div>
                                             <div className={cx('time-post')}>{formatDate(item.created_time)}</div>
                                         </div>
-                                        {user_id == item.user_id &&(
-                                            <div className={cx('option')} onClick={() => editPost(item._id)}>
-                                                <HoverDiv hoverText='Chỉnh sửa'>...</HoverDiv>
-                                            </div>
-                                        )}
-                                        
+                                        {
+                                            item.user_id === localStorage.getItem('userId')
+                                                ?
+                                                <div className={cx('option')}>
+                                                    <div onClick={() => editPost(item._id)}>
+                                                        <HoverDiv hoverText='Chỉnh sửa'>...</HoverDiv>
+                                                    </div>
+                                                    <div onClick={() => deletePost(item._id)}>
+                                                        <HoverDiv hoverText='Xóa'>...</HoverDiv>
+                                                    </div>
+                                                </div>
+                                                :
+                                                <div className={cx('option')}>
+                                                    <div onClick={() => reportPost(item._id)}>
+                                                        <HoverDiv hoverText='Báo vi phạm'>...</HoverDiv>
+                                                    </div>
+                                                </div>
+                                        }
                                     </div>
                                     {typeof item.content === 'string' && (
                                         <div className={cx('content')}>
@@ -421,9 +471,9 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
 
                                     </div>
                                     <div>
-                                        {isActive ? 
-                                        <CommentSection comments={item.comments || []} parentCommentId='' postId={item._id} onCommentSuccess={fetchPosts}/>
-                                        : <div></div>
+                                        {isActive ?
+                                            <CommentSection comments={item.comments || []} parentCommentId='' postId={item._id} onCommentSuccess={fetchPosts} />
+                                            : <div></div>
                                         }
                                     </div>
                                 </div>

@@ -55,17 +55,14 @@ const EditPost: React.FC<EditPostProps> = ({ post, isOpen, onClose }) => {
     const navigate = useNavigate();
     const [isModalimgOpen, setIsModalimgOpen] = useState(false);
     const [inputTagValue, setInputTagValue] = useState('');
-    
-    // console.log(tags)
+    console.log(post.content)
     useEffect(() => {
-        setContent(post.content);
-        
+        setContent(post.content ?? "");
         const fileObjects: File[] = post.photo.map((photo) => {
             
             return new File([new Blob()], photo.split('/').pop() || 'unknown.jpg', { type: 'image/jpeg' });
           });
         setImages(fileObjects);
-        console.log(images)
     }, [post]);
 
 
@@ -95,7 +92,7 @@ const EditPost: React.FC<EditPostProps> = ({ post, isOpen, onClose }) => {
     };
 
     const handleBlur = () => {
-        if (content.trim() === '') {
+        if (content?.trim() === '') {
             setContent('');
             setIsFocused(false);
         }
@@ -122,7 +119,7 @@ const EditPost: React.FC<EditPostProps> = ({ post, isOpen, onClose }) => {
 
     const toggleTagVisibility = (e: React.MouseEvent) => {
         setIsTagVisible(!isTagVisible);
-        setTags([]);
+        // setTags([]);
         e.stopPropagation();
     };
 
@@ -200,6 +197,8 @@ const EditPost: React.FC<EditPostProps> = ({ post, isOpen, onClose }) => {
         if (contentEditableRef.current) {
             contentEditableRef.current.innerHTML = content; // Đồng bộ nội dung từ state
         }
+        setTags(post.tag);
+
     }, [content]);
     
     if (!isOpen) return null;
@@ -251,7 +250,7 @@ const EditPost: React.FC<EditPostProps> = ({ post, isOpen, onClose }) => {
                     id="upload-input"
                 />
 
-                {(!content.trim() && !isFocused) && (
+                {(!content?.trim() && !isFocused) && (
                 <div className={cx('placeholder')}>
                     {content == null ? 'Bạn đang nghĩ gì thế, hãy chia sẻ nào?' : content}
                 </div>
@@ -382,9 +381,9 @@ const EditPost: React.FC<EditPostProps> = ({ post, isOpen, onClose }) => {
 
                 <div className={cx("button-post")}
                     style={{
-                        cursor: (content.trim() || images.length > 0) ? 'pointer' : 'not-allowed',
-                        backgroundColor: (content.trim() || images.length > 0) ? '#0866FF' : '#505151',
-                        color: (content.trim() || images.length > 0) ? '#fff' : '#757676'
+                        cursor: (content?.trim() || images.length > 0) ? 'pointer' : 'not-allowed',
+                        backgroundColor: (content?.trim() || images.length > 0) ? '#0866FF' : '#505151',
+                        color: (content?.trim() || images.length > 0) ? '#fff' : '#757676'
                     }}
                     onClick={CreateNewPost}
                 >
@@ -408,4 +407,3 @@ export default EditPost;
 function setError(arg0: string) {
     throw new Error('Function not implemented.');
 }
-
