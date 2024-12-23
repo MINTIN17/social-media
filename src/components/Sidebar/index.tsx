@@ -20,6 +20,7 @@ function Sidebar() {
     const navigate = useNavigate();
     const [list_friend, setListFriend] = useState<friend_request[]>();
     const [friends, setFriends] = useState<Friend[]>([]);
+    const [connection, setConnection] = useState<WebSocket>();
 
     const GetListUser = async (): Promise<friend_request[] | null> => {
         try {
@@ -54,12 +55,8 @@ function Sidebar() {
                 userId: currentUserId,
             });
 
-            const response1 = await axios.post(`${process.env.REACT_APP_link_server}/notification`, {
-                receiver_id: id,
-                type: "acceptFriend",
-                content: "đã chấp nhận lời mời kết bạn",
-                link_user: currentUserId
-            });
+            if(id != null && currentUserId != null)
+                sendNotification(id, currentUserId);
 
             const message = response.data;
         } catch (error) {
@@ -68,6 +65,60 @@ function Sidebar() {
             window.location.reload();
         }
     };
+
+    const sendNotification = async (id: string, currentUserId: string) => {
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_link_server}/notification`, {
+                receiver_id: id,
+                type: "acceptFriend",
+                content: "đã chấp nhận lời mời kết bạn",
+                link_user: currentUserId
+            });
+            
+    
+            const notificationData = {
+                ...res.data,
+                type: "notification",
+            };
+    
+            if (connection && connection.readyState === WebSocket.OPEN) {
+                connection.send(JSON.stringify(notificationData));
+
+            } else {
+                console.error("WebSocket connection is not open. Notification not sent.");
+            }
+        } catch (err) {
+            console.error("Error sending notification:", err);
+        }
+    };
+
+    useEffect(() => {
+        const wsConnection = new WebSocket('ws://localhost:5000');
+    
+        wsConnection.onopen = () => {
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+                wsConnection.send(JSON.stringify({ type: 'clientId', clientId: userId }));
+            }
+        };
+    
+        wsConnection.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            console.log('Received:', data);
+        };
+    
+        wsConnection.onclose = () => {
+            console.log('Disconnected from WebSocket server');
+        };
+    
+        setConnection(wsConnection); // Lưu trữ kết nối WebSocket trong state
+    
+        return () => {
+            if (wsConnection.readyState === WebSocket.OPEN) {
+                wsConnection.close();
+            }
+        };
+    }, []);
 
     const handleRemoveFriendRequest = async (id: string) => {
         try {

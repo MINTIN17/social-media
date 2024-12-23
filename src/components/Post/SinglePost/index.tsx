@@ -259,6 +259,7 @@ const SinglePost: React.FC = () => {
                             parentCommentId=""
                             postId={post._id}
                             onCommentSuccess={fetchPost}
+                            user_id={post.user_id}
                         />
                     )
                 }

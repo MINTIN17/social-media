@@ -472,7 +472,7 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                     </div>
                                     <div>
                                         {isActive ?
-                                            <CommentSection comments={item.comments || []} parentCommentId='' postId={item._id} onCommentSuccess={fetchPosts} />
+                                            <CommentSection comments={item.comments || []} parentCommentId='' postId={item._id} onCommentSuccess={fetchPosts} user_id={item.user_id}/>
                                             : <div></div>
                                         }
                                     </div>

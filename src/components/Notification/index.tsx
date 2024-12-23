@@ -5,6 +5,7 @@ import styles from './Notification.module.scss';
 import axios from 'axios';
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
+import { link } from "fs";
 
 const cx = classNames.bind(styles);
 
@@ -22,12 +23,14 @@ export const warningNotification = (message1: string): void => {
 };
 
 interface notification{
+    _id: string,
     receiver_id: string;  
     content: string;
     type: string;
-    link_comment: string;
+    link_comment: link_user_infor;
     link_post: string;       
-    link_user: link_user_infor;
+    link_user?: link_user_infor;
+    is_new: boolean;
 }
 
 interface NotificationProps {
@@ -46,28 +49,105 @@ const Notification = () => {
     const [notifications, setnotifications] = useState<notification[]>([]);
     const [viewMode, setViewMode] = useState<"new" | "all">("new");
     const navigate = useNavigate();
-    
-    const fetchNotifications = async () => {
-        try {
-            const response = await axios.get<notification[]>(`${process.env.REACT_APP_link_server}/notification/${user_id}`);
-            setnotifications(response.data);
-        } catch (error) {
-            console.error('Error fetching notifications:', error);
-        }
-    };
+    const [usernames, setUsername] = useState<string[]>([]);
+    const [images, setImages] = useState<string[]>([]);
+    const [links, setLinks] = useState<string[]>([]);
+    const [is_new, setIs_new] = useState<boolean[]>([]);
+
+const fetchNotifications = async () => {
+    try {
+        const response = await axios.get<notification[]>(`${process.env.REACT_APP_link_server}/notification/${user_id}`);
+        const notifications = response.data;
+        
+        setnotifications(notifications);
+        
+
+        const usernames = notifications.map(notification => {
+            if (notification.link_user != null) {
+                return notification.link_user.username;
+            } else {
+                return notification.link_comment.username; 
+            }
+        });
+
+        const images = notifications.map(notification => {
+            if (notification.link_user != null) {
+                return notification.link_user.image;
+            } else {
+                return notification.link_comment.image;
+            }
+        });
+
+        const links = notifications.map(notification => {
+            if (notification.link_user != null) {
+                return notification.link_user._id;
+            } else {
+                return notification.link_post;
+            }
+        });
+
+        const is_news = notifications.map(notification => {return notification.is_new;});
+
+        setUsername(usernames);
+        setImages(images);
+        setLinks(links);
+        setIs_new(is_news);
+    } catch (error) {
+        console.error('Error fetching notifications:', error); // In lỗi nếu xảy ra
+    }
+};
 
     useEffect(() => {
         fetchNotifications();
     }, []);
 
-    const visibleNotifications = viewMode === "new" ? notifications.slice(0, 5) : notifications;
-    const LinkClick = (id: string, type: string) => {
+    const visibleNotifications = viewMode === "new" ? notifications.slice(0, 4) : notifications;
+    const LinkClick = async  (link: string ,type: string, index: number, id: string) => {
+        const updatedIsNew = [...is_new];
+        updatedIsNew[index] = false;
+        setIs_new(updatedIsNew);
+
+        try {
+            // Gọi API để cập nhật is_new thành false trong backend
+            await axios.put(`${process.env.REACT_APP_link_server}/notification/${id}/is_new`, {
+            is_new: false,
+            });
+        } catch (error) {
+            console.error('Error updating notification:', error);
+        }
+
         if (type === "addFriend" || type === "acceptFriend")
-            navigate(`/profile/${id}`);
+        {
+            navigate(`/profile/${link}`);
+            
+        }
+        else if(type === "commentPost")
+        {
+            navigate(`/post/${link}`);
+        }
     };
+
+    const handleThreeDotsClick = async  (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, index: number) => {
+        // Ngừng sự kiện click lan ra ngoài (để không gây ra sự kiện click trên toàn bộ <li>)
+        e.stopPropagation();
+    
+        const updatedIsNew = [...is_new];
+        updatedIsNew[index] = true;
+        setIs_new(updatedIsNew);
+
+        try {
+            // Gọi API để cập nhật is_new thành false trong backend
+            await axios.put(`${process.env.REACT_APP_link_server}/notification/${notifications[index]._id}/is_new`, {
+            is_new: true,
+            });
+        } catch (error) {
+            console.error('Error updating notification:', error);
+        }
+    };
+
     return (
         <div className={cx('notification')}
-            style={{padding: '10px'}}
+            style={{paddingLeft: 10, paddingBottom: 10, paddingTop: 10}}
         >
             <div className={cx('header')}
                 style={{fontSize: 20, fontWeight: 600, padding: '10px'}}
@@ -112,7 +192,7 @@ const Notification = () => {
             <div
                 className={cx("notification-list")}
                 style={{
-                    maxHeight: viewMode === "all" ? "300px" : "auto",
+                    maxHeight: viewMode === "all" ? "275px" : "auto",
                     overflowY: viewMode === "all" ? "scroll" : "hidden",
                 }}
             >
@@ -127,9 +207,10 @@ const Notification = () => {
                                 paddingBottom: "10px",
                                 cursor: 'pointer',
                                 display: 'flex',
-                                alignItems: 'center'
+                                alignItems: 'center',
+                                position: 'relative'
                                 }}
-                                onClick={() => LinkClick(notification.link_user._id, notification.type)}
+                                onClick={() => LinkClick(links[index], notification.type, index, notification._id)}
                             >
                                 {/* Avatar */}
                                 <div 
@@ -142,8 +223,8 @@ const Notification = () => {
                                         marginRight: '10px'
                                 }}>
                                     <img
-                                        src={notification.link_user.image}
-                                        alt={notification.link_user.username}
+                                        src={images[index]}
+                                        alt={usernames[index]}
                                         style={{
                                         width: '100%',
                                         height: '100%',
@@ -152,7 +233,7 @@ const Notification = () => {
                                 </div>
                         
                                 <div>
-                                    <strong>{notification.link_user.username}</strong> {notification.content}
+                                    <strong>{usernames[index]}</strong> {notification.content}
                                 </div>
                           
                                 <div>
@@ -160,8 +241,37 @@ const Notification = () => {
                                         {/* Bạn có thể để nội dung trong thẻ <a> nếu muốn */}
                                     </a>
                                 </div>
+
+                                {is_new[index] && (
+                                    <span
+                                        style={{
+                                            width: '10px',
+                                            height: '10px',
+                                            backgroundColor: '#3c8ddf',
+                                            borderRadius: '50%',
+                                            position: 'absolute',
+                                            right: 40,
+                                            top: 20
+                                        }}
+                                    />
+                                )}
+
+                                {/* Dấu ba chấm */}
+                                    <span
+                                        onClick={(e) => handleThreeDotsClick(e, index)}  // Xử lý nhấn vào dấu ba chấm
+                                        style={{
+                                            position: 'absolute',
+                                            right: 20,
+                                            top: 10,
+                                            cursor: 'pointer',
+                                            fontSize: '18px',
+                                            color: '#000000'
+                                        }}
+                                    >
+                                        ...
+                                    </span>
                             </li>
-                          
+                            
                         ))}
                     </ul>
                 ) : (

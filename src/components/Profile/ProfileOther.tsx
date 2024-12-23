@@ -39,6 +39,7 @@ function ProfileOther() {
     const handleCancelPending = () => setIsModalVisiblePending(false);
     const showModalSent = () => setIsModalVisibleSent(true);
     const handleCancelSent = () => setIsModalVisibleSent(false);
+    const [connection, setConnection] = useState<WebSocket>();
 
     const fetchUser = async (): Promise<user | null> => {
         try {
@@ -98,29 +99,82 @@ function ProfileOther() {
     const handleSendFriendRequest = async () => {
         try {
             const currentUserId = localStorage.getItem('userId');
-
+    
+            // Gửi yêu cầu kết bạn
             const response = await axios.put(`${process.env.REACT_APP_link_server}/account/add-friend`, {
                 friendId: id,
                 userId: currentUserId,
             });
-
-            const response1 = await axios.post(`${process.env.REACT_APP_link_server}/notification`, {
-                receiver_id: id,
-                type: "addFriend",
-                content: "đã gửi lời mời kết bạn đến bạn",
-                link_user: currentUserId
-            });
-
+    
+            // Gửi thông báo
+            if(id != null && currentUserId != null)
+                sendNotification(id, currentUserId);
+    
+            // Cập nhật trạng thái nút sau khi yêu cầu thành công
             const message = response.data;
-            if (message === "Friend added successfully")
+            if (message === "Friend added successfully") {
                 setButtonState("pending");
-
+            }
         } catch (error) {
-            console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
+            console.error('Lỗi khi gửi yêu cầu kết bạn hoặc thông báo:', error);
         } finally {
             window.location.reload();
         }
     };
+
+    const sendNotification = async (id: string, currentUserId: string) => {
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_link_server}/notification`, {
+                receiver_id: id,
+                type: "addFriend",
+                content: "đã gửi lời mời kết bạn đến bạn",
+                link_user: currentUserId,
+            });
+            
+    
+            const notificationData = {
+                ...res.data,
+                type: "notification",
+            };
+    
+            if (connection && connection.readyState === WebSocket.OPEN) {
+                connection.send(JSON.stringify(notificationData));
+
+            } else {
+                console.error("WebSocket connection is not open. Notification not sent.");
+            }
+        } catch (err) {
+            console.error("Error sending notification:", err);
+        }
+    };
+
+    useEffect(() => {
+        const wsConnection = new WebSocket('ws://localhost:5000');
+    
+        wsConnection.onopen = () => {
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+                wsConnection.send(JSON.stringify({ type: 'clientId', clientId: userId }));
+            }
+        };
+    
+        wsConnection.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            console.log('Received:', data);
+        };
+    
+        wsConnection.onclose = () => {
+            console.log('Disconnected from WebSocket server');
+        };
+    
+        setConnection(wsConnection); // Lưu trữ kết nối WebSocket trong state
+    
+        return () => {
+            if (wsConnection.readyState === WebSocket.OPEN) {
+                wsConnection.close();
+            }
+        };
+    }, []);
 
     const handleMessage = async () => {
         try {

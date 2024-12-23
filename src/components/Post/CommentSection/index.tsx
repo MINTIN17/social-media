@@ -7,14 +7,15 @@ interface CommentSectionProps {
     postId: string;
     parentCommentId: string;
     onCommentSuccess: () => void; // Callback to refetch posts
+    user_id: string;
 }
 
-const CommentSection: React.FC<CommentSectionProps> = ({ comments, postId, parentCommentId, onCommentSuccess }) => {
+const CommentSection: React.FC<CommentSectionProps> = ({ comments, postId, parentCommentId, onCommentSuccess,user_id }) => {
     return (
         <div style={{ padding: '20px' }}>
             <div style={{maxHeight: '500px', overflowY: "scroll", paddingRight: '10px'}}>
                 {comments.map((comment) => (
-                    <Comment key={comment._id} {...comment} parentCommentId='' postId={postId} onCommentSuccess={onCommentSuccess} />
+                    <Comment key={comment._id} {...comment} parentCommentId='' postId={postId} onCommentSuccess={onCommentSuccess} user_id={user_id}/>
                 ))}
 
             </div>
@@ -22,6 +23,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ comments, postId, paren
                 parentCommentId={parentCommentId}
                 postId={postId}
                 onCommentSuccess={onCommentSuccess}
+                user_id={user_id}
             />
         </div>
     );

@@ -41,7 +41,7 @@ function Header() {
     const toggleModal = (event: React.MouseEvent) => {
         // Ngăn sự kiện click trên nút kích hoạt xử lý bên ngoài
         setModalNotification((prev) => !prev); // Toggle modal
-        event.stopPropagation(); 
+        event.stopPropagation();
     };
 
     const DiaryPage = () => {
@@ -96,6 +96,8 @@ function Header() {
 
     const [userName, setUserName] = useState<string | null>(null);
     const [avatar, setAvatar] = useState<string | undefined>(undefined);
+    const [hasNewNotification, setHasNewNotification] = useState(false);
+    const [connection, setConnection] = useState<WebSocket | null>(null);
 
     useEffect(() => {
         const userName = localStorage.getItem('userName');
@@ -160,7 +162,7 @@ function Header() {
                 break;
             case 'diary':
                 DiaryPage();
-                break;  
+                break;
             case 'admin':
                 AdminPage();
                 break;
@@ -171,6 +173,43 @@ function Header() {
                 break;
         }
     };
+
+
+    useEffect(() => {
+        const wsConnection = new WebSocket('ws://localhost:5000');
+    
+        wsConnection.onopen = () => {
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+                wsConnection.send(JSON.stringify({ type: 'clientId', clientId: userId }));
+            }
+        };
+    
+        wsConnection.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            setHasNewNotification(true);
+            console.log('Received:', data);
+        };
+    
+        wsConnection.onclose = () => {
+            console.log('Disconnected from WebSocket server');
+        };
+    
+        setConnection(wsConnection); 
+    
+        return () => {
+            if (wsConnection.readyState === WebSocket.OPEN) {
+                wsConnection.close();
+            }
+        };
+    }, []);// Empty dependency array ensures it runs only once
+   
+   
+
+    const handleOpenNotifications = () => {
+        setHasNewNotification(false);
+    };
+
 
     return (
         <header className={cx('wrapper')}>
@@ -241,13 +280,23 @@ function Header() {
                     </HoverDiv>
                     <HoverDiv hoverText="Thông báo">
                         <div className={cx('menu-item', { 'selected': selected === 'notification' })}
-                        onClick={toggleModal}>
+                            onClick={toggleModal}
+                            style={{position: "relative"}}>
                             <img
                                 src="/asset/icon/notification.svg"
                                 alt="notification-icon"
                                 className={cx('menu-icon')}
                             />
+                            {hasNewNotification && (
+                                <span
+                                    onClick={handleOpenNotifications}
+                                    style={{ position: "absolute", color: 'red', fontSize: '50px', marginLeft: '10px', cursor: 'pointer'}}
+                                >
+                                    •
+                                </span>
+                            )}
                         </div>
+                        
                     </HoverDiv>
 
                     {modalNotification && (
@@ -255,40 +304,40 @@ function Header() {
                             <Notification />
                         </div>
                     )}
-                    
+
                     <HoverDiv hoverText="Tin nhắn">
                         <div className={cx('menu-item', { 'selected': selected === 'message' })}
-                            onClick={() => handleMenuClick('message') }>
-                                <img src="/asset/icon/message.svg" alt="message-icon" className={cx('menu-icon')} />
+                            onClick={() => handleMenuClick('message')}>
+                            <img src="/asset/icon/message.svg" alt="message-icon" className={cx('menu-icon')} />
                         </div>
-            </HoverDiv>
-            {role === "admin" ?
-                <HoverDiv hoverText="Quản lý">
-                    <div className={cx('menu-item', { 'selected': selected === 'admin' })}
-                    onClick={() => handleMenuClick('admin') }>
-                        <img src="/asset/icon/manage.svg" alt="message-icon" className={cx('menu-icon')} />
+                    </HoverDiv>
+                    {role === "admin" ?
+                        <HoverDiv hoverText="Quản lý">
+                            <div className={cx('menu-item', { 'selected': selected === 'admin' })}
+                                onClick={() => handleMenuClick('admin')}>
+                                <img src="/asset/icon/manage.svg" alt="message-icon" className={cx('menu-icon')} />
+                            </div>
+                        </HoverDiv>
+                        : <div></div>
+                    }
+                </div>
+            </div >
+            <div className={cx('part_3')}>
+                <div className={cx('name')}>
+                    <p>
+                        <span>{userName}</span>
+                    </p>
+                </div>
+                <HoverDiv hoverText="Tài khoản">
+                    <div className={cx('avtar')} onClick={ProfilePage}>
+                        <img
+                            src={avatar || '/asset/img/avatar.jpg'}
+                            alt="img-avatar"
+                            className={cx('img-avatar')}
+                        />
                     </div>
                 </HoverDiv>
-                : <div></div>
-            }
-        </div>
-            </div >
-        <div className={cx('part_3')}>
-            <div className={cx('name')}>
-                <p>
-                    <span>{userName}</span>
-                </p>
             </div>
-            <HoverDiv hoverText="Tài khoản">
-                <div className={cx('avtar')} onClick={ProfilePage}>
-                    <img
-                        src={avatar || '/asset/img/avatar.jpg'}
-                        alt="img-avatar"
-                        className={cx('img-avatar')}
-                    />
-                </div>
-            </HoverDiv>
-        </div>
         </header >
     );
 }

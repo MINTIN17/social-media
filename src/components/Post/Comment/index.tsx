@@ -12,9 +12,10 @@ interface CommentProps {
     parentCommentId: string;
     postId: string;
     child: CommentProps[];
-    onCommentSuccess: () => void;}
+    onCommentSuccess: () => void;
+    user_id : string}
 
-const Comment: React.FC<CommentProps> = ({ _id, user, content, parentCommentId, postId, child, onCommentSuccess }) => {
+const Comment: React.FC<CommentProps> = ({ _id, user, content, parentCommentId, postId, child, onCommentSuccess, user_id }) => {
     console.log(parentCommentId)
     const [active, setActive] = useState<boolean>(false)
     return (
@@ -46,6 +47,7 @@ const Comment: React.FC<CommentProps> = ({ _id, user, content, parentCommentId, 
                                         postId={cmt.postId}
                                         child={cmt.child}
                                         onCommentSuccess={onCommentSuccess}
+                                        user_id={user_id}
                                     />
                                 </div>
                             ))}
@@ -55,7 +57,7 @@ const Comment: React.FC<CommentProps> = ({ _id, user, content, parentCommentId, 
             {
                 parentCommentId === "" && active ?
                     <div style={{ paddingLeft: "60px" }}>
-                        <CommentBox parentCommentId={_id} postId={postId} onCommentSuccess={onCommentSuccess} />
+                        <CommentBox parentCommentId={_id} postId={postId} onCommentSuccess={onCommentSuccess} user_id={user_id}/>
                     </div>
                     : <div></div>
             }

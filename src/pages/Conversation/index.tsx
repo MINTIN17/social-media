@@ -137,7 +137,7 @@ const Conversation: React.FC = () => {
 
     fetchData();
 
-    const wsConnection = new WebSocket('ws://10.10.31.91:5000');
+    const wsConnection = new WebSocket('ws://localhost:5000');
     console.log(wsConnection)
     wsConnection.onopen = () => {
       setTimeout(() => {
@@ -158,6 +158,7 @@ const Conversation: React.FC = () => {
         const reader = new FileReader();
         reader.onload = () => {
           const msg = reader.result;
+          
           if (msg && typeof msg === 'string') {
             const msgObj = JSON.parse(msg);
             setMessages((prevMessages) => [...prevMessages, msgObj]);
@@ -168,6 +169,7 @@ const Conversation: React.FC = () => {
         reader.readAsText(data);
       } else {
         const msg = JSON.parse(data);
+        if (msg.type === "privateMessage"){}
         setMessages((prevMessages) => [...prevMessages, msg]);
       }
     };
