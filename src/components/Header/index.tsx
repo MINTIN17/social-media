@@ -6,18 +6,27 @@ import HoverDiv from '../HoverDiv';
 import axios from 'axios';
 import { debounce, delay } from 'lodash';
 import { TIMEOUT } from 'dns';
-import { useLocation } from 'react-router-dom'; 
+import { useLocation } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
 function Header() {
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [selected, setSelected] = useState('');
+    const [role, setRole] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
 
     const DiaryPage = () => {
         navigate('/calendar');
+    };
+
+    const MessagePage = () => {
+        navigate('/message');
+    };
+
+    const AdminPage = () => {
+        navigate('/admin/listUs');
     };
 
     const HomePage = () => {
@@ -33,8 +42,8 @@ function Header() {
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value; 
-        handleSearch(value); 
+        const value = e.target.value;
+        handleSearch(value);
     };
 
     const handleSearch = debounce(async (query: string) => {
@@ -42,7 +51,7 @@ function Header() {
         if (query.length > 0) {
             const userId = localStorage.getItem('userId');
             try {
-                let response; 
+                let response;
                 if (!query.startsWith('#')) {
                     const payload = {
                         partialName: query,
@@ -70,6 +79,18 @@ function Header() {
         if (avatar) {
             setAvatar(avatar); // Get avatar from localStorage
         }
+
+        const accessToken = localStorage.getItem('accessToken')
+
+        // Split the token to get the payload
+        const payloadBase64 = accessToken?.split('.')[1]; // The second part of the JWT
+        if (payloadBase64) {
+            const decodedPayload = JSON.parse(atob(payloadBase64)); // Decode and parse the payload
+            const role = decodedPayload.role;
+            setRole(role)
+        } else {
+            console.error("Invalid token format");
+        }
     }, []);
 
     const handleSearchResultClick = (id: string) => {
@@ -92,13 +113,16 @@ function Header() {
             case '/Home':
                 setSelected('home');
                 break;
+            case '/admin':
+                setSelected('admin');
+                break;
             default:
                 setSelected('');
         }
     }, [location.pathname]);
 
     const handleMenuClick = (menu: string) => {
-        setSelected(menu); 
+        setSelected(menu);
         console.log(selected);
         switch (menu) {
             case 'home':
@@ -109,6 +133,12 @@ function Header() {
                 break;
             case 'diary':
                 DiaryPage();
+                break;
+            case 'admin':
+                AdminPage();
+                break;
+            case 'message':
+                MessagePage();
                 break;
             default:
                 break;
@@ -121,28 +151,28 @@ function Header() {
                 <div className={cx('logo')} onClick={() => handleMenuClick('home')}>Trinity</div>
                 <div className={cx('search')}>
                     <div className={cx('search-bar', { 'expanded': searchResults.length > 0 })}>
-                        <input 
-                            type="text" 
-                            id="name" 
-                            name="name" 
-                            placeholder="Tìm kiếm trên Trinity" 
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="Tìm kiếm trên Trinity"
                             onChange={handleInputChange}
                         />
-                        <img src='/asset/icon/search.svg' alt='search-icon' className={cx('search-icon')}/>
+                        <img src='/asset/icon/search.svg' alt='search-icon' className={cx('search-icon')} />
                         {searchResults.length > 0 && (
                             <div className={cx('search-results')}>
                                 {searchResults.slice(0, 5).map((result, index) => (
-                                    <div 
-                                        key={index} 
+                                    <div
+                                        key={index}
                                         className={cx('result-item')}
                                         style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
                                         onClick={() => handleSearchResultClick(result._id)}
                                     >
                                         <div className={cx('result-avatar')}>
-                                            <img  
+                                            <img
                                                 src={result.image || '/asset/img/avatar.jpg'}
-                                                alt="img-avatar" 
-                                                className={cx('img-avatar')} 
+                                                alt="img-avatar"
+                                                className={cx('img-avatar')}
                                                 style={{ width: 30, height: 30, borderRadius: '50%' }}
                                             />
                                         </div>
@@ -154,29 +184,29 @@ function Header() {
                             </div>
                         )}
                     </div>
-                </div>    
+                </div>
             </div>
             <div className={cx('part_2')}>
                 <div className={cx('menu')}>
                     <HoverDiv hoverText="Trang chủ">
-                        <div 
-                            className={cx('menu-item', { 'selected': selected === 'home' })} 
+                        <div
+                            className={cx('menu-item', { 'selected': selected === 'home' })}
                             onClick={() => handleMenuClick('home')}
                         >
                             <img src="/asset/icon/home.svg" alt="home-icon" className={cx('menu-icon')} />
                         </div>
                     </HoverDiv>
                     <HoverDiv hoverText="Bạn bè">
-                        <div 
-                            className={cx('menu-item', { 'selected': selected === 'friend' })} 
+                        <div
+                            className={cx('menu-item', { 'selected': selected === 'friend' })}
                             onClick={() => handleMenuClick('friend')}
                         >
                             <img src="/asset/icon/friend.svg" alt="friend-icon" className={cx('menu-icon')} />
                         </div>
                     </HoverDiv>
                     <HoverDiv hoverText="Nhật ký">
-                        <div 
-                            className={cx('menu-item', { 'selected': selected === 'diary' })} 
+                        <div
+                            className={cx('menu-item', { 'selected': selected === 'diary' })}
                             onClick={() => handleMenuClick('diary')}
                         >
                             <img src="/asset/icon/diary.svg" alt="diary-icon" className={cx('menu-icon')} />
@@ -192,29 +222,39 @@ function Header() {
                         </div>
                     </HoverDiv>
                     <HoverDiv hoverText="Tin nhắn">
-                        <div className={cx('menu-item', { 'selected': selected === 'message' })}>
-                            <img src="/asset/icon/message.svg" alt="message-icon" className={cx('menu-icon')} />
+                        <div className={cx('menu-item', { 'selected': selected === 'message' })}
+                            onClick={() => handleMenuClick('message') }>
+                                <img src="/asset/icon/message.svg" alt="message-icon" className={cx('menu-icon')} />
                         </div>
-                    </HoverDiv>
-                </div>
-            </div>
-            <div className={cx('part_3')}>
-                <div className={cx('name')}>
-                    <p>
-                        <span>{userName}</span>
-                    </p>
-                </div>
-                <HoverDiv hoverText="Tài khoản">
-                    <div className={cx('avtar')} onClick={ProfilePage}>
-                        <img 
-                            src={avatar || '/asset/img/avatar.jpg'} 
-                            alt="img-avatar" 
-                            className={cx('img-avatar')} 
-                        />
+            </HoverDiv>
+            {role === "admin" ?
+                <HoverDiv hoverText="Quản lý">
+                    <div className={cx('menu-item', { 'selected': selected === 'admin' })}
+                    onClick={() => handleMenuClick('admin') }>
+                        <img src="/asset/icon/manage.svg" alt="message-icon" className={cx('menu-icon')} />
                     </div>
                 </HoverDiv>
+                : <div></div>
+            }
+        </div>
+            </div >
+        <div className={cx('part_3')}>
+            <div className={cx('name')}>
+                <p>
+                    <span>{userName}</span>
+                </p>
             </div>
-        </header>
+            <HoverDiv hoverText="Tài khoản">
+                <div className={cx('avtar')} onClick={ProfilePage}>
+                    <img
+                        src={avatar || '/asset/img/avatar.jpg'}
+                        alt="img-avatar"
+                        className={cx('img-avatar')}
+                    />
+                </div>
+            </HoverDiv>
+        </div>
+        </header >
     );
 }
 

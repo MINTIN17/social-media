@@ -62,21 +62,23 @@ const ListPost: React.FC = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      // Xử lý dữ liệu trả về từ API
+  
+      // Map API response to table data format
       const fetchedData = response.data.map((item: any, index: number) => ({
-        key: index + 1,
-        id: item.post_owner.user_id,
-        email: item.post_owner.email,
+        key: index + 1, // For rendering row numbers
+        id: item.post_owner?.user_id || 'Unknown', // Safely handle missing owner data
+        email: item.post_owner?.email || 'No email', // Default value for missing email
         number: item.report_count,
         postId: item.post_id,
       }));
-
+  
       setData(fetchedData);
     } catch (error) {
       console.error('Error fetching report data:', error);
+      errorNotification('Failed to fetch data');
     }
   };
+  
 
   useEffect(() => {
     fetchDataReportPost();
@@ -84,12 +86,13 @@ const ListPost: React.FC = () => {
 
   const columns: TableColumnsType<DataType> = [
     {
-      title: 'STT',
+      title: 'STT', // Serial number
       dataIndex: 'key',
       key: 'key',
+      align: 'center',
     },
     {
-      title: 'Email',
+      title: 'Email', // Email of the post owner
       dataIndex: 'email',
       key: 'email',
       filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }: any) => (
@@ -120,43 +123,53 @@ const ListPost: React.FC = () => {
       onFilter: (value, record) => record.email.toLowerCase().includes((value as string).toLowerCase()),
     },
     {
-      title: 'Lượt report',
+      title: 'Số lượng report', // Number of reports
       dataIndex: 'number',
       key: 'number',
       sorter: (a, b) => a.number - b.number,
+      align: 'center',
     },
     {
-      title: 'Quản lý bài viết',
+      title: 'Quản lý bài viết', // Action buttons
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
           <Tooltip title="Mở report bài viết">
-              <Button className={styles.btnPrf} style={{ background: "greenyellow" }} onClick={() => handleUnlockReport(record.postId)}>
-                <UnlockOutlined style={{ color: "#fff" }}/>
-              </Button>
-            </Tooltip>
+            <Button
+              className={styles.btnPrf}
+              style={{ background: 'greenyellow' }}
+              onClick={() => handleUnlockReport(record.postId)}
+            >
+              <UnlockOutlined style={{ color: '#fff' }} />
+            </Button>
+          </Tooltip>
           <Tooltip title="Xóa bài viết">
             <Button
               className={styles.btnPrf}
               style={{ background: 'red' }}
-              onClick={() => handleDeletePost(record.postId)} // Gọi hàm xóa
+              onClick={() => handleDeletePost(record.postId)}
             >
-              <DeleteOutlined style={{ color: "#fff" }} />
+              <DeleteOutlined style={{ color: '#fff' }} />
             </Button>
           </Tooltip>
           <Tooltip title="Xem bài viết">
-            <a href={`/post/view/${record.postId}`}>View</a>
+            <a href={`/post/${record.postId}`}>View</a>
           </Tooltip>
         </Space>
       ),
-    }    
+    },
   ];
+  
 
   const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
   };
 
-  return <Table<DataType> columns={columns} dataSource={data} onChange={onChange} />;
+  return <div>
+            <p className={styles.txtListUs}>Danh sách bài viết bị báo cáo vi phạm</p>
+
+    <Table<DataType> columns={columns} dataSource={data} onChange={onChange} />
+  </div>
 };
 
 export default ListPost;

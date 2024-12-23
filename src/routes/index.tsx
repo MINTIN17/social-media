@@ -21,6 +21,7 @@ import ProfileOther from '../components/Profile/ProfileOther';
 import CalendarPage from '../pages/Calendar';
 import Conversation from '../pages/Conversation';
 import FriendSent from '../components/FriendSent';
+import SinglePost from '../components/Post/SinglePost';
 
 const publicRoutes = [
     { path: '/home', component: Home, layout: DefaultLayout },
@@ -31,12 +32,12 @@ const publicRoutes = [
     { path: '/', component: Overview, layout: null },
     { path: '/admin/listUs', component: ListUser, layout: AdminLayout },
     { path: '/admin/listPo', component: ListPost, layout: AdminLayout },
-    { path: '/admin/listPo/post', component: PostUser, layout: null, },
-    { path: '/admin/profile', component: PostProfile, layout: ProfileLayout, },
     { path: '/profile', component: ProfilePage, layout: HeaderOnly },
     { path: '/profile/post', component: PostProfile, layout: HeaderOnly },
     { path: '/diary', component: Diary, layout: null },
+    { path: '/message', component: Conversation, layout: HeaderOnly },
     { path: '/message/:id', component: Conversation, layout: HeaderOnly },
+    { path: '/post/:id', component: SinglePost, layout: DefaultLayout },
     { path: '/friend/friendlist', component: ContentFriend, layout: FriendLayout },
     { path: '/friend/friendRequests', component: FriendRequests, layout: FriendLayout },
     { path: '/friend/friendsent', component: FriendSent, layout: FriendLayout },

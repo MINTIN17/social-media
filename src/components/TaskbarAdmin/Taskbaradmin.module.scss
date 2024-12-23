@@ -4,10 +4,9 @@
 
 .taskbar-admin {
   display: flex;
-  position: fixed; 
-  top: 0;
+  top: 92px;
   left: 0;
-  height: 100vh; /* Chiều cao của Taskbar */
+  height: 100%; /* Chiều cao của Taskbar */
   z-index: 1000;
 }
 

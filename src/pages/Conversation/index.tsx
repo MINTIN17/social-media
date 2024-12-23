@@ -33,7 +33,6 @@ const Conversation: React.FC = () => {
   const [recipient, setRecipient] = useState<UserData>();
   const [connection, setConnection] = useState<WebSocket>();
   const navigation = useNavigate();
-
   const fetchConversation = async () => {
     const userId = localStorage.getItem("userId");
 
@@ -190,7 +189,7 @@ const Conversation: React.FC = () => {
 
 
   return (
-    <div style={{ display: "flex" }}>
+    <div className="wrapper" style={{ display: "flex" }}>
       {/* Conversation List */}
       <div
         style={{
@@ -230,8 +229,8 @@ const Conversation: React.FC = () => {
 
       {/* Chat Place */}
       <div style={{ flex: 1, padding: "10px" }}>
-        {id !== null ? (
-          <div>
+        {id !== undefined && id !== null && id !== "" ? (
+          <div className="wrapper">
             <div className="chat-messages">
               {messages.map((msg, index) => (
                 <div
@@ -309,7 +308,13 @@ const Conversation: React.FC = () => {
             </div>
           </div>
         ) : (
-          <p>Select a conversation to start chatting</p>
+          <p style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}>Vui lòng chọn người để nhắn tin</p>
         )}
       </div>
     </div>
