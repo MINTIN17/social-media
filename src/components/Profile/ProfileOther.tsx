@@ -232,7 +232,7 @@ function ProfileOther() {
                             <p style={{ color: '#fff' }}>Không có ảnh bìa</p>
                         )}
                         <div className={cx('user-infor')}>
-                            <img src='/asset/img/avatar.jpg' alt='' className={cx('avatar-img')}></img>
+                            <img src={user?.image !== "" ? user?.image : "asset/img/avatar.jpg"} alt='' className={cx('avatar-img')}></img>
                             <div className={styles.nameUs}>
                                 <p className={styles.nameUser}>{user?.username}</p>
                                 <p className={styles.friendUs}>{user?.friend.length} Bạn bè</p>

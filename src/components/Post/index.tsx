@@ -319,7 +319,7 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                             <img
                                                 src={item.userInfo?.image || '/asset/img/avatar.jpg'}
                                                 alt="avatar-img"
-
+                                                className={cx('avatar-img')}
                                             />
                                         </div>
                                         <div className={cx('name')} onClick={() => goToProfile(item.user_id)}>
