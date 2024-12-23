@@ -1,12 +1,13 @@
 import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import HoverDiv from '../HoverDiv';
 import axios from 'axios';
 import { debounce, delay } from 'lodash';
 import { TIMEOUT } from 'dns';
 import { useLocation } from 'react-router-dom'; 
+import Notification from '../Notification';
 
 const cx = classNames.bind(styles);
 
@@ -15,6 +16,32 @@ function Header() {
     const [selected, setSelected] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
+    const [modalNotification, setModalNotification] = useState(false);
+    const modalRef = useRef<HTMLDivElement | null>(null);
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+            setModalNotification(false); // Đóng modal nếu click bên ngoài
+        }
+    };
+
+    useEffect(() => {
+        if (modalNotification) {
+            document.addEventListener('mousedown', handleClickOutside);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [modalNotification]);
+
+    const toggleModal = (event: React.MouseEvent) => {
+        // Ngăn sự kiện click trên nút kích hoạt xử lý bên ngoài
+        setModalNotification((prev) => !prev); // Toggle modal
+        event.stopPropagation(); 
+    };
 
     const DiaryPage = () => {
         navigate('/calendar');
@@ -109,7 +136,7 @@ function Header() {
                 break;
             case 'diary':
                 DiaryPage();
-                break;
+                break;  
             default:
                 break;
         }
@@ -183,7 +210,8 @@ function Header() {
                         </div>
                     </HoverDiv>
                     <HoverDiv hoverText="Thông báo">
-                        <div className={cx('menu-item', { 'selected': selected === 'notification' })}>
+                        <div className={cx('menu-item', { 'selected': selected === 'notification' })}
+                        onClick={toggleModal}>
                             <img
                                 src="/asset/icon/notification.svg"
                                 alt="notification-icon"
@@ -191,6 +219,13 @@ function Header() {
                             />
                         </div>
                     </HoverDiv>
+
+                    {modalNotification && (
+                        <div className={cx('modal-notification')} ref={modalRef}>
+                            <Notification />
+                        </div>
+                    )}
+                    
                     <HoverDiv hoverText="Tin nhắn">
                         <div className={cx('menu-item', { 'selected': selected === 'message' })}>
                             <img src="/asset/icon/message.svg" alt="message-icon" className={cx('menu-icon')} />

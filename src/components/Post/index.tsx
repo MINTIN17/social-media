@@ -7,12 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import { set } from 'lodash';
 import { notification } from 'antd';
 import { successNotification } from '../Notification';
-<<<<<<< HEAD
 import EditPost from '../EditPost';
-
-=======
 import CommentSection from './CommentSection';
->>>>>>> 9f7cbbe2f103dd6f54768fd6f4ea83faa506bb40
+
 const cx = classNames.bind(styles);
 
 interface Post {
@@ -63,10 +60,10 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
     const navigate = useNavigate();
     const [reactions, setReactions] = useState<{ [postId: string]: string }>({});
     const currentUserId = localStorage.getItem('userId');
-<<<<<<< HEAD
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalData, setModalData] = useState<Post>();
-=======
+    const user_id = localStorage.getItem("userId");
+
     const [active, setActive] = useState<string[]>([])
 
     const toggleActive = (postId: string) => {
@@ -74,7 +71,6 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
             prev.includes(postId) ? prev.filter((id) => id !== postId) : [...prev, postId]
         );
     };
->>>>>>> 9f7cbbe2f103dd6f54768fd6f4ea83faa506bb40
 
     const fetchPosts = async () => {
         console.log(apiUrl)
@@ -229,15 +225,6 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
         return "";
     };
 
-<<<<<<< HEAD
-    // const handleOpenModalEdit = () => {
-    //     setIsModalOpen(true);
-    //   };
-    
-    //   const handleCloseModalEdit = () => {
-    //     setIsModalOpen(false);
-    //   };
-
     const editPost = (itemId : string) => {
         axios.get(`${process.env.REACT_APP_link_server}/post/${itemId}`)
         .then(res => {
@@ -251,14 +238,6 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
       const handleCloseModal = () => {
         setIsModalOpen(false);
       };
-
-=======
-    const editPost = (itemId: string) => {
-        // axios.post(`${process.env.REACT_APP_link_server}/user-post-share`, {
-        //     user_id,
-        //     post_id: postId
-        // })
-    };
 
     if (loading) {
         return (
@@ -280,7 +259,6 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
             </div>
         )
     }
->>>>>>> 9f7cbbe2f103dd6f54768fd6f4ea83faa506bb40
 
     return (
 
@@ -303,16 +281,19 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                             <img
                                                 src={item.userInfo?.image || '/asset/img/avatar.jpg'}
                                                 alt="avatar-img"
-                                                className={cx('avatar-img')}
+
                                             />
                                         </div>
                                         <div className={cx('name')} onClick={() => goToProfile(item.user_id)}>
                                             <div className={cx('user-name')}>{item.userInfo?.username || 'Người dùng không xác định'}</div>
                                             <div className={cx('time-post')}>{formatDate(item.created_time)}</div>
                                         </div>
-                                        <div className={cx('option')} onClick={() => editPost(item._id)}>
-                                            <HoverDiv hoverText='Chỉnh sửa'>...</HoverDiv>
-                                        </div>
+                                        {user_id == item.user_id &&(
+                                            <div className={cx('option')} onClick={() => editPost(item._id)}>
+                                                <HoverDiv hoverText='Chỉnh sửa'>...</HoverDiv>
+                                            </div>
+                                        )}
+                                        
                                     </div>
                                     {typeof item.content === 'string' && (
                                         <div className={cx('content')}>

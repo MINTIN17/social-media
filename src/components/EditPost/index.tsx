@@ -55,6 +55,7 @@ const EditPost: React.FC<EditPostProps> = ({ post, isOpen, onClose }) => {
     const navigate = useNavigate();
     const [isModalimgOpen, setIsModalimgOpen] = useState(false);
     const [inputTagValue, setInputTagValue] = useState('');
+    
     // console.log(tags)
     useEffect(() => {
         setContent(post.content);
@@ -64,6 +65,7 @@ const EditPost: React.FC<EditPostProps> = ({ post, isOpen, onClose }) => {
             return new File([new Blob()], photo.split('/').pop() || 'unknown.jpg', { type: 'image/jpeg' });
           });
         setImages(fileObjects);
+        console.log(images)
     }, [post]);
 
 
@@ -345,7 +347,7 @@ const EditPost: React.FC<EditPostProps> = ({ post, isOpen, onClose }) => {
                         </div>
                         <div className={cx('tag-container')}>
                             <div className={cx('tags')}>
-                                {post.tag.map((tag, index) => (
+                                {tags.map((tag, index) => (
                                     <span key={index} className={cx('tag')}>
                                         #{tag}
                                         <button onClick={() => handleRemoveTag(index)}>

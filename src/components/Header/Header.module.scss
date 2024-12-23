@@ -96,6 +96,7 @@
     justify-content: center;
     .menu {
         display: flex;
+        position: relative;
         flex-direction: row;
         justify-content: space-between; 
         .menu-item {
@@ -121,6 +122,15 @@
                 }
             }
             
+        }
+        .modal-notification{
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            top: 92px;
+            right: -100px;
+            border-radius: 10px;
+            background-color: #b6b6b6;
         }
     }
 }

@@ -54,6 +54,13 @@ function Sidebar() {
                 userId: currentUserId,
             });
 
+            const response1 = await axios.post(`${process.env.REACT_APP_link_server}/notification`, {
+                receiver_id: id,
+                type: "acceptFriend",
+                content: "đã chấp nhận lời mời kết bạn",
+                link_user: currentUserId
+            });
+
             const message = response.data;
         } catch (error) {
             console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
