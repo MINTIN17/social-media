@@ -1,6 +1,7 @@
 .wrapper {
     height: 1000px;
     background-color: var(--primary-color);
+
     .no-post {
         display: flex;
         color: #fff;
@@ -8,13 +9,39 @@
         background-color: var(--primary-color);
         font-size: 25px;
     }
+
     .Posts {
-        display: flex; 
+        display: flex;
         flex-direction: column;
 
         align-items: center;
         background-color: var(--primary-color);
-        
+
+        .modal_confirm {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            right: 0;
+            background-color: #86858581;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            .modal_confirm_content{
+                background-color: white;
+                border-radius: 20px;
+                padding: 20px 40px 20px 40px;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
         .Post {
             justify-content: center;
             width: 800px;
@@ -23,11 +50,13 @@
             margin-bottom: 30px;
             background-color: #fff;
             border-radius: 25px;
+
             .post-infor {
                 position: relative;
                 display: flex;
                 flex-direction: row;
                 height: 80px;
+
                 .avatar {
                     width: 50px;
                     height: 50px;
@@ -38,34 +67,38 @@
                     align-items: center;
                     margin: 20px 10px 0px 20px;
                     cursor: pointer;
-                    
+
                     .avatar-img {
                         width: 100%;
                         height: 100%;
                         object-fit: fill;
                     }
                 }
+
                 .name {
                     display: flex;
                     flex-direction: column;
                     font-size: 20px;
                     font-weight: 600;
                     cursor: pointer;
+
                     .user-name {
                         height: 30px;
                         color: #000;
                         display: flex;
                         margin-top: 20px;
                     }
+
                     .time-post {
                         color: #000;
                         font-size: 15px;
                         font-weight: 500;
                     }
                 }
-                .option{
+
+                .option {
                     position: absolute;
-                    top: 10px;
+                    top: 15px;
                     right: 30px;
                     cursor: pointer;
                     display: flex;
@@ -73,6 +106,7 @@
                 }
 
             }
+
             .content {
                 display: flex;
                 width: 90%;
@@ -80,65 +114,72 @@
                 color: #000;
                 font-size: 20px;
             }
+
             .tag {
                 width: 100%;
                 padding: 0 20px;
                 color: blue;
             }
+
             .image-container {
                 display: flex;
-                flex-wrap: wrap; 
+                flex-wrap: wrap;
                 padding: 5px;
                 max-height: 500px; // Giới hạn chiều cao tối đa
                 overflow: hidden;
+
                 .image-item {
                     width: 100%;
                     height: 100%;
-                    border: 2px solid #dfdfdf; 
-                    object-fit: contain; 
+                    border: 2px solid #dfdfdf;
+                    object-fit: contain;
                 }
-            
+
                 .one-image {
                     width: 100%; // Chiếm toàn bộ không gian
                     height: auto; // Để chiều cao tự động theo kích thước ảnh
                 }
-            
+
                 .two-images {
                     width: 50%; // Mỗi ảnh chiếm 50% chiều rộng
                     height: auto; // Để chiều cao tự động theo kích thước ảnh
                 }
-            
+
                 .three-images {
                     display: flex;
                     width: 100%; // Chiếm toàn bộ không gian
                     position: relative;
+
                     .first {
                         width: 50%; // Ảnh đầu tiên chiếm 50%
                         height: 500px; // Để chiều cao tự động
                     }
-            
+
                     .two-images {
                         display: flex;
                         flex-direction: column;
                         width: 50%; // Hai ảnh còn lại chiếm 50% không gian
                         height: 500px; // Chiều cao cố định
-            
-                        .second, .third {
+
+                        .second,
+                        .third {
                             width: 100%; // Mỗi ảnh chiếm toàn bộ chiều rộng của phần 50%
                             height: 50%; // Mỗi ảnh chiếm 50% chiều cao
                         }
                     }
                 }
             }
-            .infor-post
-            {
+
+            .infor-post {
                 display: flex;
                 padding: 10px;
             }
+
             .action {
                 display: flex;
                 flex-direction: row;
                 height: 40px;
+
                 .child {
                     flex: 1;
                     display: flex;
@@ -146,56 +187,66 @@
                     align-items: center;
                     color: #868585;
                     cursor: pointer;
-                    &:hover 
-                    {
-                        background-color:#eeeeee;
+
+                    &:hover {
+                        background-color: #eeeeee;
                     }
                 }
-                .reaction{
+
+                .reaction {
                     position: relative;
                     border-bottom-left-radius: 25px;
-                    .like-icon
-                    {
+
+                    .like-icon {
                         width: 20px;
                         height: 20px;
                         margin-right: 5px;
                     }
+
                     .reaction-icons {
-                        display: none; 
+                        display: none;
                         width: 240px;
                         height: 60px;
-                        position: absolute; 
-                        top: -60px; 
+                        position: absolute;
+                        top: -60px;
                         background-color: #dadada;
                         border-radius: 20px;
                         cursor: default;
-                        .like-icon-post, .dislike-icon, .haha-icon, .angry-icon {
+
+                        .like-icon-post,
+                        .dislike-icon,
+                        .haha-icon,
+                        .angry-icon {
                             margin: 0 10px;
                             width: 40px;
                             height: 40px;
                             margin-top: 10px;
                             border-radius: 50%;
                             cursor: pointer;
+
                             &:hover {
                                 transform: scale(1.2);
                                 transition: transform 0.2s;
                             }
                         }
                     }
-                    &:hover .reaction-icons{
+
+                    &:hover .reaction-icons {
                         display: block;
                     }
                 }
-                .comment{
+
+                .comment {
                     .comment-icon {
                         width: 20px;
                         height: 20px;
                         margin-right: 5px;
                     }
                 }
-                .share
-                {
+
+                .share {
                     border-bottom-right-radius: 25px;
+
                     .share-icon {
                         width: 20px;
                         height: 20px;
@@ -239,7 +290,8 @@
     object-fit: contain; // Giữ tỉ lệ của ảnh
 }
 
-.prev-button, .next-button {
+.prev-button,
+.next-button {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -271,6 +323,7 @@
     color: white;
     font-size: 1.5rem;
     font-weight: bold;
+
     .more-count {
         position: relative;
         z-index: 2; // Đảm bảo chữ nằm trên ảnh
@@ -279,28 +332,32 @@
 
 .share.disabled {
     pointer-events: none;
-    opacity: 0.5;        
-    cursor: not-allowed;  
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .share.disabled {
     pointer-events: none;
-    opacity: 0.5;        
-    cursor: not-allowed;  
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .bg-like {
-    background-color: #8cb9fc; /* Xanh lá */
+    background-color: #8cb9fc;
+    /* Xanh lá */
 }
 
 .bg-dislike {
-    background-color: #fa948d; /* Đỏ */
+    background-color: #fa948d;
+    /* Đỏ */
 }
 
 .bg-haha {
-    background-color: #fff598; /* Vàng */
+    background-color: #fff598;
+    /* Vàng */
 }
 
 .bg-angry {
-    background-color: #ff9d7f; /* Cam đậm */
+    background-color: #ff9d7f;
+    /* Cam đậm */
 }

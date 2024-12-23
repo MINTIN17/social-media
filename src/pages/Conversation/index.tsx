@@ -192,11 +192,11 @@ const Conversation: React.FC = () => {
 
   return (
     <div className="wrapper" style={{ display: "flex" }}>
-      {/* Conversation List */}
       <div
         style={{
           width: "400px",
           borderRight: "1px solid #ddd",
+          height: "calc(100vh - 92px)"
         }}
       >
         {conversation && conversation.length > 0 ? (
@@ -225,7 +225,7 @@ const Conversation: React.FC = () => {
             ))}
           </div>
         ) : (
-          <p>No conversation found.</p>
+          <p>Không có người liên hệ</p>
         )}
       </div>
 

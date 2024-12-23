@@ -61,7 +61,7 @@ const Login: React.FC = () => {
     return (
         <div className={cx('form-container', 'login-container')}>
             <form onSubmit={handleSubmit}>
-                <h1 className={cx('nick')}>Login here.</h1>
+                <h1 className={cx('nick')}>Đăng nhập</h1>
                 <input
                     type="email"
                     placeholder="Email"
@@ -70,7 +70,7 @@ const Login: React.FC = () => {
                 />
                 <input
                     type="password"
-                    placeholder="Password"
+                    placeholder="Mật khẩu"
                     value={password}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} // Typing for onChange event
                 />
@@ -78,11 +78,11 @@ const Login: React.FC = () => {
                 {/* Hiển thị thông báo lỗi nếu có */}
                 <div className={cx('content')}>
                     <a href="/forgot_password" className={cx('pass-link')}>
-                        Forgot password?
+                        Quên mật khẩu?
                     </a>
                 </div>
                 <button className={cx('btnLo')} type="submit">
-                    Login
+                    Đăng nhập
                 </button>
             </form>
         </div>

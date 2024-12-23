@@ -59,10 +59,10 @@ const Register: React.FC = () => {
     return (
         <div className={cx('form-container', 'register-container')}>
             <form onSubmit={handleSubmit}> {/* Gán handleSubmit vào sự kiện onSubmit */}
-                <h1 className={cx('nick')}>Sign Up here.</h1>
+                <h1 className={cx('nick')}>Đăng ký</h1>
                 <input 
                     type="text" 
-                    placeholder="Name" 
+                    placeholder="Tên" 
                     value={name} 
                     onChange={handleNameChange} 
                 />
@@ -74,18 +74,18 @@ const Register: React.FC = () => {
                 />
                 <input 
                     type="password" 
-                    placeholder="Password" 
+                    placeholder="Mật khẩu" 
                     value={password} 
                     onChange={handlePasswordChange} 
                 />
                 <input 
                     type="password" 
-                    placeholder="Repassword" 
+                    placeholder="Xác nhận mật khẩu" 
                     value={repassword} 
                     onChange={handleRepasswordChange} 
                 />
                 {error && <p style={{ color: '#440000', fontSize: '10px' }}>{error}</p>} {/* Hiển thị thông báo lỗi nếu có */}
-                <button className={cx('btnLo')} type='submit'>Sign Up</button>
+                <button className={cx('btnLo')} type='submit'>Đăng ký</button>
             </form>
         </div>
     );
