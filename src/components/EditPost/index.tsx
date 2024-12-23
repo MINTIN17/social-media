@@ -407,4 +407,3 @@ export default EditPost;
 function setError(arg0: string) {
     throw new Error('Function not implemented.');
 }
-

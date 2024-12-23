@@ -104,6 +104,13 @@ function ProfileOther() {
                 userId: currentUserId,
             });
 
+            const response1 = await axios.post(`${process.env.REACT_APP_link_server}/notification`, {
+                receiver_id: id,
+                type: "addFriend",
+                content: "đã gửi lời mời kết bạn đến bạn",
+                link_user: currentUserId
+            });
+
             const message = response.data;
             if (message === "Friend added successfully")
                 setButtonState("pending");
