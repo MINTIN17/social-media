@@ -60,6 +60,9 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
     const [reactions, setReactions] = useState<{ [postId: string]: string }>({});
     const currentUserId = localStorage.getItem('userId');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedId, setSelectedId] = useState<string>()
+    const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+    const [isModalReportOpen, setIsModalReportOpen] = useState(false);
     const [modalData, setModalData] = useState<Post>();
     const [active, setActive] = useState<string[]>([])
 
@@ -164,42 +167,44 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
             prevItems.map((post) => {
                 if (post._id === postId) {
                     const isCurrentReaction =
-                        (emotion === "like" && post.like_user_id.includes(user_id)) ||
-                        (emotion === "dislike" && post.dislike_user_id.includes(user_id)) ||
-                        (emotion === "haha" && post.haha_user_id.includes(user_id)) ||
-                        (emotion === "angry" && post.angry_user_id.includes(user_id));
+                        (emotion === "like" && post.like_user_id?.includes(user_id)) ||
+                        (emotion === "dislike" && post.dislike_user_id?.includes(user_id)) ||
+                        (emotion === "haha" && post.haha_user_id?.includes(user_id)) ||
+                        (emotion === "angry" && post.angry_user_id?.includes(user_id));
 
-                    // Nếu đang chọn cùng reaction, xóa user_id khỏi tất cả các mảng
+                    // If the user already reacted with the same emotion, remove their reaction from all arrays
                     if (isCurrentReaction) {
-                        post.like_user_id = post.like_user_id.filter((id) => id !== user_id);
-                        post.dislike_user_id = post.dislike_user_id.filter((id) => id !== user_id);
-                        post.haha_user_id = post.haha_user_id.filter((id) => id !== user_id);
-                        post.angry_user_id = post.angry_user_id.filter((id) => id !== user_id);
+                        post.like_user_id = post.like_user_id?.filter((id) => id !== user_id) || [];
+                        post.dislike_user_id = post.dislike_user_id?.filter((id) => id !== user_id) || [];
+                        post.haha_user_id = post.haha_user_id?.filter((id) => id !== user_id) || [];
+                        post.angry_user_id = post.angry_user_id?.filter((id) => id !== user_id) || [];
                         return post;
                     }
-                    // Remove the user from all possible reaction arrays to ensure no duplicates
-                    post.like_user_id = post.like_user_id.filter((id) => id !== user_id);
-                    post.dislike_user_id = post.dislike_user_id.filter((id) => id !== user_id);
-                    post.haha_user_id = post.haha_user_id.filter((id) => id !== user_id);
-                    post.angry_user_id = post.angry_user_id.filter((id) => id !== user_id);
+
+                    // Remove the user from all reaction arrays to ensure no duplicates
+                    post.like_user_id = post.like_user_id?.filter((id) => id !== user_id) || [];
+                    post.dislike_user_id = post.dislike_user_id?.filter((id) => id !== user_id) || [];
+                    post.haha_user_id = post.haha_user_id?.filter((id) => id !== user_id) || [];
+                    post.angry_user_id = post.angry_user_id?.filter((id) => id !== user_id) || [];
 
                     // Add the user to the appropriate reaction category based on the selected emotion
                     switch (emotion) {
                         case "like":
-                            post.like_user_id.push(user_id?.toString() || '');
+                            post.like_user_id = [...(post.like_user_id || []), user_id];
                             break;
                         case "dislike":
-                            post.dislike_user_id.push(user_id?.toString() || '');
+                            post.dislike_user_id = [...(post.dislike_user_id || []), user_id];
                             break;
                         case "haha":
-                            post.haha_user_id.push(user_id?.toString() || '');
+                            post.haha_user_id = [...(post.haha_user_id || []), user_id];
                             break;
                         case "angry":
-                            post.angry_user_id.push(user_id?.toString() || '');
+                            post.angry_user_id = [...(post.angry_user_id || []), user_id];
                             break;
                         default:
                             break;
                     }
+
                 }
                 return post;
             })
@@ -247,6 +252,7 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                 fetchPosts();
             })
             .finally(() => {
+                setIsModalDeleteOpen(false)
             })
     };
 
@@ -270,12 +276,26 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                 errorNotification(err.data)
             })
             .finally(() => {
+                setIsModalReportOpen(false)
             })
     };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
+
+    // Recursive function to count all comments and their children
+    const countComments = (comments: any) => {
+        if (!comments || comments.length === 0) {
+            return 0;
+        }
+
+        return comments.reduce((total: any, comment: any) => {
+            // Count the current comment and recursively count its children
+            return total + 1 + countComments(comment.child || []);
+        }, 0);
+    };
+
 
     if (loading) {
         return (
@@ -307,7 +327,28 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                 <div className={cx('Posts')}>
                     {isModalOpen && modalData != null && <EditPost post={modalData}
                         isOpen={isModalOpen}
-                        onClose={handleCloseModal} />}
+                        onClose={handleCloseModal} />
+                    }
+                    {isModalDeleteOpen != null && isModalDeleteOpen &&
+                        <div className={cx('modal_confirm')}>
+                            <div className={cx('modal_confirm_content')}>
+                                Bạn có chắc chắn muốn xóa
+                                <div style={{ width: "100px", display: "flex", justifyContent: "center", }} className={cx('modal_confirm_button')} onClick={() => { deletePost(selectedId ?? ""); }}
+                                >Xác nhận</div>
+                                <div style={{ position: "absolute", color: "gray", right: "20px", top: "20px", cursor: "pointer", display: "flex", justifyContent: "center", }} onClick={() => { setIsModalDeleteOpen(false) }}>X</div>
+                            </div>
+                        </div>
+                    }
+                    {isModalReportOpen != null && isModalReportOpen &&
+                        <div className={cx('modal_confirm')}>
+                            <div className={cx('modal_confirm_content')}>
+                                Bạn có chắc chắn muốn báo cáo
+                                <div style={{ width: "100px", display: "flex", justifyContent: "center", }} className={cx('modal_confirm_button')} onClick={() => { reportPost(selectedId ?? ""); }}
+                                >Xác nhận</div>
+                                <div style={{ position: "absolute", color: "gray", right: "20px", top: "20px", cursor: "pointer", display: "flex", justifyContent: "center", }} onClick={() => { setIsModalReportOpen(false) }}>X</div>
+                            </div>
+
+                        </div>}
                     {items.map((item) => (
                         (() => {
                             const userReaction = getUserReaction(item, currentUserId || '');
@@ -330,17 +371,25 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                             item.user_id === localStorage.getItem('userId')
                                                 ?
                                                 <div className={cx('option')}>
-                                                    <div onClick={() => editPost(item._id)}>
-                                                        <HoverDiv hoverText='Chỉnh sửa'>...</HoverDiv>
+                                                    <div className={cx('option_child')} onClick={() => editPost(item._id)}>
+                                                        <HoverDiv hoverText='Chỉnh sửa'><img style={{
+                                                            filter:
+                                                                "invert(45%) sepia(82%) saturate(1344%) hue-rotate(97deg) brightness(70%) contrast(90%)"
+                                                        }}
+                                                            src='asset/icon/editpost.svg'></img></HoverDiv>
                                                     </div>
-                                                    <div onClick={() => deletePost(item._id)}>
-                                                        <HoverDiv hoverText='Xóa'>...</HoverDiv>
+                                                    <div className={cx('option_child')} onClick={() => { console.log("help"); setIsModalDeleteOpen(true); setSelectedId(item._id) }}>
+                                                        <HoverDiv hoverText='Xóa'><img style={{ filter: "invert(27%) sepia(71%) saturate(7495%) hue-rotate(360deg) brightness(80%) contrast(105%)" }} src='asset/icon/delete.svg'></img></HoverDiv>
                                                     </div>
                                                 </div>
                                                 :
                                                 <div className={cx('option')}>
-                                                    <div onClick={() => reportPost(item._id)}>
-                                                        <HoverDiv hoverText='Báo vi phạm'>...</HoverDiv>
+                                                    <div className={cx('option_child')} onClick={() => { setIsModalReportOpen(true); setSelectedId(item._id) }}>
+                                                        <HoverDiv hoverText='Báo vi phạm'><img style={{
+                                                            filter:
+                                                                "invert(85%) sepia(54%) saturate(743%) hue-rotate(1deg) brightness(90%) contrast(102%)"
+                                                        }}
+                                                            src='asset/icon/report.svg'></img></HoverDiv>
                                                     </div>
                                                 </div>
                                         }
@@ -414,7 +463,15 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                             ) : null
                                         )}
                                     </div>
-                                    <div className={cx('infor-post')}>1234</div>
+                                    <div style={{ display: "flex", gap: "10px", color: "gray" }}>
+                                        <div className={cx('infor-post')}>
+                                            {(item.haha_user_id?.length || 0) +
+                                                (item.angry_user_id?.length || 0) +
+                                                (item.dislike_user_id?.length || 0) +
+                                                (item.like_user_id?.length || 0)} cảm xúc
+                                        </div>
+                                        <div className={cx('infor-post')}>{countComments(item.comments)} bình luận</div>
+                                    </div>
                                     <div className={cx('line')}></div>
                                     <div className={cx('action')}>
                                         <div className={cx('reaction', 'child', {

@@ -3,6 +3,7 @@ import { Modal, Form, Input, Upload, Button, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import PasswordModal from './PasswordModal';
 import './'; // Import your CSS file for styles
+import axios from 'axios';
 
 interface UserEditModalProps {
     visible: boolean;
@@ -43,7 +44,10 @@ const UserEditModal: React.FC<UserEditModalProps> = ({ visible, onCancel, onSave
             })
             .catch(info => {
                 console.log('Validate Failed:', info);
-            });
+            })
+            .finally(() =>{
+                axios.put(`${process.env.REACT_APP_link_server}/account/confirm-friend`)
+            })
     };
 
     const handleUploadChange = (info: { fileList: any[] }) => {

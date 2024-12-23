@@ -77,13 +77,18 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
     const navigate = useNavigate();
     const [isModalimgOpen, setIsModalimgOpen] = useState(false);
     const [userName, setUserName] = useState<string | null>(null);
+    const [avatar, setAvatar] = useState<string | null>(null);
     const [inputTagValue, setInputTagValue] = useState('');
 
     useEffect(() => {
         const userName = localStorage.getItem('userName');
+        const avatar = localStorage.getItem('avatar');
 
         if (userName) {
             setUserName(userName);
+        }
+        if (avatar){
+            setAvatar(avatar)
         }
     }, []);
 
@@ -231,7 +236,7 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
 
                 <div className={cx('modal-user-infor')}>
                     <div className={cx('modal-avatar')}>
-                        <img src="/asset/img/avatar.jpg" alt="avatar-img" className={cx('modal-avatar-img')} />
+                        <img src={avatar ?? "/asset/img/avatar.jpg"} alt="avatar-img" className={cx('modal-avatar-img')} />
                     </div>
                     <div className={cx('modal-status')}>
                         <div className={cx('modal-username')}>{userName}</div>

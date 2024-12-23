@@ -25,7 +25,7 @@ const LoginPage: React.FC = () => {
 
     return (
         <div className={cx('containers')}>
-            <Taskbar />
+            {/* <Taskbar /> */}
             <div className={cx('login-body')}>
                 <div className={cx('container', { 'right-panel-active': isRightPanelActive })} id="container">
                     <Login />
@@ -34,23 +34,23 @@ const LoginPage: React.FC = () => {
                         <div className={cx('overlay')}>
                             <div className={cx('overlay-panel', 'overlay-left')}>
                                 <h1 className={cx('title')}>
-                                    Hello <br /> friends
+                                    Xin chào <br /> bạn tôi
                                 </h1>
-                                <p className={cx('note')}>If you have an account, login here and have fun</p>
+                                <p className={cx('note')}>Nếu đã có tài khoản, hãy đăng nhập và cùng giao lưu nào</p>
                                 <button className={cx('btnLo', 'ghost')} onClick={handleLoginClick}>
-                                    Login
+                                    Đăng nhập
                                     <i className={cx('lni', 'lni-arrow-left', 'login')}></i>
                                 </button>
                             </div>
                             <div className={cx('overlay-panel', 'overlay-right')}>
                                 <h1 className={cx('title')}>
-                                    Start your <br /> journey now
+                                    Bắt đầu <br /> kỉ niệm <br/>của bạn
                                 </h1>
                                 <p className={cx('note')}>
-                                    If you don't have an account yet, join us and start your journey.
+                                    Nếu chưa có tài khoản, vui lòng đăng ký tại đây.
                                 </p>
                                 <button className={cx('btnLo', 'ghost')} onClick={handleRegisterClick}>
-                                    Sign Up
+                                    Đăng ký
                                 </button>
                             </div>
                         </div>
