@@ -88,6 +88,9 @@ function Header() {
                     setSearchResults(response.data);
                     console.log(response.data);  // Log the fetched results
                 }
+                else{
+                    navigate(`/post/tag/${query.slice(1)}`);
+                }
             } catch (error) {
                 console.error('Error fetching search results:', error);
             }

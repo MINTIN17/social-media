@@ -16,7 +16,7 @@ interface Post {
     user_id: string,
     content: string,
     status: string,
-    userInfo: {
+        userInfo: {
         username: string,
         email: string,
         role: string,
@@ -38,14 +38,14 @@ interface Post {
 }
 
 interface PostProps {
-    apiUrl: string; // URL API sẽ gọi
+    apiUrl?: string; // URL API sẽ gọi
     initialData?: Post[]; // Dữ liệu có thể được truyền vào từ bên ngoài
 }
 
 interface CommentProps {
     username: string; // The username of the person commenting
     image: string;    // The profile image URL
-    content: string;  // The content of the comment
+    content: string;  // The content of the commentzz
 }
 
 const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
@@ -73,13 +73,15 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
     };
 
     const fetchPosts = async () => {
-        console.log(apiUrl)
         try {
-            const response = await axios.get(apiUrl);
-            const data: Post[] = await response.data;
+            if(apiUrl != null)
+            {
+                const response = await axios.get(apiUrl);
+                const data: Post[] = await response.data;
 
-            setItems(data);
-            console.log(data)
+                setItems(data);
+                // console.log(data)
+            }
         } catch (error) {
             setError('Có lỗi xảy ra khi lấy dữ liệu.');
             console.error('Error fetching data:', error);
@@ -89,11 +91,15 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
     };
 
     useEffect(() => {
-        if (!initialData.length) {
-            fetchPosts();
+        if (apiUrl === "") {
+            setItems(initialData);
+            console.log(1);
+            console.log(initialData);
+            console.log(2);
+            setLoading(false);
         }
         else {
-            setItems(initialData);
+            fetchPosts();
         }
     }, [apiUrl]);
 
@@ -337,7 +343,7 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                 >Xác nhận</div>
                                 <div style={{ position: "absolute", color: "gray", right: "20px", top: "20px", cursor: "pointer", display: "flex", justifyContent: "center", }} onClick={() => { setIsModalDeleteOpen(false) }}>X</div>
                             </div>
-                        </div>
+                        </div> 
                     }
                     {isModalReportOpen != null && isModalReportOpen &&
                         <div className={cx('modal_confirm')}>

@@ -22,6 +22,9 @@ import CalendarPage from '../pages/Calendar';
 import Conversation from '../pages/Conversation';
 import FriendSent from '../components/FriendSent';
 import SinglePost from '../components/Post/SinglePost';
+import Post from '../components/Post';
+import PostSearchHashTag from '../pages/PostSearchHashTag';
+import LinkPost from '../pages/LinkPost';
 
 const publicRoutes = [
     { path: '/home', component: Home, layout: DefaultLayout },
@@ -37,7 +40,8 @@ const publicRoutes = [
     { path: '/diary', component: Diary, layout: null },
     { path: '/message', component: Conversation, layout: HeaderOnly },
     { path: '/message/:id', component: Conversation, layout: HeaderOnly },
-    { path: '/post/:id', component: SinglePost, layout: DefaultLayout },
+    { path: '/post/:id', component: LinkPost, layout: DefaultLayout },
+    { path: '/post/tag/:tag', component: PostSearchHashTag, layout: DefaultLayout },
     { path: '/friend/friendlist', component: ContentFriend, layout: FriendLayout },
     { path: '/friend/friendRequests', component: FriendRequests, layout: FriendLayout },
     { path: '/friend/friendsent', component: FriendSent, layout: FriendLayout },
