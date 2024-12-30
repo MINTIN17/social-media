@@ -387,7 +387,7 @@ const EditPost: React.FC<EditPostProps> = ({ post, isOpen, onClose }) => {
                     }}
                     onClick={CreateNewPost}
                 >
-                    Đăng
+                    Chỉnh sửa
                 </div>
             </div>
 
