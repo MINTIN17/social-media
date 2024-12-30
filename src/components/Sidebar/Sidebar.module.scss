@@ -122,7 +122,7 @@
     }
     .friend {
         width: 350px;
-        height: 210px;
+        max-height: 400px;
         padding: 10px;
         background-color: var(--default-color-light);
         border-radius: 25px;

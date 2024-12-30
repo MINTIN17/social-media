@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { errorNotification, successNotification } from '../Notification';
 import EditPost from '../EditPost';
 import CommentSection from './CommentSection';
+import { localeData } from 'moment';
 const cx = classNames.bind(styles);
 
 interface Post {
@@ -14,7 +15,7 @@ interface Post {
     user_id: string,
     content: string,
     status: string,
-        userInfo: {
+    userInfo: {
         username: string,
         email: string,
         role: string,
@@ -47,6 +48,7 @@ interface CommentProps {
 }
 
 const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
+    const [sharedPost, setSharedPost] = useState<any[]>()
     const [items, setItems] = useState<Post[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [comments, setComments] = useState<CommentProps[]>();
@@ -72,8 +74,7 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
 
     const fetchPosts = async () => {
         try {
-            if(apiUrl != null && apiUrl !== "")
-            {
+            if (apiUrl != null && apiUrl !== "") {
                 const response = await axios.get(apiUrl);
                 const data: Post[] = await response.data;
 
@@ -88,6 +89,14 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
         }
     };
 
+    const fetchSharedPost = async () => {
+        const userId = localStorage.getItem('userId')
+        const response = await axios.get(`${process.env.REACT_APP_link_server}/post/share/${userId}`);
+        const data: any[] = await response.data;
+        setSharedPost(data)
+        console.log(data)
+    }
+
     useEffect(() => {
         if (apiUrl === "") {
             setItems(initialData);
@@ -99,8 +108,8 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
         else {
             fetchPosts();
         }
+        fetchSharedPost();
     }, [apiUrl]);
-
 
     const ReactionPost = async (reaciton: string, postId: string) => {
         const userId = localStorage.getItem('userId');
@@ -160,7 +169,14 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
         })
             .then(res => {
                 console.log(res.data)
-                successNotification("Chia sẻ bài viết thành công")
+                if (sharedPost?.some((post) => post._id === postId)) {
+                    successNotification("Hủy chia sẻ bài viết thành công")
+                }
+                else {
+                    successNotification("Chia sẻ bài viết thành công")
+                }
+
+                fetchSharedPost();
             })
     }
 
@@ -341,7 +357,7 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                 >Xác nhận</div>
                                 <div style={{ position: "absolute", color: "gray", right: "20px", top: "20px", cursor: "pointer", display: "flex", justifyContent: "center", }} onClick={() => { setIsModalDeleteOpen(false) }}>X</div>
                             </div>
-                        </div> 
+                        </div>
                     }
                     {isModalReportOpen != null && isModalReportOpen &&
                         <div className={cx('modal_confirm')}>
@@ -527,13 +543,19 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                             }}
                                         >
                                             <img src='/asset/icon/share.svg' alt='share-icon' className={cx('share-icon')} />
-                                            Chia sẻ
+                                            {
+                                                sharedPost?.some((post) => post._id === item._id) ?
+                                                    <div>Hủy chia sẻ</div>
+                                                    :
+                                                    <div>Chia sẻ</div>
+                                            }
+
                                         </div>
 
                                     </div>
                                     <div>
                                         {isActive ?
-                                            <CommentSection comments={item.comments || []} parentCommentId='' postId={item._id} onCommentSuccess={fetchPosts} user_id={item.user_id}/>
+                                            <CommentSection comments={item.comments || []} parentCommentId='' postId={item._id} onCommentSuccess={fetchPosts} user_id={item.user_id} />
                                             : <div></div>
                                         }
                                     </div>

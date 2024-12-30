@@ -233,9 +233,13 @@ function Sidebar() {
             </div>
             <div className={cx('line')}></div>
             <div style={{
-                width: "100%", height: "100%", padding: " 10px", display: "flex",
+                width: "100%", height: "100%", display: "flex",
                 flexDirection: "column",
-                gap: "5px"
+                overflowY: "scroll",
+                gap: "5px",
+                marginTop: "20px",
+                marginBottom: "30px",
+                paddingRight: "10px"
             }}>
                 {friends.map((friend) => (
                     <div key={friend.id} className={cx('friend-item')}

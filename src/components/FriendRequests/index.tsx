@@ -12,12 +12,12 @@ interface Friend {
 const ContentFriend: React.FC = () => {
     const [friends, setFriends] = useState<Friend[]>([]);
 
-    const handleConfirm = (friendName: string) => {
-        successNotification(`Bạn đã chấp nhận lời yêu cầu kết bạn của ${friendName}`);
+    const handleConfirm = () => {
+        successNotification(`Bạn đã chấp nhận lời yêu cầu kết bạn`);
     };
 
-    const handleCancel = (friendName: string) => {
-        errorNotification(`Bạn đã hủy lời yêu cầu kết bạn của ${friendName}`);
+    const handleCancel = () => {
+        errorNotification(`Bạn đã hủy lời yêu cầu kết bạn`);
     };
 
     const getFriendRequest = async () => {
@@ -45,7 +45,7 @@ const ContentFriend: React.FC = () => {
             if (message === "Xóa bạn thành công")
                 setButtonState("send");
             console.log(message);
-
+            handleCancel();
         } catch (error) {
             console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
         } finally {
@@ -63,6 +63,7 @@ const ContentFriend: React.FC = () => {
             });
 
             const message = response.data;
+            handleConfirm();
         } catch (error) {
             console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
         } finally {
