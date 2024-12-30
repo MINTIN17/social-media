@@ -4,8 +4,6 @@ import styles from './Post.module.scss';
 import axios from 'axios';
 import HoverDiv from '../HoverDiv';
 import { useNavigate } from 'react-router-dom';
-import { set } from 'lodash';
-import { notification } from 'antd';
 import { errorNotification, successNotification } from '../Notification';
 import EditPost from '../EditPost';
 import CommentSection from './CommentSection';
@@ -74,7 +72,7 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
 
     const fetchPosts = async () => {
         try {
-            if(apiUrl != null)
+            if(apiUrl != null && apiUrl !== "")
             {
                 const response = await axios.get(apiUrl);
                 const data: Post[] = await response.data;
@@ -355,7 +353,7 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                             </div>
 
                         </div>}
-                    {items.map((item) => (
+                    {Array.isArray(items) && items.map((item) => (
                         (() => {
                             const userReaction = getUserReaction(item, currentUserId || '');
                             const isActive = active.includes(item._id);
@@ -382,10 +380,10 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                                             filter:
                                                                 "invert(45%) sepia(82%) saturate(1344%) hue-rotate(97deg) brightness(70%) contrast(90%)"
                                                         }}
-                                                            src='asset/icon/editpost.svg'></img></HoverDiv>
+                                                            src='/asset/icon/editpost.svg'></img></HoverDiv>
                                                     </div>
                                                     <div className={cx('option_child')} onClick={() => { console.log("help"); setIsModalDeleteOpen(true); setSelectedId(item._id) }}>
-                                                        <HoverDiv hoverText='Xóa'><img style={{ filter: "invert(27%) sepia(71%) saturate(7495%) hue-rotate(360deg) brightness(80%) contrast(105%)" }} src='asset/icon/delete.svg'></img></HoverDiv>
+                                                        <HoverDiv hoverText='Xóa'><img style={{ filter: "invert(27%) sepia(71%) saturate(7495%) hue-rotate(360deg) brightness(80%) contrast(105%)" }} src='/asset/icon/delete.svg'></img></HoverDiv>
                                                     </div>
                                                 </div>
                                                 :
@@ -395,7 +393,7 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
                                                             filter:
                                                                 "invert(85%) sepia(54%) saturate(743%) hue-rotate(1deg) brightness(90%) contrast(102%)"
                                                         }}
-                                                            src='asset/icon/report.svg'></img></HoverDiv>
+                                                            src='/asset/icon/report.svg'></img></HoverDiv>
                                                     </div>
                                                 </div>
                                         }

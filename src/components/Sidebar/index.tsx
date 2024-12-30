@@ -229,7 +229,7 @@ function Sidebar() {
         <div className={cx('friend')}>
             <div className={cx('header')}>
                 <div style={{ padding: 10 }}>Người liên hệ</div>
-                <img src='/asset/icon/search.svg' alt='search-icon' className={cx('search-icon')} />
+                {/* <img src='/asset/icon/search.svg' alt='search-icon' className={cx('search-icon')} /> */}
             </div>
             <div className={cx('line')}></div>
             <div style={{

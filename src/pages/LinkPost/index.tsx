@@ -6,7 +6,7 @@ import CreatePost from "../../components/CreatePost";
 
 function LinkPost() {
     const { id } = useParams<{ id: string }>();
-    const [responseData, setResponseData] = useState([]);
+    const [responseData, setResponseData] = useState<any>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -14,7 +14,7 @@ function LinkPost() {
         const fetchPosts = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_link_server}/post/${id}`);
-                setResponseData(response.data);
+                setResponseData([response.data]);
                 console.log(responseData);
                 setLoading(false);
             } catch (err) {
