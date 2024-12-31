@@ -68,6 +68,11 @@ function Header() {
         navigate('/profile');
     };
 
+    const LoginPage = () => {
+        localStorage.clear();
+        navigate('/login');
+    };
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         handleSearch(value);
@@ -335,9 +340,14 @@ function Header() {
                     <div className={cx('avtar')} onClick={ProfilePage}>
                         <img
                             src={avatar || '/asset/img/avatar.jpg'}
-                            alt="img-avatar"
+                            alt="img-avatar"    
                             className={cx('img-avatar')}
                         />
+                    </div>
+                </HoverDiv>
+                <HoverDiv hoverText="Đăng xuất">
+                    <div className={cx('logout')} onClick={LoginPage}>
+                        <img src="/asset/icon/logout.svg" alt="login-icon" className={cx('login-icon')} />
                     </div>
                 </HoverDiv>
             </div>

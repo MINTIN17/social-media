@@ -91,7 +91,7 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
 
     const fetchSharedPost = async () => {
         const userId = localStorage.getItem('userId')
-        const response = await axios.get(`${process.env.REACT_APP_link_server}/post/share/${userId}`);
+        const response = await axios.get(`${process.env.REACT_APP_link_server}/post/user/${userId}`);
         const data: any[] = await response.data;
         setSharedPost(data)
         console.log(data)
