@@ -102,7 +102,7 @@ const Post: React.FC<PostProps> = ({ apiUrl, initialData = [] }) => {
             setItems(initialData);
             console.log(1);
             console.log(initialData);
-            console.log(2);
+            console.log(items.length);
             setLoading(false);
         }
         else {

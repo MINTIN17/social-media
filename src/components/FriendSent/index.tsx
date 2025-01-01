@@ -24,6 +24,26 @@ const ContentFriend: React.FC = () => {
         }
     };
 
+    const handleRemoveFriend = async (friendId: any) => {
+        try {
+            const currentUserId = localStorage.getItem('userId');
+
+            const response = await axios.put(`${process.env.REACT_APP_link_server}/account/remove-friend-invite`, {
+                friendId: currentUserId,
+                userId: friendId,
+            });
+
+            const message = response.data;
+            if (message === "Xóa bạn thành công")
+                setButtonState("send");
+            console.log(message);
+
+        } catch (error) {
+            console.error('Lỗi kiểm tra trạng thái bạn bè:', error);
+        } finally {
+            window.location.reload();
+        }
+    };
 
     useEffect(() => {
         getFriendRequest();
@@ -41,7 +61,7 @@ const ContentFriend: React.FC = () => {
                         <div className={Styles.iconFr} key={friend.id}>
                             <img src={friend.imageUrl != "" ? friend.imageUrl : '/asset/img/avatar.jpg'} alt={`avatar-${friend.id}`} className={Styles.imgListFr} />
                             <p className={Styles.nameListFr}>{friend.username}</p>
-                            <button className={Styles.btnItemFr}>
+                            <button className={Styles.btnItemFr} onClick={() => handleRemoveFriend(friend.id)}>
                                 Hủy lời mời kết bạn
                             </button>
                             <button className={Styles.btnItemPr}>
